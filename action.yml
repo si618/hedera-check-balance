@@ -1,0 +1,25 @@
+name: 'Check Hedera account balance'
+description: 'Checks a Hedera account is above a minimum balance'
+inputs:
+  hedera-network:
+    description: 'The Hedera "mainnet", "testnet" or "previewnet" network associated with account'
+    required: false
+    default: 'testnet'
+  operator-id:
+    description: 'The account id of the operator'
+    required: true
+  operator-key:
+    description: 'The private key of the operator'
+    required: true
+  account-id:
+    description: 'The account id being checked, defaulting to "operator-id" if not set'
+    required: false
+  minimum-balance:
+    description: 'The minimum balance in hbars for the action to succeed'    
+    required: true
+outputs:
+  account-balance:
+    description: 'The account balance in hbars'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

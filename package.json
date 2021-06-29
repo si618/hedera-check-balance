@@ -1,0 +1,28 @@
+{
+  "name": "hedera-check-balance",
+  "version": "1.0.0",
+  "description": "Github Action to check the balance of a Hedera account",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/si618/hedera-get-account-balance-action.git"
+  },
+  "keywords": [
+    "hedera",
+    "hashgraph"
+  ],
+  "author": "Simon McKenna",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/si618/hedera-get-account-balance-action/issues"
+  },
+  "homepage": "https://github.com/si618/hedera-get-account-balance-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.4.0",
+    "@actions/github": "^5.0.0",
+    "@hashgraph/sdk": "^2.0.23"
+  }
+}

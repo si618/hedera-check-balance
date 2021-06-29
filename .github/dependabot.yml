@@ -1,0 +1,8 @@
+# Create pull requests on updates to npm packages
+version: 2
+updates:
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
