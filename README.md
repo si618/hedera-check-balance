@@ -1,28 +1,32 @@
 # Hedera check account balance action
 
-Github Action to [check balance](https://docs.hedera.com/guides/docs/hedera-api/cryptocurrency-accounts/cryptogetaccountbalance) of a Hedera account, failing if there are insufficient hbars.
+Github Action to [check balance](https://docs.hedera.com/guides/docs/hedera-api/cryptocurrency-accounts/cryptogetaccountbalance) of a Hedera account, optionally failing if there are insufficient hbars.
 
 ## Inputs
 
 ### `hedera-network`
 
-The Hedera `"mainnet"`, `"testnet"` or `"previewnet"` network in which the account exists. Defaults to `"testnet"` if not entered or invalid.
+The Hedera `"mainnet"`, `"testnet"` or `"previewnet"` network in which the account exists. Defaults to `"testnet"` if not set or invalid.
 
 ### `operator-id`
 
-**Required** The account id of the operator.
+[**Required**] The account id of the operator.
 
 ### `operator-key`
 
-**Required** The private key of the operator. Set using [Github Secret](https://docs.github.com/en/actions/reference/encrypted-secrets).
+[**Required**] The private key of the operator. Set using [Github Secret](https://docs.github.com/en/actions/reference/encrypted-secrets).
+
+### `minimum-balance`
+
+[**Required**] The minimum balance in hbars for the action to succeed.
 
 ### `account-id`
 
 The account id being checked, defaulting to `operator-id` if not set.
 
-### `minimum-balance`
+### `fail-action`
 
-**Required** The minimum balance in hbars for the action to succeed.
+Fail this action if account balance is below minimum. Valid values are `true` or `false`. Defaults to `true`.
 
 ## Outputs
 

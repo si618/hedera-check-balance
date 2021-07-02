@@ -1,5 +1,9 @@
 name: 'Check Hedera account balance'
-description: 'Checks a Hedera account is above a minimum balance'
+description: 'Checks that a Hedera account is above a minimum balance'
+author: 'Simon McKenna'
+branding:
+  icon: 'check-circle'
+  color: 'green'
 inputs:
   hedera-network:
     description: 'The Hedera "mainnet", "testnet" or "previewnet" network associated with account'
@@ -11,12 +15,16 @@ inputs:
   operator-key:
     description: 'The private key of the operator'
     required: true
+  minimum-balance:
+    description: 'The minimum balance in hbars for the action to succeed'
+    required: true
   account-id:
     description: 'The account id being checked, defaulting to "operator-id" if not set'
     required: false
-  minimum-balance:
-    description: 'The minimum balance in hbars for the action to succeed'    
-    required: true
+  fail-action:
+    description: 'Boolean to fail action if account balance is below minimum'
+    required: false
+    default: true
 outputs:
   account-balance:
     description: 'The account balance in hbars'

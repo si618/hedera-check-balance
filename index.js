@@ -7,9 +7,10 @@ const {
 
 async function main() {
     try {
-        const hederaNetwork = core.getInput('hedera-network');
+        const hederaNetwork = core.getInput('hedera-network').toLowerCase();
         const operatorId = core.getInput('operator-id');
         const operatorKey = core.getInput('operator-key');
+        const failAction = core.getInput('fail-action').toLowerCase() !== 'false';
 
         let accountId = core.getInput('account-id');
         if (accountId.length === 0) {
@@ -18,13 +19,13 @@ async function main() {
 
         const minimumBalance = core.getInput('minimum-balance');
         if (isNaN(minimumBalance) || isNaN(parseFloat(minimumBalance))) {
-            core.setFailed(`minimum-balance ${minimumBalance} should be a number (in hbars)`);
+            core.setFailed(`minimum-balance ${minimumBalance} should be a number`);
             return;
         }
-        let minimumHbars = Number(minimumBalance);
+        const minimumHbars = Number(minimumBalance);
 
         console.log(
-            `Checking balance of ${accountId} on ${hederaNetwork} using operator ${operatorId}`);
+            `Checking account ${accountId} balance on ${hederaNetwork} using operator ${operatorId}`);
 
         let client;
 
@@ -45,15 +46,18 @@ async function main() {
             .setAccountId(accountId)
             .execute(client);
 
-        const hbars = balance.hbars.to(HbarUnit.Hbar).integerValue();
+        const hbars = balance.hbars
+            .to(HbarUnit.Hbar)
+            .integerValue();
 
         core.setOutput('account-balance', hbars);
 
-        var result = hbars < minimumHbars ? 'below' : 'above';
-        console.log(`Balance ${hbars} ${result} minimum ${minimumHbars}`);
+        var result = hbars < minimumHbars ? 'below' : 'above or equal to';
+        var msg = `Balance of ${hbars}ℏ is ${result} minimum ${minimumHbars}ℏ`;
+        console.log(msg);
 
-        if (hbars < minimumHbars) {
-            core.setFailed('Account balance less than minimum');
+        if (failAction && hbars < minimumHbars) {
+            core.setFailed(msg);
         }
     } catch (error) {
         core.setFailed(error.message);
