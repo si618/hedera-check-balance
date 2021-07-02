@@ -1,0 +1,40 @@
+#  Required variables set by GitHub environment secrets
+#
+#  PREVIEWNET_OPERATOR_ID:    Hedera previewnet operator account id
+#  PREVIEWNET_OPERATOR_KEY:   Hedera previewnet operator private key
+#  TESTNET_OPERATOR_ID:       Hedera testnet operator account id
+#  TESTNET_OPERATOR_KEY:      Hedera testnet operator private key
+
+name: Test
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - "*"
+
+jobs:
+  test:
+    environment: Test
+    runs-on: ubuntu-latest
+    env:
+      minimumBalance: 100
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Check Ħ testnet account balance
+        uses: si618/hedera-check-balance@v1
+        with:
+          operator-id: ${{ secrets.TESTNET_OPERATOR_ID }}
+          operator-key: ${{ secrets.TESTNET_OPERATOR_KEY }}
+          minimum-balance: ${{ env.minimumBalance }}
+
+      - name: Check Ħ previewnet account balance 💰
+        uses: si618/hedera-check-balance@v1
+        with:
+          hedera-network: 'previewnet'
+          operator-id: ${{ secrets.PREVIEWNET_OPERATOR_ID }}
+          operator-key: ${{ secrets.PREVIEWNET_OPERATOR_KEY }}
+          minimum-balance: ${{ env.minimumBalance }}          
