@@ -36,7 +36,7 @@ The account balance in ℏ (hbars).
 
 ## Example usage
 
-``` yaml
+```yaml
 - name: Check Ħ account balance
   uses: si618/hedera-check-balance@v1
   with:

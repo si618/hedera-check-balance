@@ -1,33 +1,33 @@
-name: 'Check Hedera account balance'
-description: 'Checks that a Hedera account is above a minimum balance'
-author: 'Simon McKenna'
+name: "hedera-check-balance"
+description: "Checks that a Hedera Hashgraph account is above a minimum balance"
+author: "Simon McKenna"
 branding:
-  icon: 'check-circle'
-  color: 'green'
+  icon: "check-circle"
+  color: "green"
 inputs:
   hedera-network:
-    description: 'The Hedera "mainnet", "testnet" or "previewnet" network associated with account'
+    description: "The Hedera 'mainnet', 'testnet' or 'previewnet' network associated with account"
     required: false
-    default: 'testnet'
+    default: "testnet"
   operator-id:
-    description: 'The account id of the operator'
+    description: "The account id of the operator"
     required: true
   operator-key:
-    description: 'The private key of the operator'
+    description: "The private key of the operator"
     required: true
   minimum-balance:
-    description: 'The minimum balance in hbars for the action to succeed'
+    description: "The minimum balance in hbars for the action to succeed"
     required: true
   account-id:
-    description: 'The account id being checked, defaulting to "operator-id" if not set'
+    description: "The account id being checked, defaulting to 'operator-id' if not set"
     required: false
   fail-action:
-    description: 'Boolean to fail action if account balance is below minimum'
+    description: "Boolean to fail action if account balance is below minimum"
     required: false
     default: true
 outputs:
   account-balance:
-    description: 'The account balance in hbars'
+    description: "The account balance in hbars"
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: "node12"
+  main: "dist/index.js"
