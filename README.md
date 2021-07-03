@@ -38,7 +38,7 @@ The account balance in ℏ (hbars).
 
 ```yaml
 - name: Check Ħ account balance
-  uses: si618/hedera-check-balance@v1
+  uses: si618/hedera-check-balance@latest
   with:
     operator-id: ${{ secrets.OPERATOR_ID }}
     operator-key: ${{ secrets.OPERATOR_KEY }}
