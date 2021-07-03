@@ -1,4 +1,4 @@
-name: "hedera-check-balance"
+name: "Check Hedera account balance"
 description: "Checks that a Hedera Hashgraph account is above a minimum balance"
 author: "Simon McKenna"
 branding:
