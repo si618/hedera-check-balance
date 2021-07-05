@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/si618/hedera-get-account-balance-action.git"
+    "url": "git+https://github.com/si618/hedera-check-balance.git"
   },
   "keywords": [
     "hedera",
@@ -18,13 +18,13 @@
   "author": "Simon McKenna",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/si618/hedera-get-account-balance-action/issues"
+    "url": "https://github.com/si618/hedera-check-balance/issues"
   },
-  "homepage": "https://github.com/si618/hedera-get-account-balance-action#readme",
+  "homepage": "https://github.com/si618/hedera-check-balance#readme",
   "dependencies": {
     "@actions/core": "^1.4.0",
     "@actions/github": "^5.0.0",
-    "@hashgraph/sdk": "^2.0.23"
+    "@hashgraph/sdk": "^2.0.24"
   },
   "devDependencies": {
     "prettier": "2.3.2"
