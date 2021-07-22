@@ -1,5 +1,10 @@
 const core = require("@actions/core");
-const { Client, AccountBalanceQuery, HbarUnit } = require("@hashgraph/sdk");
+const {
+  AccountBalanceQuery,
+  Client,
+  Hbar,
+  HbarUnit,
+} = require("@hashgraph/sdk");
 
 async function main() {
   try {
@@ -18,9 +23,7 @@ async function main() {
       core.setFailed(`minimum-balance ${minimumBalance} should be a number`);
       return;
     }
-    const minimumHbars = Number(minimumBalance);
-    // Alternative to integer if smaller hbar units are needed?
-    //const minimumHbars = Hbar(minimumBalance, HbarUnit.Hbar);
+    const minimumHbars = new Hbar(minimumBalance, HbarUnit.Hbar);
 
     console.log(
       `Checking account ${accountId} balance on ${hederaNetwork} using operator ${operatorId}`
@@ -45,15 +48,16 @@ async function main() {
       .setAccountId(accountId)
       .execute(client);
 
-    const hbars = balance.hbars.to(HbarUnit.Hbar).integerValue();
+    core.setOutput("account-balance", balance.hbars);
 
-    core.setOutput("account-balance", hbars);
-
-    var result = hbars < minimumHbars ? "below" : "above or equal to";
-    var msg = `Balance of ${hbars}ℏ is ${result} minimum ${minimumHbars}ℏ`;
+    const isLessThan = balance.hbars
+      .toBigNumber()
+      .isLessThan(minimumHbars.toBigNumber());
+    const result = isLessThan ? "below" : "above or equal to";
+    const msg = `Balance of ${balance.hbars} is ${result} minimum ${minimumHbars}`;
     console.log(msg);
 
-    if (failAction && hbars < minimumHbars) {
+    if (failAction && isLessThan) {
       core.setFailed(msg);
     }
   } catch (error) {

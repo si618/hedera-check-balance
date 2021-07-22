@@ -5,7 +5,7 @@
 /***/ ((module) => {
 
 "use strict";
-module.exports = {"i8":"1.3.4"};
+module.exports = {"i8":"1.3.6"};
 
 /***/ }),
 
@@ -3830,11 +3830,21 @@ function getProxiedConnection(address, channelOptions, connectionOptions) {
                             proxyAddressString);
                         resolve({ socket: cts, realTarget: parsedTarget });
                     });
-                    cts.on('error', () => {
+                    cts.on('error', (error) => {
+                        trace('Failed to establish a TLS connection to ' +
+                            options.path +
+                            ' through proxy ' +
+                            proxyAddressString +
+                            ' with error ' +
+                            error.message);
                         reject();
                     });
                 }
                 else {
+                    trace('Successfully established a plaintext connection to ' +
+                        options.path +
+                        ' through proxy ' +
+                        proxyAddressString);
                     resolve({
                         socket,
                         realTarget: parsedTarget,
@@ -8141,6 +8151,12 @@ class Subchannel {
     }
     createSession(proxyConnectionResult) {
         var _a, _b, _c;
+        if (proxyConnectionResult.realTarget) {
+            trace(this.subchannelAddressString + ' creating HTTP/2 session through proxy to ' + proxyConnectionResult.realTarget);
+        }
+        else {
+            trace(this.subchannelAddressString + ' creating HTTP/2 session');
+        }
         const targetAuthority = resolver_1.getDefaultAuthority((_a = proxyConnectionResult.realTarget) !== null && _a !== void 0 ? _a : this.channelTarget);
         let connectionOptions = this.credentials._getConnectionOptions() || {};
         connectionOptions.maxSendHeaderBlockLength = Number.MAX_SAFE_INTEGER;
@@ -8224,6 +8240,7 @@ class Subchannel {
         });
         session.once('close', () => {
             if (this.session === session) {
+                trace(this.subchannelAddressString + ' connection closed');
                 this.transitionToState([channel_1.ConnectivityState.CONNECTING], channel_1.ConnectivityState.TRANSIENT_FAILURE);
                 /* Transitioning directly to IDLE here should be OK because we are not
                  * doing any backoff, because a connection was established at some
@@ -8701,7 +8718,7 @@ exports.uriToString = uriToString;
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", ({value:!0})),exports.TransactionRecord=exports.TransactionReceipt=exports.TransactionList=exports.TransactionID=exports.TransactionBody=exports.Transaction=exports.TopicID=exports.TokenKycStatus=exports.TokenInfo=exports.TokenID=exports.TokenFreezeStatus=exports.ThresholdKey=exports.SignedTransaction=exports.SemanticVersion=exports.ScheduleID=exports.ScheduleGetInfoResponse=exports.SchedulableTransactionBody=exports.ResponseType=exports.ResponseCodeEnum=exports.Query=exports.NetworkGetVersionInfoResponse=exports.KeyList=exports.Key=exports.FileID=exports.FileGetInfoResponse=exports.CryptoGetInfoResponse=exports.ContractID=exports.ContractGetInfoResponse=exports.ConsensusTopicResponse=exports.ConsensusTopicQuery=exports.ConsensusTopicInfo=exports.AccountID=exports.TokenService=exports.SmartContractService=exports.ScheduleService=exports.NetworkService=exports.MirrorConsensusService=exports.FreezeService=exports.FileService=exports.CryptoService=exports.ConsensusService=exports.Writer=exports.Reader=void 0;var $protobuf=_interopRequireWildcard(__nccwpck_require__(6738)),_proto=__nccwpck_require__(3969);function _getRequireWildcardCache(a){if("function"!=typeof WeakMap)return null;var b=new WeakMap,c=new WeakMap;return(_getRequireWildcardCache=function(a){return a?c:b})(a)}function _interopRequireWildcard(a,b){if(!b&&a&&a.__esModule)return a;if(null===a||"object"!=typeof a&&"function"!=typeof a)return{default:a};var c=_getRequireWildcardCache(b);if(c&&c.has(a))return c.get(a);var d={},e=Object.defineProperty&&Object.getOwnPropertyDescriptor;for(var f in a)if("default"!=f&&Object.prototype.hasOwnProperty.call(a,f)){var g=e?Object.getOwnPropertyDescriptor(a,f):null;g&&(g.get||g.set)?Object.defineProperty(d,f,g):d[f]=a[f]}return d.default=a,c&&c.set(a,d),d}const Reader=$protobuf.Reader;exports.Reader=Reader;const Writer=$protobuf.Writer;exports.Writer=Writer;const ConsensusService=_proto.proto.ConsensusService;exports.ConsensusService=ConsensusService;const CryptoService=_proto.proto.CryptoService;exports.CryptoService=CryptoService;const FileService=_proto.proto.FileService;exports.FileService=FileService;const FreezeService=_proto.proto.FreezeService;exports.FreezeService=FreezeService;const MirrorConsensusService=_proto.proto.MirrorConsensusService;exports.MirrorConsensusService=MirrorConsensusService;const NetworkService=_proto.proto.NetworkService;exports.NetworkService=NetworkService;const ScheduleService=_proto.proto.ScheduleService;exports.ScheduleService=ScheduleService;const SmartContractService=_proto.proto.SmartContractService;exports.SmartContractService=SmartContractService;const TokenService=_proto.proto.TokenService;exports.TokenService=TokenService;const AccountID=_proto.proto.AccountID;exports.AccountID=AccountID;const ConsensusTopicInfo=_proto.proto.ConsensusTopicInfo;exports.ConsensusTopicInfo=ConsensusTopicInfo;const ConsensusTopicQuery=_proto.proto.ConsensusTopicQuery;exports.ConsensusTopicQuery=ConsensusTopicQuery;const ConsensusTopicResponse=_proto.proto.ConsensusTopicResponse;exports.ConsensusTopicResponse=ConsensusTopicResponse;const ContractGetInfoResponse=_proto.proto.ContractGetInfoResponse;exports.ContractGetInfoResponse=ContractGetInfoResponse;const ContractID=_proto.proto.ContractID;exports.ContractID=ContractID;const CryptoGetInfoResponse=_proto.proto.CryptoGetInfoResponse;exports.CryptoGetInfoResponse=CryptoGetInfoResponse;const FileGetInfoResponse=_proto.proto.FileGetInfoResponse;exports.FileGetInfoResponse=FileGetInfoResponse;const FileID=_proto.proto.FileID;exports.FileID=FileID;const Key=_proto.proto.Key;exports.Key=Key;const KeyList=_proto.proto.KeyList;exports.KeyList=KeyList;const NetworkGetVersionInfoResponse=_proto.proto.NetworkGetVersionInfoResponse;exports.NetworkGetVersionInfoResponse=NetworkGetVersionInfoResponse;const Query=_proto.proto.Query;exports.Query=Query;const ResponseCodeEnum=_proto.proto.ResponseCodeEnum;exports.ResponseCodeEnum=ResponseCodeEnum;const ResponseType=_proto.proto.ResponseType;exports.ResponseType=ResponseType;const SchedulableTransactionBody=_proto.proto.SchedulableTransactionBody;exports.SchedulableTransactionBody=SchedulableTransactionBody;const ScheduleGetInfoResponse=_proto.proto.ScheduleGetInfoResponse;exports.ScheduleGetInfoResponse=ScheduleGetInfoResponse;const ScheduleID=_proto.proto.ScheduleID;exports.ScheduleID=ScheduleID;const SemanticVersion=_proto.proto.SemanticVersion;exports.SemanticVersion=SemanticVersion;const SignedTransaction=_proto.proto.SignedTransaction;exports.SignedTransaction=SignedTransaction;const ThresholdKey=_proto.proto.ThresholdKey;exports.ThresholdKey=ThresholdKey;const TokenFreezeStatus=_proto.proto.TokenFreezeStatus;exports.TokenFreezeStatus=TokenFreezeStatus;const TokenID=_proto.proto.TokenID;exports.TokenID=TokenID;const TokenInfo=_proto.proto.TokenInfo;exports.TokenInfo=TokenInfo;const TokenKycStatus=_proto.proto.TokenKycStatus;exports.TokenKycStatus=TokenKycStatus;const TopicID=_proto.proto.TopicID;exports.TopicID=TopicID;const Transaction=_proto.proto.Transaction;exports.Transaction=Transaction;const TransactionBody=_proto.proto.TransactionBody;exports.TransactionBody=TransactionBody;const TransactionID=_proto.proto.TransactionID;exports.TransactionID=TransactionID;const TransactionList=_proto.proto.TransactionList;exports.TransactionList=TransactionList;const TransactionReceipt=_proto.proto.TransactionReceipt;exports.TransactionReceipt=TransactionReceipt;const TransactionRecord=_proto.proto.TransactionRecord;exports.TransactionRecord=TransactionRecord;
+Object.defineProperty(exports, "__esModule", ({value:!0})),exports.ScheduleDeleteTransactionBody=exports.SchedulableTransactionBody=exports.ScheduleCreateTransactionBody=exports.TokenFeeScheduleUpdateTransactionBody=exports.TokenDissociateTransactionBody=exports.TokenAssociateTransactionBody=exports.TokenWipeAccountTransactionBody=exports.TokenBurnTransactionBody=exports.TokenMintTransactionBody=exports.TokenUpdateTransactionBody=exports.TokenDeleteTransactionBody=exports.TokenRevokeKycTransactionBody=exports.TokenGrantKycTransactionBody=exports.TokenUnfreezeAccountTransactionBody=exports.TokenFreezeAccountTransactionBody=exports.AssessedCustomFee=exports.CustomFee=exports.FixedFee=exports.FractionalFee=exports.TokenCreateTransactionBody=exports.UncheckedSubmitBody=exports.ConsensusSubmitMessageTransactionBody=exports.ConsensusMessageChunkInfo=exports.ConsensusUpdateTopicTransactionBody=exports.ContractDeleteTransactionBody=exports.FileUpdateTransactionBody=exports.FileDeleteTransactionBody=exports.FileCreateTransactionBody=exports.FileAppendTransactionBody=exports.CryptoUpdateTransactionBody=exports.CryptoTransferTransactionBody=exports.CryptoDeleteLiveHashTransactionBody=exports.CryptoDeleteTransactionBody=exports.CryptoCreateTransactionBody=exports.CryptoAddLiveHashTransactionBody=exports.LiveHash=exports.ContractUpdateTransactionBody=exports.ContractCreateTransactionBody=exports.ContractCallTransactionBody=exports.FreezeTransactionBody=exports.SystemUndeleteTransactionBody=exports.SystemDeleteTransactionBody=exports.TransactionBody=exports.Transaction=exports.QueryHeader=exports.ResponseType=exports.ConsensusGetTopicInfoResponse=exports.ConsensusGetTopicInfoQuery=exports.ConsensusDeleteTopicTransactionBody=exports.Duration=exports.ConsensusCreateTopicTransactionBody=exports.TimestampSeconds=exports.Timestamp=exports.TokenBalances=exports.TokenBalance=exports.TokenRelationship=exports.ServicesConfigurationList=exports.Setting=exports.SemanticVersion=exports.NodeAddressBook=exports.NodeAddress=exports.ServiceEndpoint=exports.CurrentAndNextFeeSchedule=exports.FeeSchedule=exports.FeeData=exports.TransactionFeeSchedule=exports.FeeComponents=exports.HederaFunctionality=exports.SignatureMap=exports.SignaturePair=exports.SignatureList=exports.ThresholdSignature=exports.Signature=exports.KeyList=exports.ThresholdKey=exports.Key=exports.TokenKycStatus=exports.TokenFreezeStatus=exports.TokenSupplyType=exports.SubType=exports.TokenType=exports.ScheduleID=exports.TokenID=exports.TopicID=exports.Fraction=exports.TokenTransferList=exports.NftTransfer=exports.TransferList=exports.AccountAmount=exports.TransactionID=exports.ContractID=exports.FileID=exports.AccountID=exports.RealmID=exports.ShardID=exports.AllAccountBalances=exports.SingleAccountBalances=exports.TokenUnitBalance=exports.Writer=exports.Reader=void 0,exports.BytesValue=exports.StringValue=exports.BoolValue=exports.UInt32Value=exports.UInt64Value=exports.FloatValue=exports.DoubleValue=exports.TransactionList=exports.SignedTransaction=exports.TokenTransfersTransactionBody=exports.TokenService=exports.TokenGetAccountNftInfoResponse=exports.TokenGetAccountNftInfoQuery=exports.ThrottleDefinitions=exports.ThrottleBucket=exports.ThrottleGroup=exports.SmartContractService=exports.ScheduleService=exports.NetworkService=exports.MirrorConsensusService=exports.ConsensusTopicResponse=exports.ConsensusTopicQuery=exports.FreezeService=exports.FileService=exports.CryptoService=exports.CryptoGetClaimResponse=exports.CryptoGetClaimQuery=exports.CryptoDeleteClaimTransactionBody=exports.CryptoAddClaimTransactionBody=exports.Claim=exports.Response=exports.TokenGetNftInfosResponse=exports.TokenGetNftInfosQuery=exports.TokenGetNftInfoResponse=exports.TokenNftInfo=exports.TokenGetNftInfoQuery=exports.NftID=exports.TokenGetAccountNftInfosResponse=exports.TokenGetAccountNftInfosQuery=exports.ScheduleGetInfoResponse=exports.ScheduleInfo=exports.ScheduleGetInfoQuery=exports.TokenGetInfoResponse=exports.TokenInfo=exports.TokenGetInfoQuery=exports.NetworkGetVersionInfoResponse=exports.NetworkGetVersionInfoQuery=exports.TransactionGetFastRecordResponse=exports.TransactionGetFastRecordQuery=exports.TransactionGetRecordResponse=exports.TransactionGetRecordQuery=exports.TransactionGetReceiptResponse=exports.TransactionGetReceiptQuery=exports.FileInfo=exports.FileGetInfoResponse=exports.FileGetInfoQuery=exports.FileContents=exports.FileGetContentsResponse=exports.FileGetContentsQuery=exports.CryptoGetStakersResponse=exports.AllProxyStakers=exports.ProxyStaker=exports.CryptoGetStakersQuery=exports.CryptoGetLiveHashResponse=exports.CryptoGetLiveHashQuery=exports.AccountInfo=exports.CryptoGetInfoResponse=exports.CryptoGetInfoQuery=exports.CryptoGetAccountRecordsResponse=exports.CryptoGetAccountRecordsQuery=exports.CryptoGetAccountBalanceResponse=exports.CryptoGetAccountBalanceQuery=exports.ExchangeRateSet=exports.ExchangeRate=exports.TransactionReceipt=exports.TransactionRecord=exports.ContractGetRecordsResponse=exports.ContractGetRecordsQuery=exports.ContractGetBytecodeResponse=exports.ContractGetBytecodeQuery=exports.ContractInfo=exports.ContractGetInfoResponse=exports.ContractGetInfoQuery=exports.ContractCallLocalResponse=exports.ContractCallLocalQuery=exports.ContractFunctionResult=exports.ContractLoginfo=exports.GetBySolidityIDResponse=exports.GetBySolidityIDQuery=exports.GetByKeyResponse=exports.EntityID=exports.GetByKeyQuery=exports.Query=exports.ConsensusService=exports.ConsensusTopicInfo=exports.ResponseCodeEnum=exports.TransactionResponse=exports.ResponseHeader=exports.ScheduleSignTransactionBody=void 0;var $protobuf=_interopRequireWildcard(__nccwpck_require__(6738)),_proto=__nccwpck_require__(3969);function _getRequireWildcardCache(a){if("function"!=typeof WeakMap)return null;var b=new WeakMap,c=new WeakMap;return(_getRequireWildcardCache=function(a){return a?c:b})(a)}function _interopRequireWildcard(a,b){if(!b&&a&&a.__esModule)return a;if(null===a||"object"!=typeof a&&"function"!=typeof a)return{default:a};var c=_getRequireWildcardCache(b);if(c&&c.has(a))return c.get(a);var d={},e=Object.defineProperty&&Object.getOwnPropertyDescriptor;for(var f in a)if("default"!=f&&Object.prototype.hasOwnProperty.call(a,f)){var g=e?Object.getOwnPropertyDescriptor(a,f):null;g&&(g.get||g.set)?Object.defineProperty(d,f,g):d[f]=a[f]}return d.default=a,c&&c.set(a,d),d}const Reader=$protobuf.Reader;exports.Reader=Reader;const Writer=$protobuf.Writer;exports.Writer=Writer;const TokenUnitBalance=_proto.proto.TokenUnitBalance;exports.TokenUnitBalance=TokenUnitBalance;const SingleAccountBalances=_proto.proto.SingleAccountBalances;exports.SingleAccountBalances=SingleAccountBalances;const AllAccountBalances=_proto.proto.AllAccountBalances;exports.AllAccountBalances=AllAccountBalances;const ShardID=_proto.proto.ShardID;exports.ShardID=ShardID;const RealmID=_proto.proto.RealmID;exports.RealmID=RealmID;const AccountID=_proto.proto.AccountID;exports.AccountID=AccountID;const FileID=_proto.proto.FileID;exports.FileID=FileID;const ContractID=_proto.proto.ContractID;exports.ContractID=ContractID;const TransactionID=_proto.proto.TransactionID;exports.TransactionID=TransactionID;const AccountAmount=_proto.proto.AccountAmount;exports.AccountAmount=AccountAmount;const TransferList=_proto.proto.TransferList;exports.TransferList=TransferList;const NftTransfer=_proto.proto.NftTransfer;exports.NftTransfer=NftTransfer;const TokenTransferList=_proto.proto.TokenTransferList;exports.TokenTransferList=TokenTransferList;const Fraction=_proto.proto.Fraction;exports.Fraction=Fraction;const TopicID=_proto.proto.TopicID;exports.TopicID=TopicID;const TokenID=_proto.proto.TokenID;exports.TokenID=TokenID;const ScheduleID=_proto.proto.ScheduleID;exports.ScheduleID=ScheduleID;const TokenType=_proto.proto.TokenType;exports.TokenType=TokenType;const SubType=_proto.proto.SubType;exports.SubType=SubType;const TokenSupplyType=_proto.proto.TokenSupplyType;exports.TokenSupplyType=TokenSupplyType;const TokenFreezeStatus=_proto.proto.TokenFreezeStatus;exports.TokenFreezeStatus=TokenFreezeStatus;const TokenKycStatus=_proto.proto.TokenKycStatus;exports.TokenKycStatus=TokenKycStatus;const Key=_proto.proto.Key;exports.Key=Key;const ThresholdKey=_proto.proto.ThresholdKey;exports.ThresholdKey=ThresholdKey;const KeyList=_proto.proto.KeyList;exports.KeyList=KeyList;const Signature=_proto.proto.Signature;exports.Signature=Signature;const ThresholdSignature=_proto.proto.ThresholdSignature;exports.ThresholdSignature=ThresholdSignature;const SignatureList=_proto.proto.SignatureList;exports.SignatureList=SignatureList;const SignaturePair=_proto.proto.SignaturePair;exports.SignaturePair=SignaturePair;const SignatureMap=_proto.proto.SignatureMap;exports.SignatureMap=SignatureMap;const HederaFunctionality=_proto.proto.HederaFunctionality;exports.HederaFunctionality=HederaFunctionality;const FeeComponents=_proto.proto.FeeComponents;exports.FeeComponents=FeeComponents;const TransactionFeeSchedule=_proto.proto.TransactionFeeSchedule;exports.TransactionFeeSchedule=TransactionFeeSchedule;const FeeData=_proto.proto.FeeData;exports.FeeData=FeeData;const FeeSchedule=_proto.proto.FeeSchedule;exports.FeeSchedule=FeeSchedule;const CurrentAndNextFeeSchedule=_proto.proto.CurrentAndNextFeeSchedule;exports.CurrentAndNextFeeSchedule=CurrentAndNextFeeSchedule;const ServiceEndpoint=_proto.proto.ServiceEndpoint;exports.ServiceEndpoint=ServiceEndpoint;const NodeAddress=_proto.proto.NodeAddress;exports.NodeAddress=NodeAddress;const NodeAddressBook=_proto.proto.NodeAddressBook;exports.NodeAddressBook=NodeAddressBook;const SemanticVersion=_proto.proto.SemanticVersion;exports.SemanticVersion=SemanticVersion;const Setting=_proto.proto.Setting;exports.Setting=Setting;const ServicesConfigurationList=_proto.proto.ServicesConfigurationList;exports.ServicesConfigurationList=ServicesConfigurationList;const TokenRelationship=_proto.proto.TokenRelationship;exports.TokenRelationship=TokenRelationship;const TokenBalance=_proto.proto.TokenBalance;exports.TokenBalance=TokenBalance;const TokenBalances=_proto.proto.TokenBalances;exports.TokenBalances=TokenBalances;const Timestamp=_proto.proto.Timestamp;exports.Timestamp=Timestamp;const TimestampSeconds=_proto.proto.TimestampSeconds;exports.TimestampSeconds=TimestampSeconds;const ConsensusCreateTopicTransactionBody=_proto.proto.ConsensusCreateTopicTransactionBody;exports.ConsensusCreateTopicTransactionBody=ConsensusCreateTopicTransactionBody;const Duration=_proto.proto.Duration;exports.Duration=Duration;const ConsensusDeleteTopicTransactionBody=_proto.proto.ConsensusDeleteTopicTransactionBody;exports.ConsensusDeleteTopicTransactionBody=ConsensusDeleteTopicTransactionBody;const ConsensusGetTopicInfoQuery=_proto.proto.ConsensusGetTopicInfoQuery;exports.ConsensusGetTopicInfoQuery=ConsensusGetTopicInfoQuery;const ConsensusGetTopicInfoResponse=_proto.proto.ConsensusGetTopicInfoResponse;exports.ConsensusGetTopicInfoResponse=ConsensusGetTopicInfoResponse;const ResponseType=_proto.proto.ResponseType;exports.ResponseType=ResponseType;const QueryHeader=_proto.proto.QueryHeader;exports.QueryHeader=QueryHeader;const Transaction=_proto.proto.Transaction;exports.Transaction=Transaction;const TransactionBody=_proto.proto.TransactionBody;exports.TransactionBody=TransactionBody;const SystemDeleteTransactionBody=_proto.proto.SystemDeleteTransactionBody;exports.SystemDeleteTransactionBody=SystemDeleteTransactionBody;const SystemUndeleteTransactionBody=_proto.proto.SystemUndeleteTransactionBody;exports.SystemUndeleteTransactionBody=SystemUndeleteTransactionBody;const FreezeTransactionBody=_proto.proto.FreezeTransactionBody;exports.FreezeTransactionBody=FreezeTransactionBody;const ContractCallTransactionBody=_proto.proto.ContractCallTransactionBody;exports.ContractCallTransactionBody=ContractCallTransactionBody;const ContractCreateTransactionBody=_proto.proto.ContractCreateTransactionBody;exports.ContractCreateTransactionBody=ContractCreateTransactionBody;const ContractUpdateTransactionBody=_proto.proto.ContractUpdateTransactionBody;exports.ContractUpdateTransactionBody=ContractUpdateTransactionBody;const LiveHash=_proto.proto.LiveHash;exports.LiveHash=LiveHash;const CryptoAddLiveHashTransactionBody=_proto.proto.CryptoAddLiveHashTransactionBody;exports.CryptoAddLiveHashTransactionBody=CryptoAddLiveHashTransactionBody;const CryptoCreateTransactionBody=_proto.proto.CryptoCreateTransactionBody;exports.CryptoCreateTransactionBody=CryptoCreateTransactionBody;const CryptoDeleteTransactionBody=_proto.proto.CryptoDeleteTransactionBody;exports.CryptoDeleteTransactionBody=CryptoDeleteTransactionBody;const CryptoDeleteLiveHashTransactionBody=_proto.proto.CryptoDeleteLiveHashTransactionBody;exports.CryptoDeleteLiveHashTransactionBody=CryptoDeleteLiveHashTransactionBody;const CryptoTransferTransactionBody=_proto.proto.CryptoTransferTransactionBody;exports.CryptoTransferTransactionBody=CryptoTransferTransactionBody;const CryptoUpdateTransactionBody=_proto.proto.CryptoUpdateTransactionBody;exports.CryptoUpdateTransactionBody=CryptoUpdateTransactionBody;const FileAppendTransactionBody=_proto.proto.FileAppendTransactionBody;exports.FileAppendTransactionBody=FileAppendTransactionBody;const FileCreateTransactionBody=_proto.proto.FileCreateTransactionBody;exports.FileCreateTransactionBody=FileCreateTransactionBody;const FileDeleteTransactionBody=_proto.proto.FileDeleteTransactionBody;exports.FileDeleteTransactionBody=FileDeleteTransactionBody;const FileUpdateTransactionBody=_proto.proto.FileUpdateTransactionBody;exports.FileUpdateTransactionBody=FileUpdateTransactionBody;const ContractDeleteTransactionBody=_proto.proto.ContractDeleteTransactionBody;exports.ContractDeleteTransactionBody=ContractDeleteTransactionBody;const ConsensusUpdateTopicTransactionBody=_proto.proto.ConsensusUpdateTopicTransactionBody;exports.ConsensusUpdateTopicTransactionBody=ConsensusUpdateTopicTransactionBody;const ConsensusMessageChunkInfo=_proto.proto.ConsensusMessageChunkInfo;exports.ConsensusMessageChunkInfo=ConsensusMessageChunkInfo;const ConsensusSubmitMessageTransactionBody=_proto.proto.ConsensusSubmitMessageTransactionBody;exports.ConsensusSubmitMessageTransactionBody=ConsensusSubmitMessageTransactionBody;const UncheckedSubmitBody=_proto.proto.UncheckedSubmitBody;exports.UncheckedSubmitBody=UncheckedSubmitBody;const TokenCreateTransactionBody=_proto.proto.TokenCreateTransactionBody;exports.TokenCreateTransactionBody=TokenCreateTransactionBody;const FractionalFee=_proto.proto.FractionalFee;exports.FractionalFee=FractionalFee;const FixedFee=_proto.proto.FixedFee;exports.FixedFee=FixedFee;const CustomFee=_proto.proto.CustomFee;exports.CustomFee=CustomFee;const AssessedCustomFee=_proto.proto.AssessedCustomFee;exports.AssessedCustomFee=AssessedCustomFee;const TokenFreezeAccountTransactionBody=_proto.proto.TokenFreezeAccountTransactionBody;exports.TokenFreezeAccountTransactionBody=TokenFreezeAccountTransactionBody;const TokenUnfreezeAccountTransactionBody=_proto.proto.TokenUnfreezeAccountTransactionBody;exports.TokenUnfreezeAccountTransactionBody=TokenUnfreezeAccountTransactionBody;const TokenGrantKycTransactionBody=_proto.proto.TokenGrantKycTransactionBody;exports.TokenGrantKycTransactionBody=TokenGrantKycTransactionBody;const TokenRevokeKycTransactionBody=_proto.proto.TokenRevokeKycTransactionBody;exports.TokenRevokeKycTransactionBody=TokenRevokeKycTransactionBody;const TokenDeleteTransactionBody=_proto.proto.TokenDeleteTransactionBody;exports.TokenDeleteTransactionBody=TokenDeleteTransactionBody;const TokenUpdateTransactionBody=_proto.proto.TokenUpdateTransactionBody;exports.TokenUpdateTransactionBody=TokenUpdateTransactionBody;const TokenMintTransactionBody=_proto.proto.TokenMintTransactionBody;exports.TokenMintTransactionBody=TokenMintTransactionBody;const TokenBurnTransactionBody=_proto.proto.TokenBurnTransactionBody;exports.TokenBurnTransactionBody=TokenBurnTransactionBody;const TokenWipeAccountTransactionBody=_proto.proto.TokenWipeAccountTransactionBody;exports.TokenWipeAccountTransactionBody=TokenWipeAccountTransactionBody;const TokenAssociateTransactionBody=_proto.proto.TokenAssociateTransactionBody;exports.TokenAssociateTransactionBody=TokenAssociateTransactionBody;const TokenDissociateTransactionBody=_proto.proto.TokenDissociateTransactionBody;exports.TokenDissociateTransactionBody=TokenDissociateTransactionBody;const TokenFeeScheduleUpdateTransactionBody=_proto.proto.TokenFeeScheduleUpdateTransactionBody;exports.TokenFeeScheduleUpdateTransactionBody=TokenFeeScheduleUpdateTransactionBody;const ScheduleCreateTransactionBody=_proto.proto.ScheduleCreateTransactionBody;exports.ScheduleCreateTransactionBody=ScheduleCreateTransactionBody;const SchedulableTransactionBody=_proto.proto.SchedulableTransactionBody;exports.SchedulableTransactionBody=SchedulableTransactionBody;const ScheduleDeleteTransactionBody=_proto.proto.ScheduleDeleteTransactionBody;exports.ScheduleDeleteTransactionBody=ScheduleDeleteTransactionBody;const ScheduleSignTransactionBody=_proto.proto.ScheduleSignTransactionBody;exports.ScheduleSignTransactionBody=ScheduleSignTransactionBody;const ResponseHeader=_proto.proto.ResponseHeader;exports.ResponseHeader=ResponseHeader;const TransactionResponse=_proto.proto.TransactionResponse;exports.TransactionResponse=TransactionResponse;const ResponseCodeEnum=_proto.proto.ResponseCodeEnum;exports.ResponseCodeEnum=ResponseCodeEnum;const ConsensusTopicInfo=_proto.proto.ConsensusTopicInfo;exports.ConsensusTopicInfo=ConsensusTopicInfo;const ConsensusService=_proto.proto.ConsensusService;exports.ConsensusService=ConsensusService;const Query=_proto.proto.Query;exports.Query=Query;const GetByKeyQuery=_proto.proto.GetByKeyQuery;exports.GetByKeyQuery=GetByKeyQuery;const EntityID=_proto.proto.EntityID;exports.EntityID=EntityID;const GetByKeyResponse=_proto.proto.GetByKeyResponse;exports.GetByKeyResponse=GetByKeyResponse;const GetBySolidityIDQuery=_proto.proto.GetBySolidityIDQuery;exports.GetBySolidityIDQuery=GetBySolidityIDQuery;const GetBySolidityIDResponse=_proto.proto.GetBySolidityIDResponse;exports.GetBySolidityIDResponse=GetBySolidityIDResponse;const ContractLoginfo=_proto.proto.ContractLoginfo;exports.ContractLoginfo=ContractLoginfo;const ContractFunctionResult=_proto.proto.ContractFunctionResult;exports.ContractFunctionResult=ContractFunctionResult;const ContractCallLocalQuery=_proto.proto.ContractCallLocalQuery;exports.ContractCallLocalQuery=ContractCallLocalQuery;const ContractCallLocalResponse=_proto.proto.ContractCallLocalResponse;exports.ContractCallLocalResponse=ContractCallLocalResponse;const ContractGetInfoQuery=_proto.proto.ContractGetInfoQuery;exports.ContractGetInfoQuery=ContractGetInfoQuery;const ContractGetInfoResponse=_proto.proto.ContractGetInfoResponse;exports.ContractGetInfoResponse=ContractGetInfoResponse;const ContractInfo=_proto.proto.ContractGetInfoResponse.ContractInfo;exports.ContractInfo=ContractInfo;const ContractGetBytecodeQuery=_proto.proto.ContractGetBytecodeQuery;exports.ContractGetBytecodeQuery=ContractGetBytecodeQuery;const ContractGetBytecodeResponse=_proto.proto.ContractGetBytecodeResponse;exports.ContractGetBytecodeResponse=ContractGetBytecodeResponse;const ContractGetRecordsQuery=_proto.proto.ContractGetRecordsQuery;exports.ContractGetRecordsQuery=ContractGetRecordsQuery;const ContractGetRecordsResponse=_proto.proto.ContractGetRecordsResponse;exports.ContractGetRecordsResponse=ContractGetRecordsResponse;const TransactionRecord=_proto.proto.TransactionRecord;exports.TransactionRecord=TransactionRecord;const TransactionReceipt=_proto.proto.TransactionReceipt;exports.TransactionReceipt=TransactionReceipt;const ExchangeRate=_proto.proto.ExchangeRate;exports.ExchangeRate=ExchangeRate;const ExchangeRateSet=_proto.proto.ExchangeRateSet;exports.ExchangeRateSet=ExchangeRateSet;const CryptoGetAccountBalanceQuery=_proto.proto.CryptoGetAccountBalanceQuery;exports.CryptoGetAccountBalanceQuery=CryptoGetAccountBalanceQuery;const CryptoGetAccountBalanceResponse=_proto.proto.CryptoGetAccountBalanceResponse;exports.CryptoGetAccountBalanceResponse=CryptoGetAccountBalanceResponse;const CryptoGetAccountRecordsQuery=_proto.proto.CryptoGetAccountRecordsQuery;exports.CryptoGetAccountRecordsQuery=CryptoGetAccountRecordsQuery;const CryptoGetAccountRecordsResponse=_proto.proto.CryptoGetAccountRecordsResponse;exports.CryptoGetAccountRecordsResponse=CryptoGetAccountRecordsResponse;const CryptoGetInfoQuery=_proto.proto.CryptoGetInfoQuery;exports.CryptoGetInfoQuery=CryptoGetInfoQuery;const CryptoGetInfoResponse=_proto.proto.CryptoGetInfoResponse;exports.CryptoGetInfoResponse=CryptoGetInfoResponse;const AccountInfo=_proto.proto.CryptoGetInfoResponse.AccountInfo;exports.AccountInfo=AccountInfo;const CryptoGetLiveHashQuery=_proto.proto.CryptoGetLiveHashQuery;exports.CryptoGetLiveHashQuery=CryptoGetLiveHashQuery;const CryptoGetLiveHashResponse=_proto.proto.CryptoGetLiveHashResponse;exports.CryptoGetLiveHashResponse=CryptoGetLiveHashResponse;const CryptoGetStakersQuery=_proto.proto.CryptoGetStakersQuery;exports.CryptoGetStakersQuery=CryptoGetStakersQuery;const ProxyStaker=_proto.proto.ProxyStaker;exports.ProxyStaker=ProxyStaker;const AllProxyStakers=_proto.proto.AllProxyStakers;exports.AllProxyStakers=AllProxyStakers;const CryptoGetStakersResponse=_proto.proto.CryptoGetStakersResponse;exports.CryptoGetStakersResponse=CryptoGetStakersResponse;const FileGetContentsQuery=_proto.proto.FileGetContentsQuery;exports.FileGetContentsQuery=FileGetContentsQuery;const FileGetContentsResponse=_proto.proto.FileGetContentsResponse;exports.FileGetContentsResponse=FileGetContentsResponse;const FileContents=_proto.proto.FileGetContentsResponse.FileContents;exports.FileContents=FileContents;const FileGetInfoQuery=_proto.proto.FileGetInfoQuery;exports.FileGetInfoQuery=FileGetInfoQuery;const FileGetInfoResponse=_proto.proto.FileGetInfoResponse;exports.FileGetInfoResponse=FileGetInfoResponse;const FileInfo=_proto.proto.FileGetInfoResponse.FileInfo;exports.FileInfo=FileInfo;const TransactionGetReceiptQuery=_proto.proto.TransactionGetReceiptQuery;exports.TransactionGetReceiptQuery=TransactionGetReceiptQuery;const TransactionGetReceiptResponse=_proto.proto.TransactionGetReceiptResponse;exports.TransactionGetReceiptResponse=TransactionGetReceiptResponse;const TransactionGetRecordQuery=_proto.proto.TransactionGetRecordQuery;exports.TransactionGetRecordQuery=TransactionGetRecordQuery;const TransactionGetRecordResponse=_proto.proto.TransactionGetRecordResponse;exports.TransactionGetRecordResponse=TransactionGetRecordResponse;const TransactionGetFastRecordQuery=_proto.proto.TransactionGetFastRecordQuery;exports.TransactionGetFastRecordQuery=TransactionGetFastRecordQuery;const TransactionGetFastRecordResponse=_proto.proto.TransactionGetFastRecordResponse;exports.TransactionGetFastRecordResponse=TransactionGetFastRecordResponse;const NetworkGetVersionInfoQuery=_proto.proto.NetworkGetVersionInfoQuery;exports.NetworkGetVersionInfoQuery=NetworkGetVersionInfoQuery;const NetworkGetVersionInfoResponse=_proto.proto.NetworkGetVersionInfoResponse;exports.NetworkGetVersionInfoResponse=NetworkGetVersionInfoResponse;const TokenGetInfoQuery=_proto.proto.TokenGetInfoQuery;exports.TokenGetInfoQuery=TokenGetInfoQuery;const TokenInfo=_proto.proto.TokenInfo;exports.TokenInfo=TokenInfo;const TokenGetInfoResponse=_proto.proto.TokenGetInfoResponse;exports.TokenGetInfoResponse=TokenGetInfoResponse;const ScheduleGetInfoQuery=_proto.proto.ScheduleGetInfoQuery;exports.ScheduleGetInfoQuery=ScheduleGetInfoQuery;const ScheduleInfo=_proto.proto.ScheduleInfo;exports.ScheduleInfo=ScheduleInfo;const ScheduleGetInfoResponse=_proto.proto.ScheduleGetInfoResponse;exports.ScheduleGetInfoResponse=ScheduleGetInfoResponse;const TokenGetAccountNftInfosQuery=_proto.proto.TokenGetAccountNftInfosQuery;exports.TokenGetAccountNftInfosQuery=TokenGetAccountNftInfosQuery;const TokenGetAccountNftInfosResponse=_proto.proto.TokenGetAccountNftInfosResponse;exports.TokenGetAccountNftInfosResponse=TokenGetAccountNftInfosResponse;const NftID=_proto.proto.NftID;exports.NftID=NftID;const TokenGetNftInfoQuery=_proto.proto.TokenGetNftInfoQuery;exports.TokenGetNftInfoQuery=TokenGetNftInfoQuery;const TokenNftInfo=_proto.proto.TokenNftInfo;exports.TokenNftInfo=TokenNftInfo;const TokenGetNftInfoResponse=_proto.proto.TokenGetNftInfoResponse;exports.TokenGetNftInfoResponse=TokenGetNftInfoResponse;const TokenGetNftInfosQuery=_proto.proto.TokenGetNftInfosQuery;exports.TokenGetNftInfosQuery=TokenGetNftInfosQuery;const TokenGetNftInfosResponse=_proto.proto.TokenGetNftInfosResponse;exports.TokenGetNftInfosResponse=TokenGetNftInfosResponse;const Response=_proto.proto.Response;exports.Response=Response;const Claim=_proto.proto.Claim;exports.Claim=Claim;const CryptoAddClaimTransactionBody=_proto.proto.CryptoAddClaimTransactionBody;exports.CryptoAddClaimTransactionBody=CryptoAddClaimTransactionBody;const CryptoDeleteClaimTransactionBody=_proto.proto.CryptoDeleteClaimTransactionBody;exports.CryptoDeleteClaimTransactionBody=CryptoDeleteClaimTransactionBody;const CryptoGetClaimQuery=_proto.proto.CryptoGetClaimQuery;exports.CryptoGetClaimQuery=CryptoGetClaimQuery;const CryptoGetClaimResponse=_proto.proto.CryptoGetClaimResponse;exports.CryptoGetClaimResponse=CryptoGetClaimResponse;const CryptoService=_proto.proto.CryptoService;exports.CryptoService=CryptoService;const FileService=_proto.proto.FileService;exports.FileService=FileService;const FreezeService=_proto.proto.FreezeService;exports.FreezeService=FreezeService;const ConsensusTopicQuery=_proto.proto.ConsensusTopicQuery;exports.ConsensusTopicQuery=ConsensusTopicQuery;const ConsensusTopicResponse=_proto.proto.ConsensusTopicResponse;exports.ConsensusTopicResponse=ConsensusTopicResponse;const MirrorConsensusService=_proto.proto.MirrorConsensusService;exports.MirrorConsensusService=MirrorConsensusService;const NetworkService=_proto.proto.NetworkService;exports.NetworkService=NetworkService;const ScheduleService=_proto.proto.ScheduleService;exports.ScheduleService=ScheduleService;const SmartContractService=_proto.proto.SmartContractService;exports.SmartContractService=SmartContractService;const ThrottleGroup=_proto.proto.ThrottleGroup;exports.ThrottleGroup=ThrottleGroup;const ThrottleBucket=_proto.proto.ThrottleBucket;exports.ThrottleBucket=ThrottleBucket;const ThrottleDefinitions=_proto.proto.ThrottleDefinitions;exports.ThrottleDefinitions=ThrottleDefinitions;const TokenGetAccountNftInfoQuery=_proto.proto.TokenGetAccountNftInfoQuery;exports.TokenGetAccountNftInfoQuery=TokenGetAccountNftInfoQuery;const TokenGetAccountNftInfoResponse=_proto.proto.TokenGetAccountNftInfoResponse;exports.TokenGetAccountNftInfoResponse=TokenGetAccountNftInfoResponse;const TokenService=_proto.proto.TokenService;exports.TokenService=TokenService;const TokenTransfersTransactionBody=_proto.proto.TokenTransfersTransactionBody;exports.TokenTransfersTransactionBody=TokenTransfersTransactionBody;const SignedTransaction=_proto.proto.SignedTransaction;exports.SignedTransaction=SignedTransaction;const TransactionList=_proto.proto.TransactionList;exports.TransactionList=TransactionList;const DoubleValue=_proto.proto.DoubleValue;exports.DoubleValue=DoubleValue;const FloatValue=_proto.proto.FloatValue;exports.FloatValue=FloatValue;const UInt64Value=_proto.proto.UInt64Value;exports.UInt64Value=UInt64Value;const UInt32Value=_proto.proto.UInt32Value;exports.UInt32Value=UInt32Value;const BoolValue=_proto.proto.BoolValue;exports.BoolValue=BoolValue;const StringValue=_proto.proto.StringValue;exports.StringValue=StringValue;const BytesValue=_proto.proto.BytesValue;exports.BytesValue=BytesValue;
 
 /***/ }),
 
@@ -8709,7 +8726,7 @@ Object.defineProperty(exports, "__esModule", ({value:!0})),exports.TransactionRe
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
-var $protobuf=_interopRequireWildcard(__nccwpck_require__(6738));Object.defineProperty(exports, "__esModule", ({value:!0})),exports.default=exports.google=exports.proto=void 0;function _getRequireWildcardCache(e){if("function"!=typeof WeakMap)return null;var o=new WeakMap,t=new WeakMap;return(_getRequireWildcardCache=function(e){return e?t:o})(e)}function _interopRequireWildcard(e,o){if(!o&&e&&e.__esModule)return e;if(null===e||"object"!=typeof e&&"function"!=typeof e)return{default:e};var t=_getRequireWildcardCache(o);if(t&&t.has(e))return t.get(e);var n={},r=Object.defineProperty&&Object.getOwnPropertyDescriptor;for(var d in e)if("default"!=d&&Object.prototype.hasOwnProperty.call(e,d)){var i=r?Object.getOwnPropertyDescriptor(e,d):null;i&&(i.get||i.set)?Object.defineProperty(n,d,i):n[d]=e[d]}return n.default=e,t&&t.set(e,n),n}const $Reader=$protobuf.Reader,$Writer=$protobuf.Writer,$util=$protobuf.util,$root=$protobuf.roots["default"]||($protobuf.roots["default"]={});exports.default=$root;const proto=$root.proto=(()=>{const e={TokenUnitBalance:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenId=null,e.prototype.balance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.tokenId&&Object.hasOwnProperty.call(e,"tokenId")&&$root.proto.TokenID.encode(e.tokenId,o.uint32(10).fork()).ldelim(),null!=e.balance&&Object.hasOwnProperty.call(e,"balance")&&o.uint32(16).uint64(e.balance),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenUnitBalance,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenId=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.balance=e.uint64();break;default:e.skipType(7&i);}return d},e}(),SingleAccountBalances:function(){function e(e){if(this.tokenUnitBalances=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountID=null,e.prototype.hbarBalance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.tokenUnitBalances=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.hbarBalance&&Object.hasOwnProperty.call(e,"hbarBalance")&&o.uint32(16).uint64(e.hbarBalance),null!=e.tokenUnitBalances&&e.tokenUnitBalances.length)for(var t=0;t<e.tokenUnitBalances.length;++t)$root.proto.TokenUnitBalance.encode(e.tokenUnitBalances[t],o.uint32(26).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SingleAccountBalances,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.hbarBalance=e.uint64();break;case 3:d.tokenUnitBalances&&d.tokenUnitBalances.length||(d.tokenUnitBalances=[]),d.tokenUnitBalances.push($root.proto.TokenUnitBalance.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),AllAccountBalances:function(){function e(e){if(this.allAccounts=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.consensusTimestamp=null,e.prototype.allAccounts=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.consensusTimestamp&&Object.hasOwnProperty.call(e,"consensusTimestamp")&&$root.proto.Timestamp.encode(e.consensusTimestamp,o.uint32(10).fork()).ldelim(),null!=e.allAccounts&&e.allAccounts.length)for(var t=0;t<e.allAccounts.length;++t)$root.proto.SingleAccountBalances.encode(e.allAccounts[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.AllAccountBalances,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.consensusTimestamp=$root.proto.Timestamp.decode(e,e.uint32());break;case 2:d.allAccounts&&d.allAccounts.length||(d.allAccounts=[]),d.allAccounts.push($root.proto.SingleAccountBalances.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),ShardID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ShardID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),RealmID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.RealmID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),AccountID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.accountNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),null!=e.accountNum&&Object.hasOwnProperty.call(e,"accountNum")&&o.uint32(24).int64(e.accountNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.AccountID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;case 3:d.accountNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),FileID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.fileNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),null!=e.fileNum&&Object.hasOwnProperty.call(e,"fileNum")&&o.uint32(24).int64(e.fileNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;case 3:d.fileNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),ContractID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.contractNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),null!=e.contractNum&&Object.hasOwnProperty.call(e,"contractNum")&&o.uint32(24).int64(e.contractNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;case 3:d.contractNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),TransactionID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.transactionValidStart=null,e.prototype.accountID=null,e.prototype.scheduled=!1,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.transactionValidStart&&Object.hasOwnProperty.call(e,"transactionValidStart")&&$root.proto.Timestamp.encode(e.transactionValidStart,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.scheduled&&Object.hasOwnProperty.call(e,"scheduled")&&o.uint32(24).bool(e.scheduled),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transactionValidStart=$root.proto.Timestamp.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.scheduled=e.bool();break;default:e.skipType(7&i);}return d},e}(),AccountAmount:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountID=null,e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(16).sint64(e.amount),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.AccountAmount,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.amount=e.sint64();break;default:e.skipType(7&i);}return d},e}(),TransferList:function(){function e(e){if(this.accountAmounts=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountAmounts=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.accountAmounts&&e.accountAmounts.length)for(var t=0;t<e.accountAmounts.length;++t)$root.proto.AccountAmount.encode(e.accountAmounts[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransferList,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountAmounts&&d.accountAmounts.length||(d.accountAmounts=[]),d.accountAmounts.push($root.proto.AccountAmount.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TokenTransferList:function(){function e(e){if(this.transfers=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.transfers=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.transfers&&e.transfers.length)for(var t=0;t<e.transfers.length;++t)$root.proto.AccountAmount.encode(e.transfers[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenTransferList,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.transfers&&d.transfers.length||(d.transfers=[]),d.transfers.push($root.proto.AccountAmount.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TopicID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.topicNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),null!=e.topicNum&&Object.hasOwnProperty.call(e,"topicNum")&&o.uint32(24).int64(e.topicNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TopicID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;case 3:d.topicNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),TokenID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.tokenNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),null!=e.tokenNum&&Object.hasOwnProperty.call(e,"tokenNum")&&o.uint32(24).int64(e.tokenNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;case 3:d.tokenNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),ScheduleID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.scheduleNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),null!=e.scheduleNum&&Object.hasOwnProperty.call(e,"scheduleNum")&&o.uint32(24).int64(e.scheduleNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;case 3:d.scheduleNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),TokenFreezeStatus:function(){const e={},o=Object.create(e);return o[e[0]="FreezeNotApplicable"]=0,o[e[1]="Frozen"]=1,o[e[2]="Unfrozen"]=2,o}(),TokenKycStatus:function(){const e={},o=Object.create(e);return o[e[0]="KycNotApplicable"]=0,o[e[1]="Granted"]=1,o[e[2]="Revoked"]=2,o}(),Key:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.contractID=null,e.prototype.ed25519=null,e.prototype.RSA_3072=null,e.prototype.ECDSA_384=null,e.prototype.thresholdKey=null,e.prototype.keyList=null;let o;return Object.defineProperty(e.prototype,"key",{get:$util.oneOfGetter(o=["contractID","ed25519","RSA_3072","ECDSA_384","thresholdKey","keyList"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.ed25519&&Object.hasOwnProperty.call(e,"ed25519")&&o.uint32(18).bytes(e.ed25519),null!=e.RSA_3072&&Object.hasOwnProperty.call(e,"RSA_3072")&&o.uint32(26).bytes(e.RSA_3072),null!=e.ECDSA_384&&Object.hasOwnProperty.call(e,"ECDSA_384")&&o.uint32(34).bytes(e.ECDSA_384),null!=e.thresholdKey&&Object.hasOwnProperty.call(e,"thresholdKey")&&$root.proto.ThresholdKey.encode(e.thresholdKey,o.uint32(42).fork()).ldelim(),null!=e.keyList&&Object.hasOwnProperty.call(e,"keyList")&&$root.proto.KeyList.encode(e.keyList,o.uint32(50).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Key,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.ed25519=e.bytes();break;case 3:d.RSA_3072=e.bytes();break;case 4:d.ECDSA_384=e.bytes();break;case 5:d.thresholdKey=$root.proto.ThresholdKey.decode(e,e.uint32());break;case 6:d.keyList=$root.proto.KeyList.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ThresholdKey:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.threshold=0,e.prototype.keys=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.threshold&&Object.hasOwnProperty.call(e,"threshold")&&o.uint32(8).uint32(e.threshold),null!=e.keys&&Object.hasOwnProperty.call(e,"keys")&&$root.proto.KeyList.encode(e.keys,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ThresholdKey,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.threshold=e.uint32();break;case 2:d.keys=$root.proto.KeyList.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),KeyList:function(){function e(e){if(this.keys=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.keys=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.keys&&e.keys.length)for(var t=0;t<e.keys.length;++t)$root.proto.Key.encode(e.keys[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.KeyList,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.keys&&d.keys.length||(d.keys=[]),d.keys.push($root.proto.Key.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),Signature:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.contract=null,e.prototype.ed25519=null,e.prototype.RSA_3072=null,e.prototype.ECDSA_384=null,e.prototype.thresholdSignature=null,e.prototype.signatureList=null;let o;return Object.defineProperty(e.prototype,"signature",{get:$util.oneOfGetter(o=["contract","ed25519","RSA_3072","ECDSA_384","thresholdSignature","signatureList"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.contract&&Object.hasOwnProperty.call(e,"contract")&&o.uint32(10).bytes(e.contract),null!=e.ed25519&&Object.hasOwnProperty.call(e,"ed25519")&&o.uint32(18).bytes(e.ed25519),null!=e.RSA_3072&&Object.hasOwnProperty.call(e,"RSA_3072")&&o.uint32(26).bytes(e.RSA_3072),null!=e.ECDSA_384&&Object.hasOwnProperty.call(e,"ECDSA_384")&&o.uint32(34).bytes(e.ECDSA_384),null!=e.thresholdSignature&&Object.hasOwnProperty.call(e,"thresholdSignature")&&$root.proto.ThresholdSignature.encode(e.thresholdSignature,o.uint32(42).fork()).ldelim(),null!=e.signatureList&&Object.hasOwnProperty.call(e,"signatureList")&&$root.proto.SignatureList.encode(e.signatureList,o.uint32(50).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Signature,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contract=e.bytes();break;case 2:d.ed25519=e.bytes();break;case 3:d.RSA_3072=e.bytes();break;case 4:d.ECDSA_384=e.bytes();break;case 5:d.thresholdSignature=$root.proto.ThresholdSignature.decode(e,e.uint32());break;case 6:d.signatureList=$root.proto.SignatureList.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ThresholdSignature:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.sigs=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.sigs&&Object.hasOwnProperty.call(e,"sigs")&&$root.proto.SignatureList.encode(e.sigs,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ThresholdSignature,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 2:d.sigs=$root.proto.SignatureList.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),SignatureList:function(){function e(e){if(this.sigs=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.sigs=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.sigs&&e.sigs.length)for(var t=0;t<e.sigs.length;++t)$root.proto.Signature.encode(e.sigs[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SignatureList,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 2:d.sigs&&d.sigs.length||(d.sigs=[]),d.sigs.push($root.proto.Signature.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),SignaturePair:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.pubKeyPrefix=$util.newBuffer([]),e.prototype.contract=null,e.prototype.ed25519=null,e.prototype.RSA_3072=null,e.prototype.ECDSA_384=null;let o;return Object.defineProperty(e.prototype,"signature",{get:$util.oneOfGetter(o=["contract","ed25519","RSA_3072","ECDSA_384"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.pubKeyPrefix&&Object.hasOwnProperty.call(e,"pubKeyPrefix")&&o.uint32(10).bytes(e.pubKeyPrefix),null!=e.contract&&Object.hasOwnProperty.call(e,"contract")&&o.uint32(18).bytes(e.contract),null!=e.ed25519&&Object.hasOwnProperty.call(e,"ed25519")&&o.uint32(26).bytes(e.ed25519),null!=e.RSA_3072&&Object.hasOwnProperty.call(e,"RSA_3072")&&o.uint32(34).bytes(e.RSA_3072),null!=e.ECDSA_384&&Object.hasOwnProperty.call(e,"ECDSA_384")&&o.uint32(42).bytes(e.ECDSA_384),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SignaturePair,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.pubKeyPrefix=e.bytes();break;case 2:d.contract=e.bytes();break;case 3:d.ed25519=e.bytes();break;case 4:d.RSA_3072=e.bytes();break;case 5:d.ECDSA_384=e.bytes();break;default:e.skipType(7&i);}return d},e}(),SignatureMap:function(){function e(e){if(this.sigPair=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.sigPair=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.sigPair&&e.sigPair.length)for(var t=0;t<e.sigPair.length;++t)$root.proto.SignaturePair.encode(e.sigPair[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SignatureMap,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.sigPair&&d.sigPair.length||(d.sigPair=[]),d.sigPair.push($root.proto.SignaturePair.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),HederaFunctionality:function(){const e={},o=Object.create(e);return o[e[0]="NONE"]=0,o[e[1]="CryptoTransfer"]=1,o[e[2]="CryptoUpdate"]=2,o[e[3]="CryptoDelete"]=3,o[e[4]="CryptoAddLiveHash"]=4,o[e[5]="CryptoDeleteLiveHash"]=5,o[e[6]="ContractCall"]=6,o[e[7]="ContractCreate"]=7,o[e[8]="ContractUpdate"]=8,o[e[9]="FileCreate"]=9,o[e[10]="FileAppend"]=10,o[e[11]="FileUpdate"]=11,o[e[12]="FileDelete"]=12,o[e[13]="CryptoGetAccountBalance"]=13,o[e[14]="CryptoGetAccountRecords"]=14,o[e[15]="CryptoGetInfo"]=15,o[e[16]="ContractCallLocal"]=16,o[e[17]="ContractGetInfo"]=17,o[e[18]="ContractGetBytecode"]=18,o[e[19]="GetBySolidityID"]=19,o[e[20]="GetByKey"]=20,o[e[21]="CryptoGetLiveHash"]=21,o[e[22]="CryptoGetStakers"]=22,o[e[23]="FileGetContents"]=23,o[e[24]="FileGetInfo"]=24,o[e[25]="TransactionGetRecord"]=25,o[e[26]="ContractGetRecords"]=26,o[e[27]="CryptoCreate"]=27,o[e[28]="SystemDelete"]=28,o[e[29]="SystemUndelete"]=29,o[e[30]="ContractDelete"]=30,o[e[31]="Freeze"]=31,o[e[32]="CreateTransactionRecord"]=32,o[e[33]="CryptoAccountAutoRenew"]=33,o[e[34]="ContractAutoRenew"]=34,o[e[35]="GetVersionInfo"]=35,o[e[36]="TransactionGetReceipt"]=36,o[e[50]="ConsensusCreateTopic"]=50,o[e[51]="ConsensusUpdateTopic"]=51,o[e[52]="ConsensusDeleteTopic"]=52,o[e[53]="ConsensusGetTopicInfo"]=53,o[e[54]="ConsensusSubmitMessage"]=54,o[e[55]="UncheckedSubmit"]=55,o[e[56]="TokenCreate"]=56,o[e[58]="TokenGetInfo"]=58,o[e[59]="TokenFreezeAccount"]=59,o[e[60]="TokenUnfreezeAccount"]=60,o[e[61]="TokenGrantKycToAccount"]=61,o[e[62]="TokenRevokeKycFromAccount"]=62,o[e[63]="TokenDelete"]=63,o[e[64]="TokenUpdate"]=64,o[e[65]="TokenMint"]=65,o[e[66]="TokenBurn"]=66,o[e[67]="TokenAccountWipe"]=67,o[e[68]="TokenAssociateToAccount"]=68,o[e[69]="TokenDissociateFromAccount"]=69,o[e[70]="ScheduleCreate"]=70,o[e[71]="ScheduleDelete"]=71,o[e[72]="ScheduleSign"]=72,o[e[73]="ScheduleGetInfo"]=73,o}(),FeeComponents:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.min=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.max=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.constant=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.bpt=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.vpt=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.rbh=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.sbh=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.gas=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.tv=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.bpr=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.sbpr=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.min&&Object.hasOwnProperty.call(e,"min")&&o.uint32(8).int64(e.min),null!=e.max&&Object.hasOwnProperty.call(e,"max")&&o.uint32(16).int64(e.max),null!=e.constant&&Object.hasOwnProperty.call(e,"constant")&&o.uint32(24).int64(e.constant),null!=e.bpt&&Object.hasOwnProperty.call(e,"bpt")&&o.uint32(32).int64(e.bpt),null!=e.vpt&&Object.hasOwnProperty.call(e,"vpt")&&o.uint32(40).int64(e.vpt),null!=e.rbh&&Object.hasOwnProperty.call(e,"rbh")&&o.uint32(48).int64(e.rbh),null!=e.sbh&&Object.hasOwnProperty.call(e,"sbh")&&o.uint32(56).int64(e.sbh),null!=e.gas&&Object.hasOwnProperty.call(e,"gas")&&o.uint32(64).int64(e.gas),null!=e.tv&&Object.hasOwnProperty.call(e,"tv")&&o.uint32(72).int64(e.tv),null!=e.bpr&&Object.hasOwnProperty.call(e,"bpr")&&o.uint32(80).int64(e.bpr),null!=e.sbpr&&Object.hasOwnProperty.call(e,"sbpr")&&o.uint32(88).int64(e.sbpr),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FeeComponents,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.min=e.int64();break;case 2:d.max=e.int64();break;case 3:d.constant=e.int64();break;case 4:d.bpt=e.int64();break;case 5:d.vpt=e.int64();break;case 6:d.rbh=e.int64();break;case 7:d.sbh=e.int64();break;case 8:d.gas=e.int64();break;case 9:d.tv=e.int64();break;case 10:d.bpr=e.int64();break;case 11:d.sbpr=e.int64();break;default:e.skipType(7&i);}return d},e}(),TransactionFeeSchedule:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.hederaFunctionality=0,e.prototype.feeData=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.hederaFunctionality&&Object.hasOwnProperty.call(e,"hederaFunctionality")&&o.uint32(8).int32(e.hederaFunctionality),null!=e.feeData&&Object.hasOwnProperty.call(e,"feeData")&&$root.proto.FeeData.encode(e.feeData,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionFeeSchedule,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.hederaFunctionality=e.int32();break;case 2:d.feeData=$root.proto.FeeData.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FeeData:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.nodedata=null,e.prototype.networkdata=null,e.prototype.servicedata=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.nodedata&&Object.hasOwnProperty.call(e,"nodedata")&&$root.proto.FeeComponents.encode(e.nodedata,o.uint32(10).fork()).ldelim(),null!=e.networkdata&&Object.hasOwnProperty.call(e,"networkdata")&&$root.proto.FeeComponents.encode(e.networkdata,o.uint32(18).fork()).ldelim(),null!=e.servicedata&&Object.hasOwnProperty.call(e,"servicedata")&&$root.proto.FeeComponents.encode(e.servicedata,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FeeData,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.nodedata=$root.proto.FeeComponents.decode(e,e.uint32());break;case 2:d.networkdata=$root.proto.FeeComponents.decode(e,e.uint32());break;case 3:d.servicedata=$root.proto.FeeComponents.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FeeSchedule:function(){function e(e){if(this.transactionFeeSchedule=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.transactionFeeSchedule=$util.emptyArray,e.prototype.expiryTime=null,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.transactionFeeSchedule&&e.transactionFeeSchedule.length)for(var t=0;t<e.transactionFeeSchedule.length;++t)$root.proto.TransactionFeeSchedule.encode(e.transactionFeeSchedule[t],o.uint32(10).fork()).ldelim();return null!=e.expiryTime&&Object.hasOwnProperty.call(e,"expiryTime")&&$root.proto.TimestampSeconds.encode(e.expiryTime,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FeeSchedule,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transactionFeeSchedule&&d.transactionFeeSchedule.length||(d.transactionFeeSchedule=[]),d.transactionFeeSchedule.push($root.proto.TransactionFeeSchedule.decode(e,e.uint32()));break;case 2:d.expiryTime=$root.proto.TimestampSeconds.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CurrentAndNextFeeSchedule:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.currentFeeSchedule=null,e.prototype.nextFeeSchedule=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.currentFeeSchedule&&Object.hasOwnProperty.call(e,"currentFeeSchedule")&&$root.proto.FeeSchedule.encode(e.currentFeeSchedule,o.uint32(10).fork()).ldelim(),null!=e.nextFeeSchedule&&Object.hasOwnProperty.call(e,"nextFeeSchedule")&&$root.proto.FeeSchedule.encode(e.nextFeeSchedule,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CurrentAndNextFeeSchedule,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.currentFeeSchedule=$root.proto.FeeSchedule.decode(e,e.uint32());break;case 2:d.nextFeeSchedule=$root.proto.FeeSchedule.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),NodeEndpoint:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.ipAddress="",e.prototype.port="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.ipAddress&&Object.hasOwnProperty.call(e,"ipAddress")&&o.uint32(10).string(e.ipAddress),null!=e.port&&Object.hasOwnProperty.call(e,"port")&&o.uint32(18).string(e.port),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.NodeEndpoint,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.ipAddress=e.string();break;case 2:d.port=e.string();break;default:e.skipType(7&i);}return d},e}(),NodeAddress:function(){function e(e){if(this.nodeEndpoint=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.ipAddress=$util.newBuffer([]),e.prototype.portno=0,e.prototype.memo=$util.newBuffer([]),e.prototype.RSA_PubKey="",e.prototype.nodeId=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.nodeAccountId=null,e.prototype.nodeCertHash=$util.newBuffer([]),e.prototype.nodeEndpoint=$util.emptyArray,e.prototype.description="",e.prototype.stake=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.ipAddress&&Object.hasOwnProperty.call(e,"ipAddress")&&o.uint32(10).bytes(e.ipAddress),null!=e.portno&&Object.hasOwnProperty.call(e,"portno")&&o.uint32(16).int32(e.portno),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(26).bytes(e.memo),null!=e.RSA_PubKey&&Object.hasOwnProperty.call(e,"RSA_PubKey")&&o.uint32(34).string(e.RSA_PubKey),null!=e.nodeId&&Object.hasOwnProperty.call(e,"nodeId")&&o.uint32(40).int64(e.nodeId),null!=e.nodeAccountId&&Object.hasOwnProperty.call(e,"nodeAccountId")&&$root.proto.AccountID.encode(e.nodeAccountId,o.uint32(50).fork()).ldelim(),null!=e.nodeCertHash&&Object.hasOwnProperty.call(e,"nodeCertHash")&&o.uint32(58).bytes(e.nodeCertHash),null!=e.nodeEndpoint&&e.nodeEndpoint.length)for(var t=0;t<e.nodeEndpoint.length;++t)$root.proto.NodeEndpoint.encode(e.nodeEndpoint[t],o.uint32(66).fork()).ldelim();return null!=e.description&&Object.hasOwnProperty.call(e,"description")&&o.uint32(74).string(e.description),null!=e.stake&&Object.hasOwnProperty.call(e,"stake")&&o.uint32(80).int64(e.stake),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.NodeAddress,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.ipAddress=e.bytes();break;case 2:d.portno=e.int32();break;case 3:d.memo=e.bytes();break;case 4:d.RSA_PubKey=e.string();break;case 5:d.nodeId=e.int64();break;case 6:d.nodeAccountId=$root.proto.AccountID.decode(e,e.uint32());break;case 7:d.nodeCertHash=e.bytes();break;case 8:d.nodeEndpoint&&d.nodeEndpoint.length||(d.nodeEndpoint=[]),d.nodeEndpoint.push($root.proto.NodeEndpoint.decode(e,e.uint32()));break;case 9:d.description=e.string();break;case 10:d.stake=e.int64();break;default:e.skipType(7&i);}return d},e}(),AddressBook:function(){function e(e){if(this.nodeAddress=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.nodeAddress=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.nodeAddress&&e.nodeAddress.length)for(var t=0;t<e.nodeAddress.length;++t)$root.proto.NodeAddress.encode(e.nodeAddress[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.AddressBook,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.nodeAddress&&d.nodeAddress.length||(d.nodeAddress=[]),d.nodeAddress.push($root.proto.NodeAddress.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),NodeAddressForClients:function(){function e(e){if(this.nodeEndpoint=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.nodeId=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.nodeAccountId=null,e.prototype.nodeCertHash=$util.newBuffer([]),e.prototype.nodeEndpoint=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.nodeId&&Object.hasOwnProperty.call(e,"nodeId")&&o.uint32(40).int64(e.nodeId),null!=e.nodeAccountId&&Object.hasOwnProperty.call(e,"nodeAccountId")&&$root.proto.AccountID.encode(e.nodeAccountId,o.uint32(50).fork()).ldelim(),null!=e.nodeCertHash&&Object.hasOwnProperty.call(e,"nodeCertHash")&&o.uint32(58).bytes(e.nodeCertHash),null!=e.nodeEndpoint&&e.nodeEndpoint.length)for(var t=0;t<e.nodeEndpoint.length;++t)$root.proto.NodeEndpoint.encode(e.nodeEndpoint[t],o.uint32(66).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.NodeAddressForClients,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 5:d.nodeId=e.int64();break;case 6:d.nodeAccountId=$root.proto.AccountID.decode(e,e.uint32());break;case 7:d.nodeCertHash=e.bytes();break;case 8:d.nodeEndpoint&&d.nodeEndpoint.length||(d.nodeEndpoint=[]),d.nodeEndpoint.push($root.proto.NodeEndpoint.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),AddressBookForClients:function(){function e(e){if(this.nodeAddressForClients=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.nodeAddressForClients=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.nodeAddressForClients&&e.nodeAddressForClients.length)for(var t=0;t<e.nodeAddressForClients.length;++t)$root.proto.NodeAddressForClients.encode(e.nodeAddressForClients[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.AddressBookForClients,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.nodeAddressForClients&&d.nodeAddressForClients.length||(d.nodeAddressForClients=[]),d.nodeAddressForClients.push($root.proto.NodeAddressForClients.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),SemanticVersion:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.major=0,e.prototype.minor=0,e.prototype.patch=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.major&&Object.hasOwnProperty.call(e,"major")&&o.uint32(8).int32(e.major),null!=e.minor&&Object.hasOwnProperty.call(e,"minor")&&o.uint32(16).int32(e.minor),null!=e.patch&&Object.hasOwnProperty.call(e,"patch")&&o.uint32(24).int32(e.patch),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SemanticVersion,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.major=e.int32();break;case 2:d.minor=e.int32();break;case 3:d.patch=e.int32();break;default:e.skipType(7&i);}return d},e}(),Setting:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.name="",e.prototype.value="",e.prototype.data=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.name&&Object.hasOwnProperty.call(e,"name")&&o.uint32(10).string(e.name),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(18).string(e.value),null!=e.data&&Object.hasOwnProperty.call(e,"data")&&o.uint32(26).bytes(e.data),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Setting,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.name=e.string();break;case 2:d.value=e.string();break;case 3:d.data=e.bytes();break;default:e.skipType(7&i);}return d},e}(),ServicesConfigurationList:function(){function e(e){if(this.nameValue=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.nameValue=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.nameValue&&e.nameValue.length)for(var t=0;t<e.nameValue.length;++t)$root.proto.Setting.encode(e.nameValue[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ServicesConfigurationList,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.nameValue&&d.nameValue.length||(d.nameValue=[]),d.nameValue.push($root.proto.Setting.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TokenRelationship:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenId=null,e.prototype.symbol="",e.prototype.balance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.kycStatus=0,e.prototype.freezeStatus=0,e.prototype.decimals=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.tokenId&&Object.hasOwnProperty.call(e,"tokenId")&&$root.proto.TokenID.encode(e.tokenId,o.uint32(10).fork()).ldelim(),null!=e.symbol&&Object.hasOwnProperty.call(e,"symbol")&&o.uint32(18).string(e.symbol),null!=e.balance&&Object.hasOwnProperty.call(e,"balance")&&o.uint32(24).uint64(e.balance),null!=e.kycStatus&&Object.hasOwnProperty.call(e,"kycStatus")&&o.uint32(32).int32(e.kycStatus),null!=e.freezeStatus&&Object.hasOwnProperty.call(e,"freezeStatus")&&o.uint32(40).int32(e.freezeStatus),null!=e.decimals&&Object.hasOwnProperty.call(e,"decimals")&&o.uint32(48).uint32(e.decimals),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenRelationship,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenId=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.symbol=e.string();break;case 3:d.balance=e.uint64();break;case 4:d.kycStatus=e.int32();break;case 5:d.freezeStatus=e.int32();break;case 6:d.decimals=e.uint32();break;default:e.skipType(7&i);}return d},e}(),TokenBalance:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenId=null,e.prototype.balance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.decimals=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.tokenId&&Object.hasOwnProperty.call(e,"tokenId")&&$root.proto.TokenID.encode(e.tokenId,o.uint32(10).fork()).ldelim(),null!=e.balance&&Object.hasOwnProperty.call(e,"balance")&&o.uint32(16).uint64(e.balance),null!=e.decimals&&Object.hasOwnProperty.call(e,"decimals")&&o.uint32(24).uint32(e.decimals),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenBalance,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenId=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.balance=e.uint64();break;case 3:d.decimals=e.uint32();break;default:e.skipType(7&i);}return d},e}(),TokenBalances:function(){function e(e){if(this.tokenBalances=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenBalances=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.tokenBalances&&e.tokenBalances.length)for(var t=0;t<e.tokenBalances.length;++t)$root.proto.TokenBalance.encode(e.tokenBalances[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenBalances,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenBalances&&d.tokenBalances.length||(d.tokenBalances=[]),d.tokenBalances.push($root.proto.TokenBalance.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),Timestamp:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.seconds=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.nanos=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.seconds&&Object.hasOwnProperty.call(e,"seconds")&&o.uint32(8).int64(e.seconds),null!=e.nanos&&Object.hasOwnProperty.call(e,"nanos")&&o.uint32(16).int32(e.nanos),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Timestamp,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.seconds=e.int64();break;case 2:d.nanos=e.int32();break;default:e.skipType(7&i);}return d},e}(),TimestampSeconds:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.seconds=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.seconds&&Object.hasOwnProperty.call(e,"seconds")&&o.uint32(8).int64(e.seconds),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TimestampSeconds,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.seconds=e.int64();break;default:e.skipType(7&i);}return d},e}(),ConsensusCreateTopicTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.memo="",e.prototype.adminKey=null,e.prototype.submitKey=null,e.prototype.autoRenewPeriod=null,e.prototype.autoRenewAccount=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(10).string(e.memo),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(18).fork()).ldelim(),null!=e.submitKey&&Object.hasOwnProperty.call(e,"submitKey")&&$root.proto.Key.encode(e.submitKey,o.uint32(26).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(50).fork()).ldelim(),null!=e.autoRenewAccount&&Object.hasOwnProperty.call(e,"autoRenewAccount")&&$root.proto.AccountID.encode(e.autoRenewAccount,o.uint32(58).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusCreateTopicTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.memo=e.string();break;case 2:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 3:d.submitKey=$root.proto.Key.decode(e,e.uint32());break;case 6:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 7:d.autoRenewAccount=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),Duration:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.seconds=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.seconds&&Object.hasOwnProperty.call(e,"seconds")&&o.uint32(8).int64(e.seconds),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Duration,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.seconds=e.int64();break;default:e.skipType(7&i);}return d},e}(),ConsensusDeleteTopicTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.topicID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(10).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusDeleteTopicTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ConsensusGetTopicInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.topicID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusGetTopicInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ConsensusGetTopicInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.topicID=null,e.prototype.topicInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(18).fork()).ldelim(),null!=e.topicInfo&&Object.hasOwnProperty.call(e,"topicInfo")&&$root.proto.ConsensusTopicInfo.encode(e.topicInfo,o.uint32(42).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusGetTopicInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;case 5:d.topicInfo=$root.proto.ConsensusTopicInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ResponseType:function(){const e={},o=Object.create(e);return o[e[0]="ANSWER_ONLY"]=0,o[e[1]="ANSWER_STATE_PROOF"]=1,o[e[2]="COST_ANSWER"]=2,o[e[3]="COST_ANSWER_STATE_PROOF"]=3,o}(),QueryHeader:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.payment=null,e.prototype.responseType=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.payment&&Object.hasOwnProperty.call(e,"payment")&&$root.proto.Transaction.encode(e.payment,o.uint32(10).fork()).ldelim(),null!=e.responseType&&Object.hasOwnProperty.call(e,"responseType")&&o.uint32(16).int32(e.responseType),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.QueryHeader,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.payment=$root.proto.Transaction.decode(e,e.uint32());break;case 2:d.responseType=e.int32();break;default:e.skipType(7&i);}return d},e}(),Transaction:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.signedTransactionBytes=$util.newBuffer([]),e.prototype.bodyBytes=$util.newBuffer([]),e.prototype.sigMap=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.sigMap&&Object.hasOwnProperty.call(e,"sigMap")&&$root.proto.SignatureMap.encode(e.sigMap,o.uint32(26).fork()).ldelim(),null!=e.bodyBytes&&Object.hasOwnProperty.call(e,"bodyBytes")&&o.uint32(34).bytes(e.bodyBytes),null!=e.signedTransactionBytes&&Object.hasOwnProperty.call(e,"signedTransactionBytes")&&o.uint32(42).bytes(e.signedTransactionBytes),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Transaction,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 5:d.signedTransactionBytes=e.bytes();break;case 4:d.bodyBytes=e.bytes();break;case 3:d.sigMap=$root.proto.SignatureMap.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ResponseHeader:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.nodeTransactionPrecheckCode=0,e.prototype.responseType=0,e.prototype.cost=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.stateProof=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.nodeTransactionPrecheckCode&&Object.hasOwnProperty.call(e,"nodeTransactionPrecheckCode")&&o.uint32(8).int32(e.nodeTransactionPrecheckCode),null!=e.responseType&&Object.hasOwnProperty.call(e,"responseType")&&o.uint32(16).int32(e.responseType),null!=e.cost&&Object.hasOwnProperty.call(e,"cost")&&o.uint32(24).uint64(e.cost),null!=e.stateProof&&Object.hasOwnProperty.call(e,"stateProof")&&o.uint32(34).bytes(e.stateProof),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ResponseHeader,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.nodeTransactionPrecheckCode=e.int32();break;case 2:d.responseType=e.int32();break;case 3:d.cost=e.uint64();break;case 4:d.stateProof=e.bytes();break;default:e.skipType(7&i);}return d},e}(),TransactionResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.nodeTransactionPrecheckCode=0,e.prototype.cost=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.nodeTransactionPrecheckCode&&Object.hasOwnProperty.call(e,"nodeTransactionPrecheckCode")&&o.uint32(8).int32(e.nodeTransactionPrecheckCode),null!=e.cost&&Object.hasOwnProperty.call(e,"cost")&&o.uint32(16).uint64(e.cost),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.nodeTransactionPrecheckCode=e.int32();break;case 2:d.cost=e.uint64();break;default:e.skipType(7&i);}return d},e}(),ResponseCodeEnum:function(){const e={},o=Object.create(e);return o[e[0]="OK"]=0,o[e[1]="INVALID_TRANSACTION"]=1,o[e[2]="PAYER_ACCOUNT_NOT_FOUND"]=2,o[e[3]="INVALID_NODE_ACCOUNT"]=3,o[e[4]="TRANSACTION_EXPIRED"]=4,o[e[5]="INVALID_TRANSACTION_START"]=5,o[e[6]="INVALID_TRANSACTION_DURATION"]=6,o[e[7]="INVALID_SIGNATURE"]=7,o[e[8]="MEMO_TOO_LONG"]=8,o[e[9]="INSUFFICIENT_TX_FEE"]=9,o[e[10]="INSUFFICIENT_PAYER_BALANCE"]=10,o[e[11]="DUPLICATE_TRANSACTION"]=11,o[e[12]="BUSY"]=12,o[e[13]="NOT_SUPPORTED"]=13,o[e[14]="INVALID_FILE_ID"]=14,o[e[15]="INVALID_ACCOUNT_ID"]=15,o[e[16]="INVALID_CONTRACT_ID"]=16,o[e[17]="INVALID_TRANSACTION_ID"]=17,o[e[18]="RECEIPT_NOT_FOUND"]=18,o[e[19]="RECORD_NOT_FOUND"]=19,o[e[20]="INVALID_SOLIDITY_ID"]=20,o[e[21]="UNKNOWN"]=21,o[e[22]="SUCCESS"]=22,o[e[23]="FAIL_INVALID"]=23,o[e[24]="FAIL_FEE"]=24,o[e[25]="FAIL_BALANCE"]=25,o[e[26]="KEY_REQUIRED"]=26,o[e[27]="BAD_ENCODING"]=27,o[e[28]="INSUFFICIENT_ACCOUNT_BALANCE"]=28,o[e[29]="INVALID_SOLIDITY_ADDRESS"]=29,o[e[30]="INSUFFICIENT_GAS"]=30,o[e[31]="CONTRACT_SIZE_LIMIT_EXCEEDED"]=31,o[e[32]="LOCAL_CALL_MODIFICATION_EXCEPTION"]=32,o[e[33]="CONTRACT_REVERT_EXECUTED"]=33,o[e[34]="CONTRACT_EXECUTION_EXCEPTION"]=34,o[e[35]="INVALID_RECEIVING_NODE_ACCOUNT"]=35,o[e[36]="MISSING_QUERY_HEADER"]=36,o[e[37]="ACCOUNT_UPDATE_FAILED"]=37,o[e[38]="INVALID_KEY_ENCODING"]=38,o[e[39]="NULL_SOLIDITY_ADDRESS"]=39,o[e[40]="CONTRACT_UPDATE_FAILED"]=40,o[e[41]="INVALID_QUERY_HEADER"]=41,o[e[42]="INVALID_FEE_SUBMITTED"]=42,o[e[43]="INVALID_PAYER_SIGNATURE"]=43,o[e[44]="KEY_NOT_PROVIDED"]=44,o[e[45]="INVALID_EXPIRATION_TIME"]=45,o[e[46]="NO_WACL_KEY"]=46,o[e[47]="FILE_CONTENT_EMPTY"]=47,o[e[48]="INVALID_ACCOUNT_AMOUNTS"]=48,o[e[49]="EMPTY_TRANSACTION_BODY"]=49,o[e[50]="INVALID_TRANSACTION_BODY"]=50,o[e[51]="INVALID_SIGNATURE_TYPE_MISMATCHING_KEY"]=51,o[e[52]="INVALID_SIGNATURE_COUNT_MISMATCHING_KEY"]=52,o[e[53]="EMPTY_LIVE_HASH_BODY"]=53,o[e[54]="EMPTY_LIVE_HASH"]=54,o[e[55]="EMPTY_LIVE_HASH_KEYS"]=55,o[e[56]="INVALID_LIVE_HASH_SIZE"]=56,o[e[57]="EMPTY_QUERY_BODY"]=57,o[e[58]="EMPTY_LIVE_HASH_QUERY"]=58,o[e[59]="LIVE_HASH_NOT_FOUND"]=59,o[e[60]="ACCOUNT_ID_DOES_NOT_EXIST"]=60,o[e[61]="LIVE_HASH_ALREADY_EXISTS"]=61,o[e[62]="INVALID_FILE_WACL"]=62,o[e[63]="SERIALIZATION_FAILED"]=63,o[e[64]="TRANSACTION_OVERSIZE"]=64,o[e[65]="TRANSACTION_TOO_MANY_LAYERS"]=65,o[e[66]="CONTRACT_DELETED"]=66,o[e[67]="PLATFORM_NOT_ACTIVE"]=67,o[e[68]="KEY_PREFIX_MISMATCH"]=68,o[e[69]="PLATFORM_TRANSACTION_NOT_CREATED"]=69,o[e[70]="INVALID_RENEWAL_PERIOD"]=70,o[e[71]="INVALID_PAYER_ACCOUNT_ID"]=71,o[e[72]="ACCOUNT_DELETED"]=72,o[e[73]="FILE_DELETED"]=73,o[e[74]="ACCOUNT_REPEATED_IN_ACCOUNT_AMOUNTS"]=74,o[e[75]="SETTING_NEGATIVE_ACCOUNT_BALANCE"]=75,o[e[76]="OBTAINER_REQUIRED"]=76,o[e[77]="OBTAINER_SAME_CONTRACT_ID"]=77,o[e[78]="OBTAINER_DOES_NOT_EXIST"]=78,o[e[79]="MODIFYING_IMMUTABLE_CONTRACT"]=79,o[e[80]="FILE_SYSTEM_EXCEPTION"]=80,o[e[81]="AUTORENEW_DURATION_NOT_IN_RANGE"]=81,o[e[82]="ERROR_DECODING_BYTESTRING"]=82,o[e[83]="CONTRACT_FILE_EMPTY"]=83,o[e[84]="CONTRACT_BYTECODE_EMPTY"]=84,o[e[85]="INVALID_INITIAL_BALANCE"]=85,o[e[86]="INVALID_RECEIVE_RECORD_THRESHOLD"]=86,o[e[87]="INVALID_SEND_RECORD_THRESHOLD"]=87,o[e[88]="ACCOUNT_IS_NOT_GENESIS_ACCOUNT"]=88,o[e[89]="PAYER_ACCOUNT_UNAUTHORIZED"]=89,o[e[90]="INVALID_FREEZE_TRANSACTION_BODY"]=90,o[e[91]="FREEZE_TRANSACTION_BODY_NOT_FOUND"]=91,o[e[92]="TRANSFER_LIST_SIZE_LIMIT_EXCEEDED"]=92,o[e[93]="RESULT_SIZE_LIMIT_EXCEEDED"]=93,o[e[94]="NOT_SPECIAL_ACCOUNT"]=94,o[e[95]="CONTRACT_NEGATIVE_GAS"]=95,o[e[96]="CONTRACT_NEGATIVE_VALUE"]=96,o[e[97]="INVALID_FEE_FILE"]=97,o[e[98]="INVALID_EXCHANGE_RATE_FILE"]=98,o[e[99]="INSUFFICIENT_LOCAL_CALL_GAS"]=99,o[e[100]="ENTITY_NOT_ALLOWED_TO_DELETE"]=100,o[e[101]="AUTHORIZATION_FAILED"]=101,o[e[102]="FILE_UPLOADED_PROTO_INVALID"]=102,o[e[103]="FILE_UPLOADED_PROTO_NOT_SAVED_TO_DISK"]=103,o[e[104]="FEE_SCHEDULE_FILE_PART_UPLOADED"]=104,o[e[105]="EXCHANGE_RATE_CHANGE_LIMIT_EXCEEDED"]=105,o[e[106]="MAX_CONTRACT_STORAGE_EXCEEDED"]=106,o[e[107]="TRANSFER_ACCOUNT_SAME_AS_DELETE_ACCOUNT"]=107,o[e[108]="TOTAL_LEDGER_BALANCE_INVALID"]=108,o[e[110]="EXPIRATION_REDUCTION_NOT_ALLOWED"]=110,o[e[111]="MAX_GAS_LIMIT_EXCEEDED"]=111,o[e[112]="MAX_FILE_SIZE_EXCEEDED"]=112,o[e[150]="INVALID_TOPIC_ID"]=150,o[e[155]="INVALID_ADMIN_KEY"]=155,o[e[156]="INVALID_SUBMIT_KEY"]=156,o[e[157]="UNAUTHORIZED"]=157,o[e[158]="INVALID_TOPIC_MESSAGE"]=158,o[e[159]="INVALID_AUTORENEW_ACCOUNT"]=159,o[e[160]="AUTORENEW_ACCOUNT_NOT_ALLOWED"]=160,o[e[162]="TOPIC_EXPIRED"]=162,o[e[163]="INVALID_CHUNK_NUMBER"]=163,o[e[164]="INVALID_CHUNK_TRANSACTION_ID"]=164,o[e[165]="ACCOUNT_FROZEN_FOR_TOKEN"]=165,o[e[166]="TOKENS_PER_ACCOUNT_LIMIT_EXCEEDED"]=166,o[e[167]="INVALID_TOKEN_ID"]=167,o[e[168]="INVALID_TOKEN_DECIMALS"]=168,o[e[169]="INVALID_TOKEN_INITIAL_SUPPLY"]=169,o[e[170]="INVALID_TREASURY_ACCOUNT_FOR_TOKEN"]=170,o[e[171]="INVALID_TOKEN_SYMBOL"]=171,o[e[172]="TOKEN_HAS_NO_FREEZE_KEY"]=172,o[e[173]="TRANSFERS_NOT_ZERO_SUM_FOR_TOKEN"]=173,o[e[174]="MISSING_TOKEN_SYMBOL"]=174,o[e[175]="TOKEN_SYMBOL_TOO_LONG"]=175,o[e[176]="ACCOUNT_KYC_NOT_GRANTED_FOR_TOKEN"]=176,o[e[177]="TOKEN_HAS_NO_KYC_KEY"]=177,o[e[178]="INSUFFICIENT_TOKEN_BALANCE"]=178,o[e[179]="TOKEN_WAS_DELETED"]=179,o[e[180]="TOKEN_HAS_NO_SUPPLY_KEY"]=180,o[e[181]="TOKEN_HAS_NO_WIPE_KEY"]=181,o[e[182]="INVALID_TOKEN_MINT_AMOUNT"]=182,o[e[183]="INVALID_TOKEN_BURN_AMOUNT"]=183,o[e[184]="TOKEN_NOT_ASSOCIATED_TO_ACCOUNT"]=184,o[e[185]="CANNOT_WIPE_TOKEN_TREASURY_ACCOUNT"]=185,o[e[186]="INVALID_KYC_KEY"]=186,o[e[187]="INVALID_WIPE_KEY"]=187,o[e[188]="INVALID_FREEZE_KEY"]=188,o[e[189]="INVALID_SUPPLY_KEY"]=189,o[e[190]="MISSING_TOKEN_NAME"]=190,o[e[191]="TOKEN_NAME_TOO_LONG"]=191,o[e[192]="INVALID_WIPING_AMOUNT"]=192,o[e[193]="TOKEN_IS_IMMUTABLE"]=193,o[e[194]="TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT"]=194,o[e[195]="TRANSACTION_REQUIRES_ZERO_TOKEN_BALANCES"]=195,o[e[196]="ACCOUNT_IS_TREASURY"]=196,o[e[197]="TOKEN_ID_REPEATED_IN_TOKEN_LIST"]=197,o[e[198]="TOKEN_TRANSFER_LIST_SIZE_LIMIT_EXCEEDED"]=198,o[e[199]="EMPTY_TOKEN_TRANSFER_BODY"]=199,o[e[200]="EMPTY_TOKEN_TRANSFER_ACCOUNT_AMOUNTS"]=200,o[e[201]="INVALID_SCHEDULE_ID"]=201,o[e[202]="SCHEDULE_IS_IMMUTABLE"]=202,o[e[203]="INVALID_SCHEDULE_PAYER_ID"]=203,o[e[204]="INVALID_SCHEDULE_ACCOUNT_ID"]=204,o[e[205]="NO_NEW_VALID_SIGNATURES"]=205,o[e[206]="UNRESOLVABLE_REQUIRED_SIGNERS"]=206,o[e[207]="SCHEDULED_TRANSACTION_NOT_IN_WHITELIST"]=207,o[e[208]="SOME_SIGNATURES_WERE_INVALID"]=208,o[e[209]="TRANSACTION_ID_FIELD_NOT_ALLOWED"]=209,o[e[210]="IDENTICAL_SCHEDULE_ALREADY_CREATED"]=210,o[e[211]="INVALID_ZERO_BYTE_IN_STRING"]=211,o[e[212]="SCHEDULE_ALREADY_DELETED"]=212,o[e[213]="SCHEDULE_ALREADY_EXECUTED"]=213,o[e[214]="MESSAGE_SIZE_TOO_LARGE"]=214,o[e[215]="OPERATION_REPEATED_IN_BUCKET_GROUPS"]=215,o[e[216]="BUCKET_CAPACITY_OVERFLOW"]=216,o[e[217]="NODE_CAPACITY_NOT_SUFFICIENT_FOR_OPERATION"]=217,o[e[218]="BUCKET_HAS_NO_THROTTLE_GROUPS"]=218,o[e[219]="THROTTLE_GROUP_HAS_ZERO_OPS_PER_SEC"]=219,o[e[220]="SUCCESS_BUT_MISSING_EXPECTED_OPERATION"]=220,o[e[221]="UNPARSEABLE_THROTTLE_DEFINITIONS"]=221,o[e[222]="INVALID_THROTTLE_DEFINITIONS"]=222,o}(),ConsensusTopicInfo:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.memo="",e.prototype.runningHash=$util.newBuffer([]),e.prototype.sequenceNumber=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.expirationTime=null,e.prototype.adminKey=null,e.prototype.submitKey=null,e.prototype.autoRenewPeriod=null,e.prototype.autoRenewAccount=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(10).string(e.memo),null!=e.runningHash&&Object.hasOwnProperty.call(e,"runningHash")&&o.uint32(18).bytes(e.runningHash),null!=e.sequenceNumber&&Object.hasOwnProperty.call(e,"sequenceNumber")&&o.uint32(24).uint64(e.sequenceNumber),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(34).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(42).fork()).ldelim(),null!=e.submitKey&&Object.hasOwnProperty.call(e,"submitKey")&&$root.proto.Key.encode(e.submitKey,o.uint32(50).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(58).fork()).ldelim(),null!=e.autoRenewAccount&&Object.hasOwnProperty.call(e,"autoRenewAccount")&&$root.proto.AccountID.encode(e.autoRenewAccount,o.uint32(66).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusTopicInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.memo=e.string();break;case 2:d.runningHash=e.bytes();break;case 3:d.sequenceNumber=e.uint64();break;case 4:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 5:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 6:d.submitKey=$root.proto.Key.decode(e,e.uint32());break;case 7:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 8:d.autoRenewAccount=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ConsensusService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.createTopic=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"createTopic"}),Object.defineProperty(e.prototype.updateTopic=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"updateTopic"}),Object.defineProperty(e.prototype.deleteTopic=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"deleteTopic"}),Object.defineProperty(e.prototype.getTopicInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getTopicInfo"}),Object.defineProperty(e.prototype.submitMessage=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"submitMessage"}),e}(),Query:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.getByKey=null,e.prototype.getBySolidityID=null,e.prototype.contractCallLocal=null,e.prototype.contractGetInfo=null,e.prototype.contractGetBytecode=null,e.prototype.ContractGetRecords=null,e.prototype.cryptogetAccountBalance=null,e.prototype.cryptoGetAccountRecords=null,e.prototype.cryptoGetInfo=null,e.prototype.cryptoGetLiveHash=null,e.prototype.cryptoGetProxyStakers=null,e.prototype.fileGetContents=null,e.prototype.fileGetInfo=null,e.prototype.transactionGetReceipt=null,e.prototype.transactionGetRecord=null,e.prototype.transactionGetFastRecord=null,e.prototype.consensusGetTopicInfo=null,e.prototype.networkGetVersionInfo=null,e.prototype.tokenGetInfo=null,e.prototype.scheduleGetInfo=null;let o;return Object.defineProperty(e.prototype,"query",{get:$util.oneOfGetter(o=["getByKey","getBySolidityID","contractCallLocal","contractGetInfo","contractGetBytecode","ContractGetRecords","cryptogetAccountBalance","cryptoGetAccountRecords","cryptoGetInfo","cryptoGetLiveHash","cryptoGetProxyStakers","fileGetContents","fileGetInfo","transactionGetReceipt","transactionGetRecord","transactionGetFastRecord","consensusGetTopicInfo","networkGetVersionInfo","tokenGetInfo","scheduleGetInfo"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.getByKey&&Object.hasOwnProperty.call(e,"getByKey")&&$root.proto.GetByKeyQuery.encode(e.getByKey,o.uint32(10).fork()).ldelim(),null!=e.getBySolidityID&&Object.hasOwnProperty.call(e,"getBySolidityID")&&$root.proto.GetBySolidityIDQuery.encode(e.getBySolidityID,o.uint32(18).fork()).ldelim(),null!=e.contractCallLocal&&Object.hasOwnProperty.call(e,"contractCallLocal")&&$root.proto.ContractCallLocalQuery.encode(e.contractCallLocal,o.uint32(26).fork()).ldelim(),null!=e.contractGetInfo&&Object.hasOwnProperty.call(e,"contractGetInfo")&&$root.proto.ContractGetInfoQuery.encode(e.contractGetInfo,o.uint32(34).fork()).ldelim(),null!=e.contractGetBytecode&&Object.hasOwnProperty.call(e,"contractGetBytecode")&&$root.proto.ContractGetBytecodeQuery.encode(e.contractGetBytecode,o.uint32(42).fork()).ldelim(),null!=e.ContractGetRecords&&Object.hasOwnProperty.call(e,"ContractGetRecords")&&$root.proto.ContractGetRecordsQuery.encode(e.ContractGetRecords,o.uint32(50).fork()).ldelim(),null!=e.cryptogetAccountBalance&&Object.hasOwnProperty.call(e,"cryptogetAccountBalance")&&$root.proto.CryptoGetAccountBalanceQuery.encode(e.cryptogetAccountBalance,o.uint32(58).fork()).ldelim(),null!=e.cryptoGetAccountRecords&&Object.hasOwnProperty.call(e,"cryptoGetAccountRecords")&&$root.proto.CryptoGetAccountRecordsQuery.encode(e.cryptoGetAccountRecords,o.uint32(66).fork()).ldelim(),null!=e.cryptoGetInfo&&Object.hasOwnProperty.call(e,"cryptoGetInfo")&&$root.proto.CryptoGetInfoQuery.encode(e.cryptoGetInfo,o.uint32(74).fork()).ldelim(),null!=e.cryptoGetLiveHash&&Object.hasOwnProperty.call(e,"cryptoGetLiveHash")&&$root.proto.CryptoGetLiveHashQuery.encode(e.cryptoGetLiveHash,o.uint32(82).fork()).ldelim(),null!=e.cryptoGetProxyStakers&&Object.hasOwnProperty.call(e,"cryptoGetProxyStakers")&&$root.proto.CryptoGetStakersQuery.encode(e.cryptoGetProxyStakers,o.uint32(90).fork()).ldelim(),null!=e.fileGetContents&&Object.hasOwnProperty.call(e,"fileGetContents")&&$root.proto.FileGetContentsQuery.encode(e.fileGetContents,o.uint32(98).fork()).ldelim(),null!=e.fileGetInfo&&Object.hasOwnProperty.call(e,"fileGetInfo")&&$root.proto.FileGetInfoQuery.encode(e.fileGetInfo,o.uint32(106).fork()).ldelim(),null!=e.transactionGetReceipt&&Object.hasOwnProperty.call(e,"transactionGetReceipt")&&$root.proto.TransactionGetReceiptQuery.encode(e.transactionGetReceipt,o.uint32(114).fork()).ldelim(),null!=e.transactionGetRecord&&Object.hasOwnProperty.call(e,"transactionGetRecord")&&$root.proto.TransactionGetRecordQuery.encode(e.transactionGetRecord,o.uint32(122).fork()).ldelim(),null!=e.transactionGetFastRecord&&Object.hasOwnProperty.call(e,"transactionGetFastRecord")&&$root.proto.TransactionGetFastRecordQuery.encode(e.transactionGetFastRecord,o.uint32(130).fork()).ldelim(),null!=e.consensusGetTopicInfo&&Object.hasOwnProperty.call(e,"consensusGetTopicInfo")&&$root.proto.ConsensusGetTopicInfoQuery.encode(e.consensusGetTopicInfo,o.uint32(402).fork()).ldelim(),null!=e.networkGetVersionInfo&&Object.hasOwnProperty.call(e,"networkGetVersionInfo")&&$root.proto.NetworkGetVersionInfoQuery.encode(e.networkGetVersionInfo,o.uint32(410).fork()).ldelim(),null!=e.tokenGetInfo&&Object.hasOwnProperty.call(e,"tokenGetInfo")&&$root.proto.TokenGetInfoQuery.encode(e.tokenGetInfo,o.uint32(418).fork()).ldelim(),null!=e.scheduleGetInfo&&Object.hasOwnProperty.call(e,"scheduleGetInfo")&&$root.proto.ScheduleGetInfoQuery.encode(e.scheduleGetInfo,o.uint32(426).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Query,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.getByKey=$root.proto.GetByKeyQuery.decode(e,e.uint32());break;case 2:d.getBySolidityID=$root.proto.GetBySolidityIDQuery.decode(e,e.uint32());break;case 3:d.contractCallLocal=$root.proto.ContractCallLocalQuery.decode(e,e.uint32());break;case 4:d.contractGetInfo=$root.proto.ContractGetInfoQuery.decode(e,e.uint32());break;case 5:d.contractGetBytecode=$root.proto.ContractGetBytecodeQuery.decode(e,e.uint32());break;case 6:d.ContractGetRecords=$root.proto.ContractGetRecordsQuery.decode(e,e.uint32());break;case 7:d.cryptogetAccountBalance=$root.proto.CryptoGetAccountBalanceQuery.decode(e,e.uint32());break;case 8:d.cryptoGetAccountRecords=$root.proto.CryptoGetAccountRecordsQuery.decode(e,e.uint32());break;case 9:d.cryptoGetInfo=$root.proto.CryptoGetInfoQuery.decode(e,e.uint32());break;case 10:d.cryptoGetLiveHash=$root.proto.CryptoGetLiveHashQuery.decode(e,e.uint32());break;case 11:d.cryptoGetProxyStakers=$root.proto.CryptoGetStakersQuery.decode(e,e.uint32());break;case 12:d.fileGetContents=$root.proto.FileGetContentsQuery.decode(e,e.uint32());break;case 13:d.fileGetInfo=$root.proto.FileGetInfoQuery.decode(e,e.uint32());break;case 14:d.transactionGetReceipt=$root.proto.TransactionGetReceiptQuery.decode(e,e.uint32());break;case 15:d.transactionGetRecord=$root.proto.TransactionGetRecordQuery.decode(e,e.uint32());break;case 16:d.transactionGetFastRecord=$root.proto.TransactionGetFastRecordQuery.decode(e,e.uint32());break;case 50:d.consensusGetTopicInfo=$root.proto.ConsensusGetTopicInfoQuery.decode(e,e.uint32());break;case 51:d.networkGetVersionInfo=$root.proto.NetworkGetVersionInfoQuery.decode(e,e.uint32());break;case 52:d.tokenGetInfo=$root.proto.TokenGetInfoQuery.decode(e,e.uint32());break;case 53:d.scheduleGetInfo=$root.proto.ScheduleGetInfoQuery.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),GetByKeyQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.key=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.key&&Object.hasOwnProperty.call(e,"key")&&$root.proto.Key.encode(e.key,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.GetByKeyQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.key=$root.proto.Key.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),EntityID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.accountID=null,e.prototype.liveHash=null,e.prototype.fileID=null,e.prototype.contractID=null;let o;return Object.defineProperty(e.prototype,"entity",{get:$util.oneOfGetter(o=["accountID","liveHash","fileID","contractID"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.liveHash&&Object.hasOwnProperty.call(e,"liveHash")&&$root.proto.LiveHash.encode(e.liveHash,o.uint32(18).fork()).ldelim(),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(26).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(34).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.EntityID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.liveHash=$root.proto.LiveHash.decode(e,e.uint32());break;case 3:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 4:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),GetByKeyResponse:function(){function e(e){if(this.entities=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.entities=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.entities&&e.entities.length)for(var t=0;t<e.entities.length;++t)$root.proto.EntityID.encode(e.entities[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.GetByKeyResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.entities&&d.entities.length||(d.entities=[]),d.entities.push($root.proto.EntityID.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),LiveHash:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountId=null,e.prototype.hash=$util.newBuffer([]),e.prototype.keys=null,e.prototype.duration=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountId&&Object.hasOwnProperty.call(e,"accountId")&&$root.proto.AccountID.encode(e.accountId,o.uint32(10).fork()).ldelim(),null!=e.hash&&Object.hasOwnProperty.call(e,"hash")&&o.uint32(18).bytes(e.hash),null!=e.keys&&Object.hasOwnProperty.call(e,"keys")&&$root.proto.KeyList.encode(e.keys,o.uint32(26).fork()).ldelim(),null!=e.duration&&Object.hasOwnProperty.call(e,"duration")&&$root.proto.Duration.encode(e.duration,o.uint32(42).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.LiveHash,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountId=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.hash=e.bytes();break;case 3:d.keys=$root.proto.KeyList.decode(e,e.uint32());break;case 5:d.duration=$root.proto.Duration.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoAddLiveHashTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.liveHash=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.liveHash&&Object.hasOwnProperty.call(e,"liveHash")&&$root.proto.LiveHash.encode(e.liveHash,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoAddLiveHashTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 3:d.liveHash=$root.proto.LiveHash.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),GetBySolidityIDQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.solidityID="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.solidityID&&Object.hasOwnProperty.call(e,"solidityID")&&o.uint32(18).string(e.solidityID),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.GetBySolidityIDQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.solidityID=e.string();break;default:e.skipType(7&i);}return d},e}(),GetBySolidityIDResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.prototype.fileID=null,e.prototype.contractID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(26).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(34).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.GetBySolidityIDResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 4:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ContractLoginfo:function(){function e(e){if(this.topic=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.contractID=null,e.prototype.bloom=$util.newBuffer([]),e.prototype.topic=$util.emptyArray,e.prototype.data=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.bloom&&Object.hasOwnProperty.call(e,"bloom")&&o.uint32(18).bytes(e.bloom),null!=e.topic&&e.topic.length)for(var t=0;t<e.topic.length;++t)o.uint32(26).bytes(e.topic[t]);return null!=e.data&&Object.hasOwnProperty.call(e,"data")&&o.uint32(34).bytes(e.data),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractLoginfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.bloom=e.bytes();break;case 3:d.topic&&d.topic.length||(d.topic=[]),d.topic.push(e.bytes());break;case 4:d.data=e.bytes();break;default:e.skipType(7&i);}return d},e}(),ContractFunctionResult:function(){function e(e){if(this.logInfo=[],this.createdContractIDs=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.contractID=null,e.prototype.contractCallResult=$util.newBuffer([]),e.prototype.errorMessage="",e.prototype.bloom=$util.newBuffer([]),e.prototype.gasUsed=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.logInfo=$util.emptyArray,e.prototype.createdContractIDs=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.contractCallResult&&Object.hasOwnProperty.call(e,"contractCallResult")&&o.uint32(18).bytes(e.contractCallResult),null!=e.errorMessage&&Object.hasOwnProperty.call(e,"errorMessage")&&o.uint32(26).string(e.errorMessage),null!=e.bloom&&Object.hasOwnProperty.call(e,"bloom")&&o.uint32(34).bytes(e.bloom),null!=e.gasUsed&&Object.hasOwnProperty.call(e,"gasUsed")&&o.uint32(40).uint64(e.gasUsed),null!=e.logInfo&&e.logInfo.length)for(var t=0;t<e.logInfo.length;++t)$root.proto.ContractLoginfo.encode(e.logInfo[t],o.uint32(50).fork()).ldelim();if(null!=e.createdContractIDs&&e.createdContractIDs.length)for(var t=0;t<e.createdContractIDs.length;++t)$root.proto.ContractID.encode(e.createdContractIDs[t],o.uint32(58).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractFunctionResult,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.contractCallResult=e.bytes();break;case 3:d.errorMessage=e.string();break;case 4:d.bloom=e.bytes();break;case 5:d.gasUsed=e.uint64();break;case 6:d.logInfo&&d.logInfo.length||(d.logInfo=[]),d.logInfo.push($root.proto.ContractLoginfo.decode(e,e.uint32()));break;case 7:d.createdContractIDs&&d.createdContractIDs.length||(d.createdContractIDs=[]),d.createdContractIDs.push($root.proto.ContractID.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),ContractCallLocalQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.contractID=null,e.prototype.gas=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.functionParameters=$util.newBuffer([]),e.prototype.maxResultSize=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),null!=e.gas&&Object.hasOwnProperty.call(e,"gas")&&o.uint32(24).int64(e.gas),null!=e.functionParameters&&Object.hasOwnProperty.call(e,"functionParameters")&&o.uint32(34).bytes(e.functionParameters),null!=e.maxResultSize&&Object.hasOwnProperty.call(e,"maxResultSize")&&o.uint32(40).int64(e.maxResultSize),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractCallLocalQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 3:d.gas=e.int64();break;case 4:d.functionParameters=e.bytes();break;case 5:d.maxResultSize=e.int64();break;default:e.skipType(7&i);}return d},e}(),ContractCallLocalResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.functionResult=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.functionResult&&Object.hasOwnProperty.call(e,"functionResult")&&$root.proto.ContractFunctionResult.encode(e.functionResult,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractCallLocalResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.functionResult=$root.proto.ContractFunctionResult.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ContractGetInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.contractID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ContractGetInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.contractInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.contractInfo&&Object.hasOwnProperty.call(e,"contractInfo")&&$root.proto.ContractGetInfoResponse.ContractInfo.encode(e.contractInfo,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.contractInfo=$root.proto.ContractGetInfoResponse.ContractInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e.ContractInfo=function(){function e(e){if(this.tokenRelationships=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.contractID=null,e.prototype.accountID=null,e.prototype.contractAccountID="",e.prototype.adminKey=null,e.prototype.expirationTime=null,e.prototype.autoRenewPeriod=null,e.prototype.storage=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.memo="",e.prototype.balance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.deleted=!1,e.prototype.tokenRelationships=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.contractAccountID&&Object.hasOwnProperty.call(e,"contractAccountID")&&o.uint32(26).string(e.contractAccountID),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(34).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(42).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(50).fork()).ldelim(),null!=e.storage&&Object.hasOwnProperty.call(e,"storage")&&o.uint32(56).int64(e.storage),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(66).string(e.memo),null!=e.balance&&Object.hasOwnProperty.call(e,"balance")&&o.uint32(72).uint64(e.balance),null!=e.deleted&&Object.hasOwnProperty.call(e,"deleted")&&o.uint32(80).bool(e.deleted),null!=e.tokenRelationships&&e.tokenRelationships.length)for(var t=0;t<e.tokenRelationships.length;++t)$root.proto.TokenRelationship.encode(e.tokenRelationships[t],o.uint32(90).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetInfoResponse.ContractInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.contractAccountID=e.string();break;case 4:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 5:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 6:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 7:d.storage=e.int64();break;case 8:d.memo=e.string();break;case 9:d.balance=e.uint64();break;case 10:d.deleted=e.bool();break;case 11:d.tokenRelationships&&d.tokenRelationships.length||(d.tokenRelationships=[]),d.tokenRelationships.push($root.proto.TokenRelationship.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),e}(),ContractGetBytecodeQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.contractID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetBytecodeQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ContractGetBytecodeResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.bytecode=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.bytecode&&Object.hasOwnProperty.call(e,"bytecode")&&o.uint32(50).bytes(e.bytecode),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetBytecodeResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 6:d.bytecode=e.bytes();break;default:e.skipType(7&i);}return d},e}(),ContractGetRecordsQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.contractID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetRecordsQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ContractGetRecordsResponse:function(){function e(e){if(this.records=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.contractID=null,e.prototype.records=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),null!=e.records&&e.records.length)for(var t=0;t<e.records.length;++t)$root.proto.TransactionRecord.encode(e.records[t],o.uint32(26).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetRecordsResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 3:d.records&&d.records.length||(d.records=[]),d.records.push($root.proto.TransactionRecord.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TransactionRecord:function(){function e(e){if(this.tokenTransferLists=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.receipt=null,e.prototype.transactionHash=$util.newBuffer([]),e.prototype.consensusTimestamp=null,e.prototype.transactionID=null,e.prototype.memo="",e.prototype.transactionFee=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.contractCallResult=null,e.prototype.contractCreateResult=null,e.prototype.transferList=null,e.prototype.tokenTransferLists=$util.emptyArray,e.prototype.scheduleRef=null;let o;return Object.defineProperty(e.prototype,"body",{get:$util.oneOfGetter(o=["contractCallResult","contractCreateResult"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.receipt&&Object.hasOwnProperty.call(e,"receipt")&&$root.proto.TransactionReceipt.encode(e.receipt,o.uint32(10).fork()).ldelim(),null!=e.transactionHash&&Object.hasOwnProperty.call(e,"transactionHash")&&o.uint32(18).bytes(e.transactionHash),null!=e.consensusTimestamp&&Object.hasOwnProperty.call(e,"consensusTimestamp")&&$root.proto.Timestamp.encode(e.consensusTimestamp,o.uint32(26).fork()).ldelim(),null!=e.transactionID&&Object.hasOwnProperty.call(e,"transactionID")&&$root.proto.TransactionID.encode(e.transactionID,o.uint32(34).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(42).string(e.memo),null!=e.transactionFee&&Object.hasOwnProperty.call(e,"transactionFee")&&o.uint32(48).uint64(e.transactionFee),null!=e.contractCallResult&&Object.hasOwnProperty.call(e,"contractCallResult")&&$root.proto.ContractFunctionResult.encode(e.contractCallResult,o.uint32(58).fork()).ldelim(),null!=e.contractCreateResult&&Object.hasOwnProperty.call(e,"contractCreateResult")&&$root.proto.ContractFunctionResult.encode(e.contractCreateResult,o.uint32(66).fork()).ldelim(),null!=e.transferList&&Object.hasOwnProperty.call(e,"transferList")&&$root.proto.TransferList.encode(e.transferList,o.uint32(82).fork()).ldelim(),null!=e.tokenTransferLists&&e.tokenTransferLists.length)for(var t=0;t<e.tokenTransferLists.length;++t)$root.proto.TokenTransferList.encode(e.tokenTransferLists[t],o.uint32(90).fork()).ldelim();return null!=e.scheduleRef&&Object.hasOwnProperty.call(e,"scheduleRef")&&$root.proto.ScheduleID.encode(e.scheduleRef,o.uint32(98).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionRecord,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.receipt=$root.proto.TransactionReceipt.decode(e,e.uint32());break;case 2:d.transactionHash=e.bytes();break;case 3:d.consensusTimestamp=$root.proto.Timestamp.decode(e,e.uint32());break;case 4:d.transactionID=$root.proto.TransactionID.decode(e,e.uint32());break;case 5:d.memo=e.string();break;case 6:d.transactionFee=e.uint64();break;case 7:d.contractCallResult=$root.proto.ContractFunctionResult.decode(e,e.uint32());break;case 8:d.contractCreateResult=$root.proto.ContractFunctionResult.decode(e,e.uint32());break;case 10:d.transferList=$root.proto.TransferList.decode(e,e.uint32());break;case 11:d.tokenTransferLists&&d.tokenTransferLists.length||(d.tokenTransferLists=[]),d.tokenTransferLists.push($root.proto.TokenTransferList.decode(e,e.uint32()));break;case 12:d.scheduleRef=$root.proto.ScheduleID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TransactionReceipt:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.status=0,e.prototype.accountID=null,e.prototype.fileID=null,e.prototype.contractID=null,e.prototype.exchangeRate=null,e.prototype.topicID=null,e.prototype.topicSequenceNumber=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.topicRunningHash=$util.newBuffer([]),e.prototype.topicRunningHashVersion=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.tokenID=null,e.prototype.newTotalSupply=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.scheduleID=null,e.prototype.scheduledTransactionID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.status&&Object.hasOwnProperty.call(e,"status")&&o.uint32(8).int32(e.status),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(26).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(34).fork()).ldelim(),null!=e.exchangeRate&&Object.hasOwnProperty.call(e,"exchangeRate")&&$root.proto.ExchangeRateSet.encode(e.exchangeRate,o.uint32(42).fork()).ldelim(),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(50).fork()).ldelim(),null!=e.topicSequenceNumber&&Object.hasOwnProperty.call(e,"topicSequenceNumber")&&o.uint32(56).uint64(e.topicSequenceNumber),null!=e.topicRunningHash&&Object.hasOwnProperty.call(e,"topicRunningHash")&&o.uint32(66).bytes(e.topicRunningHash),null!=e.topicRunningHashVersion&&Object.hasOwnProperty.call(e,"topicRunningHashVersion")&&o.uint32(72).uint64(e.topicRunningHashVersion),null!=e.tokenID&&Object.hasOwnProperty.call(e,"tokenID")&&$root.proto.TokenID.encode(e.tokenID,o.uint32(82).fork()).ldelim(),null!=e.newTotalSupply&&Object.hasOwnProperty.call(e,"newTotalSupply")&&o.uint32(88).uint64(e.newTotalSupply),null!=e.scheduleID&&Object.hasOwnProperty.call(e,"scheduleID")&&$root.proto.ScheduleID.encode(e.scheduleID,o.uint32(98).fork()).ldelim(),null!=e.scheduledTransactionID&&Object.hasOwnProperty.call(e,"scheduledTransactionID")&&$root.proto.TransactionID.encode(e.scheduledTransactionID,o.uint32(106).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionReceipt,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.status=e.int32();break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 4:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 5:d.exchangeRate=$root.proto.ExchangeRateSet.decode(e,e.uint32());break;case 6:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;case 7:d.topicSequenceNumber=e.uint64();break;case 8:d.topicRunningHash=e.bytes();break;case 9:d.topicRunningHashVersion=e.uint64();break;case 10:d.tokenID=$root.proto.TokenID.decode(e,e.uint32());break;case 11:d.newTotalSupply=e.uint64();break;case 12:d.scheduleID=$root.proto.ScheduleID.decode(e,e.uint32());break;case 13:d.scheduledTransactionID=$root.proto.TransactionID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ExchangeRate:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.hbarEquiv=0,e.prototype.centEquiv=0,e.prototype.expirationTime=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.hbarEquiv&&Object.hasOwnProperty.call(e,"hbarEquiv")&&o.uint32(8).int32(e.hbarEquiv),null!=e.centEquiv&&Object.hasOwnProperty.call(e,"centEquiv")&&o.uint32(16).int32(e.centEquiv),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.TimestampSeconds.encode(e.expirationTime,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ExchangeRate,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.hbarEquiv=e.int32();break;case 2:d.centEquiv=e.int32();break;case 3:d.expirationTime=$root.proto.TimestampSeconds.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ExchangeRateSet:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.currentRate=null,e.prototype.nextRate=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.currentRate&&Object.hasOwnProperty.call(e,"currentRate")&&$root.proto.ExchangeRate.encode(e.currentRate,o.uint32(10).fork()).ldelim(),null!=e.nextRate&&Object.hasOwnProperty.call(e,"nextRate")&&$root.proto.ExchangeRate.encode(e.nextRate,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ExchangeRateSet,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.currentRate=$root.proto.ExchangeRate.decode(e,e.uint32());break;case 2:d.nextRate=$root.proto.ExchangeRate.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoTransferTransactionBody:function(){function e(e){if(this.tokenTransfers=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.transfers=null,e.prototype.tokenTransfers=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.transfers&&Object.hasOwnProperty.call(e,"transfers")&&$root.proto.TransferList.encode(e.transfers,o.uint32(10).fork()).ldelim(),null!=e.tokenTransfers&&e.tokenTransfers.length)for(var t=0;t<e.tokenTransfers.length;++t)$root.proto.TokenTransferList.encode(e.tokenTransfers[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoTransferTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transfers=$root.proto.TransferList.decode(e,e.uint32());break;case 2:d.tokenTransfers&&d.tokenTransfers.length||(d.tokenTransfers=[]),d.tokenTransfers.push($root.proto.TokenTransferList.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),CryptoGetAccountBalanceQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.header=null,e.prototype.accountID=null,e.prototype.contractID=null;let o;return Object.defineProperty(e.prototype,"balanceSource",{get:$util.oneOfGetter(o=["accountID","contractID"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetAccountBalanceQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoGetAccountBalanceResponse:function(){function e(e){if(this.tokenBalances=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.prototype.balance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.tokenBalances=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.balance&&Object.hasOwnProperty.call(e,"balance")&&o.uint32(24).uint64(e.balance),null!=e.tokenBalances&&e.tokenBalances.length)for(var t=0;t<e.tokenBalances.length;++t)$root.proto.TokenBalance.encode(e.tokenBalances[t],o.uint32(34).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetAccountBalanceResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.balance=e.uint64();break;case 4:d.tokenBalances&&d.tokenBalances.length||(d.tokenBalances=[]),d.tokenBalances.push($root.proto.TokenBalance.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),CryptoGetAccountRecordsQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetAccountRecordsQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoGetAccountRecordsResponse:function(){function e(e){if(this.records=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.prototype.records=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.records&&e.records.length)for(var t=0;t<e.records.length;++t)$root.proto.TransactionRecord.encode(e.records[t],o.uint32(26).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetAccountRecordsResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.records&&d.records.length||(d.records=[]),d.records.push($root.proto.TransactionRecord.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),CryptoGetInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoGetInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountInfo&&Object.hasOwnProperty.call(e,"accountInfo")&&$root.proto.CryptoGetInfoResponse.AccountInfo.encode(e.accountInfo,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.accountInfo=$root.proto.CryptoGetInfoResponse.AccountInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e.AccountInfo=function(){function e(e){if(this.liveHashes=[],this.tokenRelationships=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountID=null,e.prototype.contractAccountID="",e.prototype.deleted=!1,e.prototype.proxyAccountID=null,e.prototype.proxyReceived=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.key=null,e.prototype.balance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.generateSendRecordThreshold=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.generateReceiveRecordThreshold=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.receiverSigRequired=!1,e.prototype.expirationTime=null,e.prototype.autoRenewPeriod=null,e.prototype.liveHashes=$util.emptyArray,e.prototype.tokenRelationships=$util.emptyArray,e.prototype.memo="",e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.contractAccountID&&Object.hasOwnProperty.call(e,"contractAccountID")&&o.uint32(18).string(e.contractAccountID),null!=e.deleted&&Object.hasOwnProperty.call(e,"deleted")&&o.uint32(24).bool(e.deleted),null!=e.proxyAccountID&&Object.hasOwnProperty.call(e,"proxyAccountID")&&$root.proto.AccountID.encode(e.proxyAccountID,o.uint32(34).fork()).ldelim(),null!=e.proxyReceived&&Object.hasOwnProperty.call(e,"proxyReceived")&&o.uint32(48).int64(e.proxyReceived),null!=e.key&&Object.hasOwnProperty.call(e,"key")&&$root.proto.Key.encode(e.key,o.uint32(58).fork()).ldelim(),null!=e.balance&&Object.hasOwnProperty.call(e,"balance")&&o.uint32(64).uint64(e.balance),null!=e.generateSendRecordThreshold&&Object.hasOwnProperty.call(e,"generateSendRecordThreshold")&&o.uint32(72).uint64(e.generateSendRecordThreshold),null!=e.generateReceiveRecordThreshold&&Object.hasOwnProperty.call(e,"generateReceiveRecordThreshold")&&o.uint32(80).uint64(e.generateReceiveRecordThreshold),null!=e.receiverSigRequired&&Object.hasOwnProperty.call(e,"receiverSigRequired")&&o.uint32(88).bool(e.receiverSigRequired),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(98).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(106).fork()).ldelim(),null!=e.liveHashes&&e.liveHashes.length)for(var t=0;t<e.liveHashes.length;++t)$root.proto.LiveHash.encode(e.liveHashes[t],o.uint32(114).fork()).ldelim();if(null!=e.tokenRelationships&&e.tokenRelationships.length)for(var t=0;t<e.tokenRelationships.length;++t)$root.proto.TokenRelationship.encode(e.tokenRelationships[t],o.uint32(122).fork()).ldelim();return null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(130).string(e.memo),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetInfoResponse.AccountInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.contractAccountID=e.string();break;case 3:d.deleted=e.bool();break;case 4:d.proxyAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 6:d.proxyReceived=e.int64();break;case 7:d.key=$root.proto.Key.decode(e,e.uint32());break;case 8:d.balance=e.uint64();break;case 9:d.generateSendRecordThreshold=e.uint64();break;case 10:d.generateReceiveRecordThreshold=e.uint64();break;case 11:d.receiverSigRequired=e.bool();break;case 12:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 13:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 14:d.liveHashes&&d.liveHashes.length||(d.liveHashes=[]),d.liveHashes.push($root.proto.LiveHash.decode(e,e.uint32()));break;case 15:d.tokenRelationships&&d.tokenRelationships.length||(d.tokenRelationships=[]),d.tokenRelationships.push($root.proto.TokenRelationship.decode(e,e.uint32()));break;case 16:d.memo=e.string();break;default:e.skipType(7&i);}return d},e}(),e}(),CryptoGetLiveHashQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.prototype.hash=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.hash&&Object.hasOwnProperty.call(e,"hash")&&o.uint32(26).bytes(e.hash),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetLiveHashQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.hash=e.bytes();break;default:e.skipType(7&i);}return d},e}(),CryptoGetLiveHashResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.liveHash=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.liveHash&&Object.hasOwnProperty.call(e,"liveHash")&&$root.proto.LiveHash.encode(e.liveHash,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetLiveHashResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.liveHash=$root.proto.LiveHash.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoGetStakersQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetStakersQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ProxyStaker:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountID=null,e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(16).int64(e.amount),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ProxyStaker,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.amount=e.int64();break;default:e.skipType(7&i);}return d},e}(),AllProxyStakers:function(){function e(e){if(this.proxyStaker=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountID=null,e.prototype.proxyStaker=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.proxyStaker&&e.proxyStaker.length)for(var t=0;t<e.proxyStaker.length;++t)$root.proto.ProxyStaker.encode(e.proxyStaker[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.AllProxyStakers,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.proxyStaker&&d.proxyStaker.length||(d.proxyStaker=[]),d.proxyStaker.push($root.proto.ProxyStaker.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),CryptoGetStakersResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.stakers=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.stakers&&Object.hasOwnProperty.call(e,"stakers")&&$root.proto.AllProxyStakers.encode(e.stakers,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetStakersResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 3:d.stakers=$root.proto.AllProxyStakers.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FileGetContentsQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.fileID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileGetContentsQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FileGetContentsResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.fileContents=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.fileContents&&Object.hasOwnProperty.call(e,"fileContents")&&$root.proto.FileGetContentsResponse.FileContents.encode(e.fileContents,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileGetContentsResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.fileContents=$root.proto.FileGetContentsResponse.FileContents.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e.FileContents=function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.fileID=null,e.prototype.contents=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(10).fork()).ldelim(),null!=e.contents&&Object.hasOwnProperty.call(e,"contents")&&o.uint32(18).bytes(e.contents),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileGetContentsResponse.FileContents,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 2:d.contents=e.bytes();break;default:e.skipType(7&i);}return d},e}(),e}(),FileGetInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.fileID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileGetInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FileGetInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.fileInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.fileInfo&&Object.hasOwnProperty.call(e,"fileInfo")&&$root.proto.FileGetInfoResponse.FileInfo.encode(e.fileInfo,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileGetInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.fileInfo=$root.proto.FileGetInfoResponse.FileInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e.FileInfo=function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.fileID=null,e.prototype.size=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.expirationTime=null,e.prototype.deleted=!1,e.prototype.keys=null,e.prototype.memo="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(10).fork()).ldelim(),null!=e.size&&Object.hasOwnProperty.call(e,"size")&&o.uint32(16).int64(e.size),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(26).fork()).ldelim(),null!=e.deleted&&Object.hasOwnProperty.call(e,"deleted")&&o.uint32(32).bool(e.deleted),null!=e.keys&&Object.hasOwnProperty.call(e,"keys")&&$root.proto.KeyList.encode(e.keys,o.uint32(42).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(50).string(e.memo),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileGetInfoResponse.FileInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 2:d.size=e.int64();break;case 3:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 4:d.deleted=e.bool();break;case 5:d.keys=$root.proto.KeyList.decode(e,e.uint32());break;case 6:d.memo=e.string();break;default:e.skipType(7&i);}return d},e}(),e}(),TransactionGetReceiptQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.transactionID=null,e.prototype.includeDuplicates=!1,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.transactionID&&Object.hasOwnProperty.call(e,"transactionID")&&$root.proto.TransactionID.encode(e.transactionID,o.uint32(18).fork()).ldelim(),null!=e.includeDuplicates&&Object.hasOwnProperty.call(e,"includeDuplicates")&&o.uint32(24).bool(e.includeDuplicates),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionGetReceiptQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.transactionID=$root.proto.TransactionID.decode(e,e.uint32());break;case 3:d.includeDuplicates=e.bool();break;default:e.skipType(7&i);}return d},e}(),TransactionGetReceiptResponse:function(){function e(e){if(this.duplicateTransactionReceipts=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.receipt=null,e.prototype.duplicateTransactionReceipts=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.receipt&&Object.hasOwnProperty.call(e,"receipt")&&$root.proto.TransactionReceipt.encode(e.receipt,o.uint32(18).fork()).ldelim(),null!=e.duplicateTransactionReceipts&&e.duplicateTransactionReceipts.length)for(var t=0;t<e.duplicateTransactionReceipts.length;++t)$root.proto.TransactionReceipt.encode(e.duplicateTransactionReceipts[t],o.uint32(34).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionGetReceiptResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.receipt=$root.proto.TransactionReceipt.decode(e,e.uint32());break;case 4:d.duplicateTransactionReceipts&&d.duplicateTransactionReceipts.length||(d.duplicateTransactionReceipts=[]),d.duplicateTransactionReceipts.push($root.proto.TransactionReceipt.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TransactionGetRecordQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.transactionID=null,e.prototype.includeDuplicates=!1,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.transactionID&&Object.hasOwnProperty.call(e,"transactionID")&&$root.proto.TransactionID.encode(e.transactionID,o.uint32(18).fork()).ldelim(),null!=e.includeDuplicates&&Object.hasOwnProperty.call(e,"includeDuplicates")&&o.uint32(24).bool(e.includeDuplicates),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionGetRecordQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.transactionID=$root.proto.TransactionID.decode(e,e.uint32());break;case 3:d.includeDuplicates=e.bool();break;default:e.skipType(7&i);}return d},e}(),TransactionGetRecordResponse:function(){function e(e){if(this.duplicateTransactionRecords=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.transactionRecord=null,e.prototype.duplicateTransactionRecords=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.transactionRecord&&Object.hasOwnProperty.call(e,"transactionRecord")&&$root.proto.TransactionRecord.encode(e.transactionRecord,o.uint32(26).fork()).ldelim(),null!=e.duplicateTransactionRecords&&e.duplicateTransactionRecords.length)for(var t=0;t<e.duplicateTransactionRecords.length;++t)$root.proto.TransactionRecord.encode(e.duplicateTransactionRecords[t],o.uint32(34).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionGetRecordResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 3:d.transactionRecord=$root.proto.TransactionRecord.decode(e,e.uint32());break;case 4:d.duplicateTransactionRecords&&d.duplicateTransactionRecords.length||(d.duplicateTransactionRecords=[]),d.duplicateTransactionRecords.push($root.proto.TransactionRecord.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TransactionGetFastRecordQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.transactionID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.transactionID&&Object.hasOwnProperty.call(e,"transactionID")&&$root.proto.TransactionID.encode(e.transactionID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionGetFastRecordQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.transactionID=$root.proto.TransactionID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TransactionGetFastRecordResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.transactionRecord=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.transactionRecord&&Object.hasOwnProperty.call(e,"transactionRecord")&&$root.proto.TransactionRecord.encode(e.transactionRecord,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionGetFastRecordResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.transactionRecord=$root.proto.TransactionRecord.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),NetworkGetVersionInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.NetworkGetVersionInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),NetworkGetVersionInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.hapiProtoVersion=null,e.prototype.hederaServicesVersion=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.hapiProtoVersion&&Object.hasOwnProperty.call(e,"hapiProtoVersion")&&$root.proto.SemanticVersion.encode(e.hapiProtoVersion,o.uint32(18).fork()).ldelim(),null!=e.hederaServicesVersion&&Object.hasOwnProperty.call(e,"hederaServicesVersion")&&$root.proto.SemanticVersion.encode(e.hederaServicesVersion,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.NetworkGetVersionInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.hapiProtoVersion=$root.proto.SemanticVersion.decode(e,e.uint32());break;case 3:d.hederaServicesVersion=$root.proto.SemanticVersion.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenGetInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.token=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGetInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.token=$root.proto.TokenID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenInfo:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenId=null,e.prototype.name="",e.prototype.symbol="",e.prototype.decimals=0,e.prototype.totalSupply=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.treasury=null,e.prototype.adminKey=null,e.prototype.kycKey=null,e.prototype.freezeKey=null,e.prototype.wipeKey=null,e.prototype.supplyKey=null,e.prototype.defaultFreezeStatus=0,e.prototype.defaultKycStatus=0,e.prototype.deleted=!1,e.prototype.autoRenewAccount=null,e.prototype.autoRenewPeriod=null,e.prototype.expiry=null,e.prototype.memo="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.tokenId&&Object.hasOwnProperty.call(e,"tokenId")&&$root.proto.TokenID.encode(e.tokenId,o.uint32(10).fork()).ldelim(),null!=e.name&&Object.hasOwnProperty.call(e,"name")&&o.uint32(18).string(e.name),null!=e.symbol&&Object.hasOwnProperty.call(e,"symbol")&&o.uint32(26).string(e.symbol),null!=e.decimals&&Object.hasOwnProperty.call(e,"decimals")&&o.uint32(32).uint32(e.decimals),null!=e.totalSupply&&Object.hasOwnProperty.call(e,"totalSupply")&&o.uint32(40).uint64(e.totalSupply),null!=e.treasury&&Object.hasOwnProperty.call(e,"treasury")&&$root.proto.AccountID.encode(e.treasury,o.uint32(50).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(58).fork()).ldelim(),null!=e.kycKey&&Object.hasOwnProperty.call(e,"kycKey")&&$root.proto.Key.encode(e.kycKey,o.uint32(66).fork()).ldelim(),null!=e.freezeKey&&Object.hasOwnProperty.call(e,"freezeKey")&&$root.proto.Key.encode(e.freezeKey,o.uint32(74).fork()).ldelim(),null!=e.wipeKey&&Object.hasOwnProperty.call(e,"wipeKey")&&$root.proto.Key.encode(e.wipeKey,o.uint32(82).fork()).ldelim(),null!=e.supplyKey&&Object.hasOwnProperty.call(e,"supplyKey")&&$root.proto.Key.encode(e.supplyKey,o.uint32(90).fork()).ldelim(),null!=e.defaultFreezeStatus&&Object.hasOwnProperty.call(e,"defaultFreezeStatus")&&o.uint32(96).int32(e.defaultFreezeStatus),null!=e.defaultKycStatus&&Object.hasOwnProperty.call(e,"defaultKycStatus")&&o.uint32(104).int32(e.defaultKycStatus),null!=e.deleted&&Object.hasOwnProperty.call(e,"deleted")&&o.uint32(112).bool(e.deleted),null!=e.autoRenewAccount&&Object.hasOwnProperty.call(e,"autoRenewAccount")&&$root.proto.AccountID.encode(e.autoRenewAccount,o.uint32(122).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(130).fork()).ldelim(),null!=e.expiry&&Object.hasOwnProperty.call(e,"expiry")&&$root.proto.Timestamp.encode(e.expiry,o.uint32(138).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(146).string(e.memo),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenId=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.name=e.string();break;case 3:d.symbol=e.string();break;case 4:d.decimals=e.uint32();break;case 5:d.totalSupply=e.uint64();break;case 6:d.treasury=$root.proto.AccountID.decode(e,e.uint32());break;case 7:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 8:d.kycKey=$root.proto.Key.decode(e,e.uint32());break;case 9:d.freezeKey=$root.proto.Key.decode(e,e.uint32());break;case 10:d.wipeKey=$root.proto.Key.decode(e,e.uint32());break;case 11:d.supplyKey=$root.proto.Key.decode(e,e.uint32());break;case 12:d.defaultFreezeStatus=e.int32();break;case 13:d.defaultKycStatus=e.int32();break;case 14:d.deleted=e.bool();break;case 15:d.autoRenewAccount=$root.proto.AccountID.decode(e,e.uint32());break;case 16:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 17:d.expiry=$root.proto.Timestamp.decode(e,e.uint32());break;case 18:d.memo=e.string();break;default:e.skipType(7&i);}return d},e}(),TokenGetInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.tokenInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.tokenInfo&&Object.hasOwnProperty.call(e,"tokenInfo")&&$root.proto.TokenInfo.encode(e.tokenInfo,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGetInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.tokenInfo=$root.proto.TokenInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ScheduleGetInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.scheduleID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.scheduleID&&Object.hasOwnProperty.call(e,"scheduleID")&&$root.proto.ScheduleID.encode(e.scheduleID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleGetInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.scheduleID=$root.proto.ScheduleID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ScheduleInfo:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.scheduleID=null,e.prototype.deletionTime=null,e.prototype.executionTime=null,e.prototype.expirationTime=null,e.prototype.scheduledTransactionBody=null,e.prototype.memo="",e.prototype.adminKey=null,e.prototype.signers=null,e.prototype.creatorAccountID=null,e.prototype.payerAccountID=null,e.prototype.scheduledTransactionID=null;let o;return Object.defineProperty(e.prototype,"data",{get:$util.oneOfGetter(o=["deletionTime","executionTime"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.scheduleID&&Object.hasOwnProperty.call(e,"scheduleID")&&$root.proto.ScheduleID.encode(e.scheduleID,o.uint32(10).fork()).ldelim(),null!=e.deletionTime&&Object.hasOwnProperty.call(e,"deletionTime")&&$root.proto.Timestamp.encode(e.deletionTime,o.uint32(18).fork()).ldelim(),null!=e.executionTime&&Object.hasOwnProperty.call(e,"executionTime")&&$root.proto.Timestamp.encode(e.executionTime,o.uint32(26).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(34).fork()).ldelim(),null!=e.scheduledTransactionBody&&Object.hasOwnProperty.call(e,"scheduledTransactionBody")&&$root.proto.SchedulableTransactionBody.encode(e.scheduledTransactionBody,o.uint32(42).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(50).string(e.memo),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(58).fork()).ldelim(),null!=e.signers&&Object.hasOwnProperty.call(e,"signers")&&$root.proto.KeyList.encode(e.signers,o.uint32(66).fork()).ldelim(),null!=e.creatorAccountID&&Object.hasOwnProperty.call(e,"creatorAccountID")&&$root.proto.AccountID.encode(e.creatorAccountID,o.uint32(74).fork()).ldelim(),null!=e.payerAccountID&&Object.hasOwnProperty.call(e,"payerAccountID")&&$root.proto.AccountID.encode(e.payerAccountID,o.uint32(82).fork()).ldelim(),null!=e.scheduledTransactionID&&Object.hasOwnProperty.call(e,"scheduledTransactionID")&&$root.proto.TransactionID.encode(e.scheduledTransactionID,o.uint32(90).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.scheduleID=$root.proto.ScheduleID.decode(e,e.uint32());break;case 2:d.deletionTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 3:d.executionTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 4:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 5:d.scheduledTransactionBody=$root.proto.SchedulableTransactionBody.decode(e,e.uint32());break;case 6:d.memo=e.string();break;case 7:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 8:d.signers=$root.proto.KeyList.decode(e,e.uint32());break;case 9:d.creatorAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 10:d.payerAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 11:d.scheduledTransactionID=$root.proto.TransactionID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ScheduleGetInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.scheduleInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.scheduleInfo&&Object.hasOwnProperty.call(e,"scheduleInfo")&&$root.proto.ScheduleInfo.encode(e.scheduleInfo,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleGetInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.scheduleInfo=$root.proto.ScheduleInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),SchedulableTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.transactionFee=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.memo="",e.prototype.contractCall=null,e.prototype.contractCreateInstance=null,e.prototype.contractUpdateInstance=null,e.prototype.contractDeleteInstance=null,e.prototype.cryptoCreateAccount=null,e.prototype.cryptoDelete=null,e.prototype.cryptoTransfer=null,e.prototype.cryptoUpdateAccount=null,e.prototype.fileAppend=null,e.prototype.fileCreate=null,e.prototype.fileDelete=null,e.prototype.fileUpdate=null,e.prototype.systemDelete=null,e.prototype.systemUndelete=null,e.prototype.freeze=null,e.prototype.consensusCreateTopic=null,e.prototype.consensusUpdateTopic=null,e.prototype.consensusDeleteTopic=null,e.prototype.consensusSubmitMessage=null,e.prototype.tokenCreation=null,e.prototype.tokenFreeze=null,e.prototype.tokenUnfreeze=null,e.prototype.tokenGrantKyc=null,e.prototype.tokenRevokeKyc=null,e.prototype.tokenDeletion=null,e.prototype.tokenUpdate=null,e.prototype.tokenMint=null,e.prototype.tokenBurn=null,e.prototype.tokenWipe=null,e.prototype.tokenAssociate=null,e.prototype.tokenDissociate=null,e.prototype.scheduleDelete=null;let o;return Object.defineProperty(e.prototype,"data",{get:$util.oneOfGetter(o=["contractCall","contractCreateInstance","contractUpdateInstance","contractDeleteInstance","cryptoCreateAccount","cryptoDelete","cryptoTransfer","cryptoUpdateAccount","fileAppend","fileCreate","fileDelete","fileUpdate","systemDelete","systemUndelete","freeze","consensusCreateTopic","consensusUpdateTopic","consensusDeleteTopic","consensusSubmitMessage","tokenCreation","tokenFreeze","tokenUnfreeze","tokenGrantKyc","tokenRevokeKyc","tokenDeletion","tokenUpdate","tokenMint","tokenBurn","tokenWipe","tokenAssociate","tokenDissociate","scheduleDelete"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.transactionFee&&Object.hasOwnProperty.call(e,"transactionFee")&&o.uint32(8).uint64(e.transactionFee),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(18).string(e.memo),null!=e.contractCall&&Object.hasOwnProperty.call(e,"contractCall")&&$root.proto.ContractCallTransactionBody.encode(e.contractCall,o.uint32(26).fork()).ldelim(),null!=e.contractCreateInstance&&Object.hasOwnProperty.call(e,"contractCreateInstance")&&$root.proto.ContractCreateTransactionBody.encode(e.contractCreateInstance,o.uint32(34).fork()).ldelim(),null!=e.contractUpdateInstance&&Object.hasOwnProperty.call(e,"contractUpdateInstance")&&$root.proto.ContractUpdateTransactionBody.encode(e.contractUpdateInstance,o.uint32(42).fork()).ldelim(),null!=e.contractDeleteInstance&&Object.hasOwnProperty.call(e,"contractDeleteInstance")&&$root.proto.ContractDeleteTransactionBody.encode(e.contractDeleteInstance,o.uint32(50).fork()).ldelim(),null!=e.cryptoCreateAccount&&Object.hasOwnProperty.call(e,"cryptoCreateAccount")&&$root.proto.CryptoCreateTransactionBody.encode(e.cryptoCreateAccount,o.uint32(58).fork()).ldelim(),null!=e.cryptoDelete&&Object.hasOwnProperty.call(e,"cryptoDelete")&&$root.proto.CryptoDeleteTransactionBody.encode(e.cryptoDelete,o.uint32(66).fork()).ldelim(),null!=e.cryptoTransfer&&Object.hasOwnProperty.call(e,"cryptoTransfer")&&$root.proto.CryptoTransferTransactionBody.encode(e.cryptoTransfer,o.uint32(74).fork()).ldelim(),null!=e.cryptoUpdateAccount&&Object.hasOwnProperty.call(e,"cryptoUpdateAccount")&&$root.proto.CryptoUpdateTransactionBody.encode(e.cryptoUpdateAccount,o.uint32(82).fork()).ldelim(),null!=e.fileAppend&&Object.hasOwnProperty.call(e,"fileAppend")&&$root.proto.FileAppendTransactionBody.encode(e.fileAppend,o.uint32(90).fork()).ldelim(),null!=e.fileCreate&&Object.hasOwnProperty.call(e,"fileCreate")&&$root.proto.FileCreateTransactionBody.encode(e.fileCreate,o.uint32(98).fork()).ldelim(),null!=e.fileDelete&&Object.hasOwnProperty.call(e,"fileDelete")&&$root.proto.FileDeleteTransactionBody.encode(e.fileDelete,o.uint32(106).fork()).ldelim(),null!=e.fileUpdate&&Object.hasOwnProperty.call(e,"fileUpdate")&&$root.proto.FileUpdateTransactionBody.encode(e.fileUpdate,o.uint32(114).fork()).ldelim(),null!=e.systemDelete&&Object.hasOwnProperty.call(e,"systemDelete")&&$root.proto.SystemDeleteTransactionBody.encode(e.systemDelete,o.uint32(122).fork()).ldelim(),null!=e.systemUndelete&&Object.hasOwnProperty.call(e,"systemUndelete")&&$root.proto.SystemUndeleteTransactionBody.encode(e.systemUndelete,o.uint32(130).fork()).ldelim(),null!=e.freeze&&Object.hasOwnProperty.call(e,"freeze")&&$root.proto.FreezeTransactionBody.encode(e.freeze,o.uint32(138).fork()).ldelim(),null!=e.consensusCreateTopic&&Object.hasOwnProperty.call(e,"consensusCreateTopic")&&$root.proto.ConsensusCreateTopicTransactionBody.encode(e.consensusCreateTopic,o.uint32(146).fork()).ldelim(),null!=e.consensusUpdateTopic&&Object.hasOwnProperty.call(e,"consensusUpdateTopic")&&$root.proto.ConsensusUpdateTopicTransactionBody.encode(e.consensusUpdateTopic,o.uint32(154).fork()).ldelim(),null!=e.consensusDeleteTopic&&Object.hasOwnProperty.call(e,"consensusDeleteTopic")&&$root.proto.ConsensusDeleteTopicTransactionBody.encode(e.consensusDeleteTopic,o.uint32(162).fork()).ldelim(),null!=e.consensusSubmitMessage&&Object.hasOwnProperty.call(e,"consensusSubmitMessage")&&$root.proto.ConsensusSubmitMessageTransactionBody.encode(e.consensusSubmitMessage,o.uint32(170).fork()).ldelim(),null!=e.tokenCreation&&Object.hasOwnProperty.call(e,"tokenCreation")&&$root.proto.TokenCreateTransactionBody.encode(e.tokenCreation,o.uint32(178).fork()).ldelim(),null!=e.tokenFreeze&&Object.hasOwnProperty.call(e,"tokenFreeze")&&$root.proto.TokenFreezeAccountTransactionBody.encode(e.tokenFreeze,o.uint32(186).fork()).ldelim(),null!=e.tokenUnfreeze&&Object.hasOwnProperty.call(e,"tokenUnfreeze")&&$root.proto.TokenUnfreezeAccountTransactionBody.encode(e.tokenUnfreeze,o.uint32(194).fork()).ldelim(),null!=e.tokenGrantKyc&&Object.hasOwnProperty.call(e,"tokenGrantKyc")&&$root.proto.TokenGrantKycTransactionBody.encode(e.tokenGrantKyc,o.uint32(202).fork()).ldelim(),null!=e.tokenRevokeKyc&&Object.hasOwnProperty.call(e,"tokenRevokeKyc")&&$root.proto.TokenRevokeKycTransactionBody.encode(e.tokenRevokeKyc,o.uint32(210).fork()).ldelim(),null!=e.tokenDeletion&&Object.hasOwnProperty.call(e,"tokenDeletion")&&$root.proto.TokenDeleteTransactionBody.encode(e.tokenDeletion,o.uint32(218).fork()).ldelim(),null!=e.tokenUpdate&&Object.hasOwnProperty.call(e,"tokenUpdate")&&$root.proto.TokenUpdateTransactionBody.encode(e.tokenUpdate,o.uint32(226).fork()).ldelim(),null!=e.tokenMint&&Object.hasOwnProperty.call(e,"tokenMint")&&$root.proto.TokenMintTransactionBody.encode(e.tokenMint,o.uint32(234).fork()).ldelim(),null!=e.tokenBurn&&Object.hasOwnProperty.call(e,"tokenBurn")&&$root.proto.TokenBurnTransactionBody.encode(e.tokenBurn,o.uint32(242).fork()).ldelim(),null!=e.tokenWipe&&Object.hasOwnProperty.call(e,"tokenWipe")&&$root.proto.TokenWipeAccountTransactionBody.encode(e.tokenWipe,o.uint32(250).fork()).ldelim(),null!=e.tokenAssociate&&Object.hasOwnProperty.call(e,"tokenAssociate")&&$root.proto.TokenAssociateTransactionBody.encode(e.tokenAssociate,o.uint32(258).fork()).ldelim(),null!=e.tokenDissociate&&Object.hasOwnProperty.call(e,"tokenDissociate")&&$root.proto.TokenDissociateTransactionBody.encode(e.tokenDissociate,o.uint32(266).fork()).ldelim(),null!=e.scheduleDelete&&Object.hasOwnProperty.call(e,"scheduleDelete")&&$root.proto.ScheduleDeleteTransactionBody.encode(e.scheduleDelete,o.uint32(274).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SchedulableTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transactionFee=e.uint64();break;case 2:d.memo=e.string();break;case 3:d.contractCall=$root.proto.ContractCallTransactionBody.decode(e,e.uint32());break;case 4:d.contractCreateInstance=$root.proto.ContractCreateTransactionBody.decode(e,e.uint32());break;case 5:d.contractUpdateInstance=$root.proto.ContractUpdateTransactionBody.decode(e,e.uint32());break;case 6:d.contractDeleteInstance=$root.proto.ContractDeleteTransactionBody.decode(e,e.uint32());break;case 7:d.cryptoCreateAccount=$root.proto.CryptoCreateTransactionBody.decode(e,e.uint32());break;case 8:d.cryptoDelete=$root.proto.CryptoDeleteTransactionBody.decode(e,e.uint32());break;case 9:d.cryptoTransfer=$root.proto.CryptoTransferTransactionBody.decode(e,e.uint32());break;case 10:d.cryptoUpdateAccount=$root.proto.CryptoUpdateTransactionBody.decode(e,e.uint32());break;case 11:d.fileAppend=$root.proto.FileAppendTransactionBody.decode(e,e.uint32());break;case 12:d.fileCreate=$root.proto.FileCreateTransactionBody.decode(e,e.uint32());break;case 13:d.fileDelete=$root.proto.FileDeleteTransactionBody.decode(e,e.uint32());break;case 14:d.fileUpdate=$root.proto.FileUpdateTransactionBody.decode(e,e.uint32());break;case 15:d.systemDelete=$root.proto.SystemDeleteTransactionBody.decode(e,e.uint32());break;case 16:d.systemUndelete=$root.proto.SystemUndeleteTransactionBody.decode(e,e.uint32());break;case 17:d.freeze=$root.proto.FreezeTransactionBody.decode(e,e.uint32());break;case 18:d.consensusCreateTopic=$root.proto.ConsensusCreateTopicTransactionBody.decode(e,e.uint32());break;case 19:d.consensusUpdateTopic=$root.proto.ConsensusUpdateTopicTransactionBody.decode(e,e.uint32());break;case 20:d.consensusDeleteTopic=$root.proto.ConsensusDeleteTopicTransactionBody.decode(e,e.uint32());break;case 21:d.consensusSubmitMessage=$root.proto.ConsensusSubmitMessageTransactionBody.decode(e,e.uint32());break;case 22:d.tokenCreation=$root.proto.TokenCreateTransactionBody.decode(e,e.uint32());break;case 23:d.tokenFreeze=$root.proto.TokenFreezeAccountTransactionBody.decode(e,e.uint32());break;case 24:d.tokenUnfreeze=$root.proto.TokenUnfreezeAccountTransactionBody.decode(e,e.uint32());break;case 25:d.tokenGrantKyc=$root.proto.TokenGrantKycTransactionBody.decode(e,e.uint32());break;case 26:d.tokenRevokeKyc=$root.proto.TokenRevokeKycTransactionBody.decode(e,e.uint32());break;case 27:d.tokenDeletion=$root.proto.TokenDeleteTransactionBody.decode(e,e.uint32());break;case 28:d.tokenUpdate=$root.proto.TokenUpdateTransactionBody.decode(e,e.uint32());break;case 29:d.tokenMint=$root.proto.TokenMintTransactionBody.decode(e,e.uint32());break;case 30:d.tokenBurn=$root.proto.TokenBurnTransactionBody.decode(e,e.uint32());break;case 31:d.tokenWipe=$root.proto.TokenWipeAccountTransactionBody.decode(e,e.uint32());break;case 32:d.tokenAssociate=$root.proto.TokenAssociateTransactionBody.decode(e,e.uint32());break;case 33:d.tokenDissociate=$root.proto.TokenDissociateTransactionBody.decode(e,e.uint32());break;case 34:d.scheduleDelete=$root.proto.ScheduleDeleteTransactionBody.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),SystemDeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.fileID=null,e.prototype.contractID=null,e.prototype.expirationTime=null;let o;return Object.defineProperty(e.prototype,"id",{get:$util.oneOfGetter(o=["fileID","contractID"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.TimestampSeconds.encode(e.expirationTime,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SystemDeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 3:d.expirationTime=$root.proto.TimestampSeconds.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),SystemUndeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.fileID=null,e.prototype.contractID=null;let o;return Object.defineProperty(e.prototype,"id",{get:$util.oneOfGetter(o=["fileID","contractID"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SystemUndeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FreezeTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.startHour=0,e.prototype.startMin=0,e.prototype.endHour=0,e.prototype.endMin=0,e.prototype.updateFile=null,e.prototype.fileHash=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.startHour&&Object.hasOwnProperty.call(e,"startHour")&&o.uint32(8).int32(e.startHour),null!=e.startMin&&Object.hasOwnProperty.call(e,"startMin")&&o.uint32(16).int32(e.startMin),null!=e.endHour&&Object.hasOwnProperty.call(e,"endHour")&&o.uint32(24).int32(e.endHour),null!=e.endMin&&Object.hasOwnProperty.call(e,"endMin")&&o.uint32(32).int32(e.endMin),null!=e.updateFile&&Object.hasOwnProperty.call(e,"updateFile")&&$root.proto.FileID.encode(e.updateFile,o.uint32(42).fork()).ldelim(),null!=e.fileHash&&Object.hasOwnProperty.call(e,"fileHash")&&o.uint32(50).bytes(e.fileHash),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FreezeTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.startHour=e.int32();break;case 2:d.startMin=e.int32();break;case 3:d.endHour=e.int32();break;case 4:d.endMin=e.int32();break;case 5:d.updateFile=$root.proto.FileID.decode(e,e.uint32());break;case 6:d.fileHash=e.bytes();break;default:e.skipType(7&i);}return d},e}(),ContractCallTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.contractID=null,e.prototype.gas=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.functionParameters=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.gas&&Object.hasOwnProperty.call(e,"gas")&&o.uint32(16).int64(e.gas),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(24).int64(e.amount),null!=e.functionParameters&&Object.hasOwnProperty.call(e,"functionParameters")&&o.uint32(34).bytes(e.functionParameters),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractCallTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.gas=e.int64();break;case 3:d.amount=e.int64();break;case 4:d.functionParameters=e.bytes();break;default:e.skipType(7&i);}return d},e}(),ContractCreateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.fileID=null,e.prototype.adminKey=null,e.prototype.gas=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.initialBalance=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.proxyAccountID=null,e.prototype.autoRenewPeriod=null,e.prototype.constructorParameters=$util.newBuffer([]),e.prototype.shardID=null,e.prototype.realmID=null,e.prototype.newRealmAdminKey=null,e.prototype.memo="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(10).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(26).fork()).ldelim(),null!=e.gas&&Object.hasOwnProperty.call(e,"gas")&&o.uint32(32).int64(e.gas),null!=e.initialBalance&&Object.hasOwnProperty.call(e,"initialBalance")&&o.uint32(40).int64(e.initialBalance),null!=e.proxyAccountID&&Object.hasOwnProperty.call(e,"proxyAccountID")&&$root.proto.AccountID.encode(e.proxyAccountID,o.uint32(50).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(66).fork()).ldelim(),null!=e.constructorParameters&&Object.hasOwnProperty.call(e,"constructorParameters")&&o.uint32(74).bytes(e.constructorParameters),null!=e.shardID&&Object.hasOwnProperty.call(e,"shardID")&&$root.proto.ShardID.encode(e.shardID,o.uint32(82).fork()).ldelim(),null!=e.realmID&&Object.hasOwnProperty.call(e,"realmID")&&$root.proto.RealmID.encode(e.realmID,o.uint32(90).fork()).ldelim(),null!=e.newRealmAdminKey&&Object.hasOwnProperty.call(e,"newRealmAdminKey")&&$root.proto.Key.encode(e.newRealmAdminKey,o.uint32(98).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(106).string(e.memo),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractCreateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 3:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 4:d.gas=e.int64();break;case 5:d.initialBalance=e.int64();break;case 6:d.proxyAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 8:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 9:d.constructorParameters=e.bytes();break;case 10:d.shardID=$root.proto.ShardID.decode(e,e.uint32());break;case 11:d.realmID=$root.proto.RealmID.decode(e,e.uint32());break;case 12:d.newRealmAdminKey=$root.proto.Key.decode(e,e.uint32());break;case 13:d.memo=e.string();break;default:e.skipType(7&i);}return d},e}(),ContractUpdateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.contractID=null,e.prototype.expirationTime=null,e.prototype.adminKey=null,e.prototype.proxyAccountID=null,e.prototype.autoRenewPeriod=null,e.prototype.fileID=null,e.prototype.memo=null,e.prototype.memoWrapper=null;let o;return Object.defineProperty(e.prototype,"memoField",{get:$util.oneOfGetter(o=["memo","memoWrapper"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(18).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(26).fork()).ldelim(),null!=e.proxyAccountID&&Object.hasOwnProperty.call(e,"proxyAccountID")&&$root.proto.AccountID.encode(e.proxyAccountID,o.uint32(50).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(58).fork()).ldelim(),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(66).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(74).string(e.memo),null!=e.memoWrapper&&Object.hasOwnProperty.call(e,"memoWrapper")&&$root.google.protobuf.StringValue.encode(e.memoWrapper,o.uint32(82).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractUpdateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 3:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 6:d.proxyAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 7:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 8:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 9:d.memo=e.string();break;case 10:d.memoWrapper=$root.google.protobuf.StringValue.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoCreateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.key=null,e.prototype.initialBalance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.proxyAccountID=null,e.prototype.sendRecordThreshold=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.receiveRecordThreshold=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.receiverSigRequired=!1,e.prototype.autoRenewPeriod=null,e.prototype.shardID=null,e.prototype.realmID=null,e.prototype.newRealmAdminKey=null,e.prototype.memo="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.key&&Object.hasOwnProperty.call(e,"key")&&$root.proto.Key.encode(e.key,o.uint32(10).fork()).ldelim(),null!=e.initialBalance&&Object.hasOwnProperty.call(e,"initialBalance")&&o.uint32(16).uint64(e.initialBalance),null!=e.proxyAccountID&&Object.hasOwnProperty.call(e,"proxyAccountID")&&$root.proto.AccountID.encode(e.proxyAccountID,o.uint32(26).fork()).ldelim(),null!=e.sendRecordThreshold&&Object.hasOwnProperty.call(e,"sendRecordThreshold")&&o.uint32(48).uint64(e.sendRecordThreshold),null!=e.receiveRecordThreshold&&Object.hasOwnProperty.call(e,"receiveRecordThreshold")&&o.uint32(56).uint64(e.receiveRecordThreshold),null!=e.receiverSigRequired&&Object.hasOwnProperty.call(e,"receiverSigRequired")&&o.uint32(64).bool(e.receiverSigRequired),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(74).fork()).ldelim(),null!=e.shardID&&Object.hasOwnProperty.call(e,"shardID")&&$root.proto.ShardID.encode(e.shardID,o.uint32(82).fork()).ldelim(),null!=e.realmID&&Object.hasOwnProperty.call(e,"realmID")&&$root.proto.RealmID.encode(e.realmID,o.uint32(90).fork()).ldelim(),null!=e.newRealmAdminKey&&Object.hasOwnProperty.call(e,"newRealmAdminKey")&&$root.proto.Key.encode(e.newRealmAdminKey,o.uint32(98).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(106).string(e.memo),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoCreateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.key=$root.proto.Key.decode(e,e.uint32());break;case 2:d.initialBalance=e.uint64();break;case 3:d.proxyAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 6:d.sendRecordThreshold=e.uint64();break;case 7:d.receiveRecordThreshold=e.uint64();break;case 8:d.receiverSigRequired=e.bool();break;case 9:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 10:d.shardID=$root.proto.ShardID.decode(e,e.uint32());break;case 11:d.realmID=$root.proto.RealmID.decode(e,e.uint32());break;case 12:d.newRealmAdminKey=$root.proto.Key.decode(e,e.uint32());break;case 13:d.memo=e.string();break;default:e.skipType(7&i);}return d},e}(),CryptoDeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.transferAccountID=null,e.prototype.deleteAccountID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.transferAccountID&&Object.hasOwnProperty.call(e,"transferAccountID")&&$root.proto.AccountID.encode(e.transferAccountID,o.uint32(10).fork()).ldelim(),null!=e.deleteAccountID&&Object.hasOwnProperty.call(e,"deleteAccountID")&&$root.proto.AccountID.encode(e.deleteAccountID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoDeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transferAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.deleteAccountID=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoUpdateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.accountIDToUpdate=null,e.prototype.key=null,e.prototype.proxyAccountID=null,e.prototype.proxyFraction=0,e.prototype.sendRecordThreshold=null,e.prototype.sendRecordThresholdWrapper=null,e.prototype.receiveRecordThreshold=null,e.prototype.receiveRecordThresholdWrapper=null,e.prototype.autoRenewPeriod=null,e.prototype.expirationTime=null,e.prototype.receiverSigRequired=null,e.prototype.receiverSigRequiredWrapper=null,e.prototype.memo=null;let o;return Object.defineProperty(e.prototype,"sendRecordThresholdField",{get:$util.oneOfGetter(o=["sendRecordThreshold","sendRecordThresholdWrapper"]),set:$util.oneOfSetter(o)}),Object.defineProperty(e.prototype,"receiveRecordThresholdField",{get:$util.oneOfGetter(o=["receiveRecordThreshold","receiveRecordThresholdWrapper"]),set:$util.oneOfSetter(o)}),Object.defineProperty(e.prototype,"receiverSigRequiredField",{get:$util.oneOfGetter(o=["receiverSigRequired","receiverSigRequiredWrapper"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountIDToUpdate&&Object.hasOwnProperty.call(e,"accountIDToUpdate")&&$root.proto.AccountID.encode(e.accountIDToUpdate,o.uint32(18).fork()).ldelim(),null!=e.key&&Object.hasOwnProperty.call(e,"key")&&$root.proto.Key.encode(e.key,o.uint32(26).fork()).ldelim(),null!=e.proxyAccountID&&Object.hasOwnProperty.call(e,"proxyAccountID")&&$root.proto.AccountID.encode(e.proxyAccountID,o.uint32(34).fork()).ldelim(),null!=e.proxyFraction&&Object.hasOwnProperty.call(e,"proxyFraction")&&o.uint32(40).int32(e.proxyFraction),null!=e.sendRecordThreshold&&Object.hasOwnProperty.call(e,"sendRecordThreshold")&&o.uint32(48).uint64(e.sendRecordThreshold),null!=e.receiveRecordThreshold&&Object.hasOwnProperty.call(e,"receiveRecordThreshold")&&o.uint32(56).uint64(e.receiveRecordThreshold),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(66).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(74).fork()).ldelim(),null!=e.receiverSigRequired&&Object.hasOwnProperty.call(e,"receiverSigRequired")&&o.uint32(80).bool(e.receiverSigRequired),null!=e.sendRecordThresholdWrapper&&Object.hasOwnProperty.call(e,"sendRecordThresholdWrapper")&&$root.google.protobuf.UInt64Value.encode(e.sendRecordThresholdWrapper,o.uint32(90).fork()).ldelim(),null!=e.receiveRecordThresholdWrapper&&Object.hasOwnProperty.call(e,"receiveRecordThresholdWrapper")&&$root.google.protobuf.UInt64Value.encode(e.receiveRecordThresholdWrapper,o.uint32(98).fork()).ldelim(),null!=e.receiverSigRequiredWrapper&&Object.hasOwnProperty.call(e,"receiverSigRequiredWrapper")&&$root.google.protobuf.BoolValue.encode(e.receiverSigRequiredWrapper,o.uint32(106).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&$root.google.protobuf.StringValue.encode(e.memo,o.uint32(114).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoUpdateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 2:d.accountIDToUpdate=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.key=$root.proto.Key.decode(e,e.uint32());break;case 4:d.proxyAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 5:d.proxyFraction=e.int32();break;case 6:d.sendRecordThreshold=e.uint64();break;case 11:d.sendRecordThresholdWrapper=$root.google.protobuf.UInt64Value.decode(e,e.uint32());break;case 7:d.receiveRecordThreshold=e.uint64();break;case 12:d.receiveRecordThresholdWrapper=$root.google.protobuf.UInt64Value.decode(e,e.uint32());break;case 8:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 9:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 10:d.receiverSigRequired=e.bool();break;case 13:d.receiverSigRequiredWrapper=$root.google.protobuf.BoolValue.decode(e,e.uint32());break;case 14:d.memo=$root.google.protobuf.StringValue.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FileAppendTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.fileID=null,e.prototype.contents=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(18).fork()).ldelim(),null!=e.contents&&Object.hasOwnProperty.call(e,"contents")&&o.uint32(34).bytes(e.contents),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileAppendTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 2:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 4:d.contents=e.bytes();break;default:e.skipType(7&i);}return d},e}(),FileCreateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.expirationTime=null,e.prototype.keys=null,e.prototype.contents=$util.newBuffer([]),e.prototype.shardID=null,e.prototype.realmID=null,e.prototype.newRealmAdminKey=null,e.prototype.memo="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(18).fork()).ldelim(),null!=e.keys&&Object.hasOwnProperty.call(e,"keys")&&$root.proto.KeyList.encode(e.keys,o.uint32(26).fork()).ldelim(),null!=e.contents&&Object.hasOwnProperty.call(e,"contents")&&o.uint32(34).bytes(e.contents),null!=e.shardID&&Object.hasOwnProperty.call(e,"shardID")&&$root.proto.ShardID.encode(e.shardID,o.uint32(42).fork()).ldelim(),null!=e.realmID&&Object.hasOwnProperty.call(e,"realmID")&&$root.proto.RealmID.encode(e.realmID,o.uint32(50).fork()).ldelim(),null!=e.newRealmAdminKey&&Object.hasOwnProperty.call(e,"newRealmAdminKey")&&$root.proto.Key.encode(e.newRealmAdminKey,o.uint32(58).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(66).string(e.memo),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileCreateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 2:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 3:d.keys=$root.proto.KeyList.decode(e,e.uint32());break;case 4:d.contents=e.bytes();break;case 5:d.shardID=$root.proto.ShardID.decode(e,e.uint32());break;case 6:d.realmID=$root.proto.RealmID.decode(e,e.uint32());break;case 7:d.newRealmAdminKey=$root.proto.Key.decode(e,e.uint32());break;case 8:d.memo=e.string();break;default:e.skipType(7&i);}return d},e}(),FileDeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.fileID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileDeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 2:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FileUpdateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.fileID=null,e.prototype.expirationTime=null,e.prototype.keys=null,e.prototype.contents=$util.newBuffer([]),e.prototype.memo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(10).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(18).fork()).ldelim(),null!=e.keys&&Object.hasOwnProperty.call(e,"keys")&&$root.proto.KeyList.encode(e.keys,o.uint32(26).fork()).ldelim(),null!=e.contents&&Object.hasOwnProperty.call(e,"contents")&&o.uint32(34).bytes(e.contents),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&$root.google.protobuf.StringValue.encode(e.memo,o.uint32(42).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileUpdateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 2:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 3:d.keys=$root.proto.KeyList.decode(e,e.uint32());break;case 4:d.contents=e.bytes();break;case 5:d.memo=$root.google.protobuf.StringValue.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ContractDeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.contractID=null,e.prototype.transferAccountID=null,e.prototype.transferContractID=null;let o;return Object.defineProperty(e.prototype,"obtainers",{get:$util.oneOfGetter(o=["transferAccountID","transferContractID"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.transferAccountID&&Object.hasOwnProperty.call(e,"transferAccountID")&&$root.proto.AccountID.encode(e.transferAccountID,o.uint32(18).fork()).ldelim(),null!=e.transferContractID&&Object.hasOwnProperty.call(e,"transferContractID")&&$root.proto.ContractID.encode(e.transferContractID,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractDeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.transferAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.transferContractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ConsensusUpdateTopicTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.topicID=null,e.prototype.memo=null,e.prototype.expirationTime=null,e.prototype.adminKey=null,e.prototype.submitKey=null,e.prototype.autoRenewPeriod=null,e.prototype.autoRenewAccount=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(10).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&$root.google.protobuf.StringValue.encode(e.memo,o.uint32(18).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(34).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(50).fork()).ldelim(),null!=e.submitKey&&Object.hasOwnProperty.call(e,"submitKey")&&$root.proto.Key.encode(e.submitKey,o.uint32(58).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(66).fork()).ldelim(),null!=e.autoRenewAccount&&Object.hasOwnProperty.call(e,"autoRenewAccount")&&$root.proto.AccountID.encode(e.autoRenewAccount,o.uint32(74).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusUpdateTopicTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;case 2:d.memo=$root.google.protobuf.StringValue.decode(e,e.uint32());break;case 4:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 6:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 7:d.submitKey=$root.proto.Key.decode(e,e.uint32());break;case 8:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 9:d.autoRenewAccount=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ConsensusMessageChunkInfo:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.initialTransactionID=null,e.prototype.total=0,e.prototype.number=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.initialTransactionID&&Object.hasOwnProperty.call(e,"initialTransactionID")&&$root.proto.TransactionID.encode(e.initialTransactionID,o.uint32(10).fork()).ldelim(),null!=e.total&&Object.hasOwnProperty.call(e,"total")&&o.uint32(16).int32(e.total),null!=e.number&&Object.hasOwnProperty.call(e,"number")&&o.uint32(24).int32(e.number),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusMessageChunkInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.initialTransactionID=$root.proto.TransactionID.decode(e,e.uint32());break;case 2:d.total=e.int32();break;case 3:d.number=e.int32();break;default:e.skipType(7&i);}return d},e}(),ConsensusSubmitMessageTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.topicID=null,e.prototype.message=$util.newBuffer([]),e.prototype.chunkInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(10).fork()).ldelim(),null!=e.message&&Object.hasOwnProperty.call(e,"message")&&o.uint32(18).bytes(e.message),null!=e.chunkInfo&&Object.hasOwnProperty.call(e,"chunkInfo")&&$root.proto.ConsensusMessageChunkInfo.encode(e.chunkInfo,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusSubmitMessageTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;case 2:d.message=e.bytes();break;case 3:d.chunkInfo=$root.proto.ConsensusMessageChunkInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenCreateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.name="",e.prototype.symbol="",e.prototype.decimals=0,e.prototype.initialSupply=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.treasury=null,e.prototype.adminKey=null,e.prototype.kycKey=null,e.prototype.freezeKey=null,e.prototype.wipeKey=null,e.prototype.supplyKey=null,e.prototype.freezeDefault=!1,e.prototype.expiry=null,e.prototype.autoRenewAccount=null,e.prototype.autoRenewPeriod=null,e.prototype.memo="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.name&&Object.hasOwnProperty.call(e,"name")&&o.uint32(10).string(e.name),null!=e.symbol&&Object.hasOwnProperty.call(e,"symbol")&&o.uint32(18).string(e.symbol),null!=e.decimals&&Object.hasOwnProperty.call(e,"decimals")&&o.uint32(24).uint32(e.decimals),null!=e.initialSupply&&Object.hasOwnProperty.call(e,"initialSupply")&&o.uint32(32).uint64(e.initialSupply),null!=e.treasury&&Object.hasOwnProperty.call(e,"treasury")&&$root.proto.AccountID.encode(e.treasury,o.uint32(42).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(50).fork()).ldelim(),null!=e.kycKey&&Object.hasOwnProperty.call(e,"kycKey")&&$root.proto.Key.encode(e.kycKey,o.uint32(58).fork()).ldelim(),null!=e.freezeKey&&Object.hasOwnProperty.call(e,"freezeKey")&&$root.proto.Key.encode(e.freezeKey,o.uint32(66).fork()).ldelim(),null!=e.wipeKey&&Object.hasOwnProperty.call(e,"wipeKey")&&$root.proto.Key.encode(e.wipeKey,o.uint32(74).fork()).ldelim(),null!=e.supplyKey&&Object.hasOwnProperty.call(e,"supplyKey")&&$root.proto.Key.encode(e.supplyKey,o.uint32(82).fork()).ldelim(),null!=e.freezeDefault&&Object.hasOwnProperty.call(e,"freezeDefault")&&o.uint32(88).bool(e.freezeDefault),null!=e.expiry&&Object.hasOwnProperty.call(e,"expiry")&&$root.proto.Timestamp.encode(e.expiry,o.uint32(106).fork()).ldelim(),null!=e.autoRenewAccount&&Object.hasOwnProperty.call(e,"autoRenewAccount")&&$root.proto.AccountID.encode(e.autoRenewAccount,o.uint32(114).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(122).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(130).string(e.memo),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenCreateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.name=e.string();break;case 2:d.symbol=e.string();break;case 3:d.decimals=e.uint32();break;case 4:d.initialSupply=e.uint64();break;case 5:d.treasury=$root.proto.AccountID.decode(e,e.uint32());break;case 6:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 7:d.kycKey=$root.proto.Key.decode(e,e.uint32());break;case 8:d.freezeKey=$root.proto.Key.decode(e,e.uint32());break;case 9:d.wipeKey=$root.proto.Key.decode(e,e.uint32());break;case 10:d.supplyKey=$root.proto.Key.decode(e,e.uint32());break;case 11:d.freezeDefault=e.bool();break;case 13:d.expiry=$root.proto.Timestamp.decode(e,e.uint32());break;case 14:d.autoRenewAccount=$root.proto.AccountID.decode(e,e.uint32());break;case 15:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 16:d.memo=e.string();break;default:e.skipType(7&i);}return d},e}(),TokenFreezeAccountTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.account=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenFreezeAccountTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.account=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenUnfreezeAccountTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.account=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenUnfreezeAccountTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.account=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenGrantKycTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.account=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGrantKycTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.account=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenRevokeKycTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.account=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenRevokeKycTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.account=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenDeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenDeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenUpdateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.symbol="",e.prototype.name="",e.prototype.treasury=null,e.prototype.adminKey=null,e.prototype.kycKey=null,e.prototype.freezeKey=null,e.prototype.wipeKey=null,e.prototype.supplyKey=null,e.prototype.autoRenewAccount=null,e.prototype.autoRenewPeriod=null,e.prototype.expiry=null,e.prototype.memo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.symbol&&Object.hasOwnProperty.call(e,"symbol")&&o.uint32(18).string(e.symbol),null!=e.name&&Object.hasOwnProperty.call(e,"name")&&o.uint32(26).string(e.name),null!=e.treasury&&Object.hasOwnProperty.call(e,"treasury")&&$root.proto.AccountID.encode(e.treasury,o.uint32(34).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(42).fork()).ldelim(),null!=e.kycKey&&Object.hasOwnProperty.call(e,"kycKey")&&$root.proto.Key.encode(e.kycKey,o.uint32(50).fork()).ldelim(),null!=e.freezeKey&&Object.hasOwnProperty.call(e,"freezeKey")&&$root.proto.Key.encode(e.freezeKey,o.uint32(58).fork()).ldelim(),null!=e.wipeKey&&Object.hasOwnProperty.call(e,"wipeKey")&&$root.proto.Key.encode(e.wipeKey,o.uint32(66).fork()).ldelim(),null!=e.supplyKey&&Object.hasOwnProperty.call(e,"supplyKey")&&$root.proto.Key.encode(e.supplyKey,o.uint32(74).fork()).ldelim(),null!=e.autoRenewAccount&&Object.hasOwnProperty.call(e,"autoRenewAccount")&&$root.proto.AccountID.encode(e.autoRenewAccount,o.uint32(82).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(90).fork()).ldelim(),null!=e.expiry&&Object.hasOwnProperty.call(e,"expiry")&&$root.proto.Timestamp.encode(e.expiry,o.uint32(98).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&$root.google.protobuf.StringValue.encode(e.memo,o.uint32(106).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenUpdateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.symbol=e.string();break;case 3:d.name=e.string();break;case 4:d.treasury=$root.proto.AccountID.decode(e,e.uint32());break;case 5:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 6:d.kycKey=$root.proto.Key.decode(e,e.uint32());break;case 7:d.freezeKey=$root.proto.Key.decode(e,e.uint32());break;case 8:d.wipeKey=$root.proto.Key.decode(e,e.uint32());break;case 9:d.supplyKey=$root.proto.Key.decode(e,e.uint32());break;case 10:d.autoRenewAccount=$root.proto.AccountID.decode(e,e.uint32());break;case 11:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 12:d.expiry=$root.proto.Timestamp.decode(e,e.uint32());break;case 13:d.memo=$root.google.protobuf.StringValue.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenMintTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(16).uint64(e.amount),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenMintTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.amount=e.uint64();break;default:e.skipType(7&i);}return d},e}(),TokenBurnTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(16).uint64(e.amount),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenBurnTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.amount=e.uint64();break;default:e.skipType(7&i);}return d},e}(),TokenWipeAccountTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.account=null,e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(18).fork()).ldelim(),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(24).uint64(e.amount),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenWipeAccountTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.account=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.amount=e.uint64();break;default:e.skipType(7&i);}return d},e}(),TokenAssociateTransactionBody:function(){function e(e){if(this.tokens=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.account=null,e.prototype.tokens=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(10).fork()).ldelim(),null!=e.tokens&&e.tokens.length)for(var t=0;t<e.tokens.length;++t)$root.proto.TokenID.encode(e.tokens[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenAssociateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.account=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.tokens&&d.tokens.length||(d.tokens=[]),d.tokens.push($root.proto.TokenID.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TokenDissociateTransactionBody:function(){function e(e){if(this.tokens=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.account=null,e.prototype.tokens=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(10).fork()).ldelim(),null!=e.tokens&&e.tokens.length)for(var t=0;t<e.tokens.length;++t)$root.proto.TokenID.encode(e.tokens[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenDissociateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.account=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.tokens&&d.tokens.length||(d.tokens=[]),d.tokens.push($root.proto.TokenID.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),ScheduleDeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.scheduleID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.scheduleID&&Object.hasOwnProperty.call(e,"scheduleID")&&$root.proto.ScheduleID.encode(e.scheduleID,o.uint32(10).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleDeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.scheduleID=$root.proto.ScheduleID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),Response:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.getByKey=null,e.prototype.getBySolidityID=null,e.prototype.contractCallLocal=null,e.prototype.contractGetBytecodeResponse=null,e.prototype.contractGetInfo=null,e.prototype.contractGetRecordsResponse=null,e.prototype.cryptogetAccountBalance=null,e.prototype.cryptoGetAccountRecords=null,e.prototype.cryptoGetInfo=null,e.prototype.cryptoGetLiveHash=null,e.prototype.cryptoGetProxyStakers=null,e.prototype.fileGetContents=null,e.prototype.fileGetInfo=null,e.prototype.transactionGetReceipt=null,e.prototype.transactionGetRecord=null,e.prototype.transactionGetFastRecord=null,e.prototype.consensusGetTopicInfo=null,e.prototype.networkGetVersionInfo=null,e.prototype.tokenGetInfo=null,e.prototype.scheduleGetInfo=null;let o;return Object.defineProperty(e.prototype,"response",{get:$util.oneOfGetter(o=["getByKey","getBySolidityID","contractCallLocal","contractGetBytecodeResponse","contractGetInfo","contractGetRecordsResponse","cryptogetAccountBalance","cryptoGetAccountRecords","cryptoGetInfo","cryptoGetLiveHash","cryptoGetProxyStakers","fileGetContents","fileGetInfo","transactionGetReceipt","transactionGetRecord","transactionGetFastRecord","consensusGetTopicInfo","networkGetVersionInfo","tokenGetInfo","scheduleGetInfo"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.getByKey&&Object.hasOwnProperty.call(e,"getByKey")&&$root.proto.GetByKeyResponse.encode(e.getByKey,o.uint32(10).fork()).ldelim(),null!=e.getBySolidityID&&Object.hasOwnProperty.call(e,"getBySolidityID")&&$root.proto.GetBySolidityIDResponse.encode(e.getBySolidityID,o.uint32(18).fork()).ldelim(),null!=e.contractCallLocal&&Object.hasOwnProperty.call(e,"contractCallLocal")&&$root.proto.ContractCallLocalResponse.encode(e.contractCallLocal,o.uint32(26).fork()).ldelim(),null!=e.contractGetInfo&&Object.hasOwnProperty.call(e,"contractGetInfo")&&$root.proto.ContractGetInfoResponse.encode(e.contractGetInfo,o.uint32(34).fork()).ldelim(),null!=e.contractGetBytecodeResponse&&Object.hasOwnProperty.call(e,"contractGetBytecodeResponse")&&$root.proto.ContractGetBytecodeResponse.encode(e.contractGetBytecodeResponse,o.uint32(42).fork()).ldelim(),null!=e.contractGetRecordsResponse&&Object.hasOwnProperty.call(e,"contractGetRecordsResponse")&&$root.proto.ContractGetRecordsResponse.encode(e.contractGetRecordsResponse,o.uint32(50).fork()).ldelim(),null!=e.cryptogetAccountBalance&&Object.hasOwnProperty.call(e,"cryptogetAccountBalance")&&$root.proto.CryptoGetAccountBalanceResponse.encode(e.cryptogetAccountBalance,o.uint32(58).fork()).ldelim(),null!=e.cryptoGetAccountRecords&&Object.hasOwnProperty.call(e,"cryptoGetAccountRecords")&&$root.proto.CryptoGetAccountRecordsResponse.encode(e.cryptoGetAccountRecords,o.uint32(66).fork()).ldelim(),null!=e.cryptoGetInfo&&Object.hasOwnProperty.call(e,"cryptoGetInfo")&&$root.proto.CryptoGetInfoResponse.encode(e.cryptoGetInfo,o.uint32(74).fork()).ldelim(),null!=e.cryptoGetLiveHash&&Object.hasOwnProperty.call(e,"cryptoGetLiveHash")&&$root.proto.CryptoGetLiveHashResponse.encode(e.cryptoGetLiveHash,o.uint32(82).fork()).ldelim(),null!=e.cryptoGetProxyStakers&&Object.hasOwnProperty.call(e,"cryptoGetProxyStakers")&&$root.proto.CryptoGetStakersResponse.encode(e.cryptoGetProxyStakers,o.uint32(90).fork()).ldelim(),null!=e.fileGetContents&&Object.hasOwnProperty.call(e,"fileGetContents")&&$root.proto.FileGetContentsResponse.encode(e.fileGetContents,o.uint32(98).fork()).ldelim(),null!=e.fileGetInfo&&Object.hasOwnProperty.call(e,"fileGetInfo")&&$root.proto.FileGetInfoResponse.encode(e.fileGetInfo,o.uint32(106).fork()).ldelim(),null!=e.transactionGetReceipt&&Object.hasOwnProperty.call(e,"transactionGetReceipt")&&$root.proto.TransactionGetReceiptResponse.encode(e.transactionGetReceipt,o.uint32(114).fork()).ldelim(),null!=e.transactionGetRecord&&Object.hasOwnProperty.call(e,"transactionGetRecord")&&$root.proto.TransactionGetRecordResponse.encode(e.transactionGetRecord,o.uint32(122).fork()).ldelim(),null!=e.transactionGetFastRecord&&Object.hasOwnProperty.call(e,"transactionGetFastRecord")&&$root.proto.TransactionGetFastRecordResponse.encode(e.transactionGetFastRecord,o.uint32(130).fork()).ldelim(),null!=e.consensusGetTopicInfo&&Object.hasOwnProperty.call(e,"consensusGetTopicInfo")&&$root.proto.ConsensusGetTopicInfoResponse.encode(e.consensusGetTopicInfo,o.uint32(1202).fork()).ldelim(),null!=e.networkGetVersionInfo&&Object.hasOwnProperty.call(e,"networkGetVersionInfo")&&$root.proto.NetworkGetVersionInfoResponse.encode(e.networkGetVersionInfo,o.uint32(1210).fork()).ldelim(),null!=e.tokenGetInfo&&Object.hasOwnProperty.call(e,"tokenGetInfo")&&$root.proto.TokenGetInfoResponse.encode(e.tokenGetInfo,o.uint32(1218).fork()).ldelim(),null!=e.scheduleGetInfo&&Object.hasOwnProperty.call(e,"scheduleGetInfo")&&$root.proto.ScheduleGetInfoResponse.encode(e.scheduleGetInfo,o.uint32(1226).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Response,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.getByKey=$root.proto.GetByKeyResponse.decode(e,e.uint32());break;case 2:d.getBySolidityID=$root.proto.GetBySolidityIDResponse.decode(e,e.uint32());break;case 3:d.contractCallLocal=$root.proto.ContractCallLocalResponse.decode(e,e.uint32());break;case 5:d.contractGetBytecodeResponse=$root.proto.ContractGetBytecodeResponse.decode(e,e.uint32());break;case 4:d.contractGetInfo=$root.proto.ContractGetInfoResponse.decode(e,e.uint32());break;case 6:d.contractGetRecordsResponse=$root.proto.ContractGetRecordsResponse.decode(e,e.uint32());break;case 7:d.cryptogetAccountBalance=$root.proto.CryptoGetAccountBalanceResponse.decode(e,e.uint32());break;case 8:d.cryptoGetAccountRecords=$root.proto.CryptoGetAccountRecordsResponse.decode(e,e.uint32());break;case 9:d.cryptoGetInfo=$root.proto.CryptoGetInfoResponse.decode(e,e.uint32());break;case 10:d.cryptoGetLiveHash=$root.proto.CryptoGetLiveHashResponse.decode(e,e.uint32());break;case 11:d.cryptoGetProxyStakers=$root.proto.CryptoGetStakersResponse.decode(e,e.uint32());break;case 12:d.fileGetContents=$root.proto.FileGetContentsResponse.decode(e,e.uint32());break;case 13:d.fileGetInfo=$root.proto.FileGetInfoResponse.decode(e,e.uint32());break;case 14:d.transactionGetReceipt=$root.proto.TransactionGetReceiptResponse.decode(e,e.uint32());break;case 15:d.transactionGetRecord=$root.proto.TransactionGetRecordResponse.decode(e,e.uint32());break;case 16:d.transactionGetFastRecord=$root.proto.TransactionGetFastRecordResponse.decode(e,e.uint32());break;case 150:d.consensusGetTopicInfo=$root.proto.ConsensusGetTopicInfoResponse.decode(e,e.uint32());break;case 151:d.networkGetVersionInfo=$root.proto.NetworkGetVersionInfoResponse.decode(e,e.uint32());break;case 152:d.tokenGetInfo=$root.proto.TokenGetInfoResponse.decode(e,e.uint32());break;case 153:d.scheduleGetInfo=$root.proto.ScheduleGetInfoResponse.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),Claim:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountID=null,e.prototype.hash=$util.newBuffer([]),e.prototype.keys=null,e.prototype.claimDuration=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.hash&&Object.hasOwnProperty.call(e,"hash")&&o.uint32(18).bytes(e.hash),null!=e.keys&&Object.hasOwnProperty.call(e,"keys")&&$root.proto.KeyList.encode(e.keys,o.uint32(26).fork()).ldelim(),null!=e.claimDuration&&Object.hasOwnProperty.call(e,"claimDuration")&&$root.proto.Duration.encode(e.claimDuration,o.uint32(42).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Claim,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.hash=e.bytes();break;case 3:d.keys=$root.proto.KeyList.decode(e,e.uint32());break;case 5:d.claimDuration=$root.proto.Duration.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoAddClaimTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.claim=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.claim&&Object.hasOwnProperty.call(e,"claim")&&$root.proto.Claim.encode(e.claim,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoAddClaimTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 3:d.claim=$root.proto.Claim.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoDeleteClaimTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountIDToDeleteFrom=null,e.prototype.hashToDelete=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountIDToDeleteFrom&&Object.hasOwnProperty.call(e,"accountIDToDeleteFrom")&&$root.proto.AccountID.encode(e.accountIDToDeleteFrom,o.uint32(10).fork()).ldelim(),null!=e.hashToDelete&&Object.hasOwnProperty.call(e,"hashToDelete")&&o.uint32(18).bytes(e.hashToDelete),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoDeleteClaimTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountIDToDeleteFrom=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.hashToDelete=e.bytes();break;default:e.skipType(7&i);}return d},e}(),CryptoDeleteLiveHashTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountOfLiveHash=null,e.prototype.liveHashToDelete=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountOfLiveHash&&Object.hasOwnProperty.call(e,"accountOfLiveHash")&&$root.proto.AccountID.encode(e.accountOfLiveHash,o.uint32(10).fork()).ldelim(),null!=e.liveHashToDelete&&Object.hasOwnProperty.call(e,"liveHashToDelete")&&o.uint32(18).bytes(e.liveHashToDelete),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoDeleteLiveHashTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountOfLiveHash=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.liveHashToDelete=e.bytes();break;default:e.skipType(7&i);}return d},e}(),CryptoGetClaimQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.prototype.hash=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.hash&&Object.hasOwnProperty.call(e,"hash")&&o.uint32(26).bytes(e.hash),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetClaimQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.hash=e.bytes();break;default:e.skipType(7&i);}return d},e}(),CryptoGetClaimResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.claim=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.claim&&Object.hasOwnProperty.call(e,"claim")&&$root.proto.Claim.encode(e.claim,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetClaimResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.claim=$root.proto.Claim.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.createAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"createAccount"}),Object.defineProperty(e.prototype.updateAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"updateAccount"}),Object.defineProperty(e.prototype.cryptoTransfer=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"cryptoTransfer"}),Object.defineProperty(e.prototype.cryptoDelete=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"cryptoDelete"}),Object.defineProperty(e.prototype.addLiveHash=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"addLiveHash"}),Object.defineProperty(e.prototype.deleteLiveHash=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"deleteLiveHash"}),Object.defineProperty(e.prototype.getLiveHash=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getLiveHash"}),Object.defineProperty(e.prototype.getAccountRecords=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getAccountRecords"}),Object.defineProperty(e.prototype.cryptoGetBalance=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"cryptoGetBalance"}),Object.defineProperty(e.prototype.getAccountInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getAccountInfo"}),Object.defineProperty(e.prototype.getTransactionReceipts=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getTransactionReceipts"}),Object.defineProperty(e.prototype.getFastTransactionRecord=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getFastTransactionRecord"}),Object.defineProperty(e.prototype.getTxRecordByTxID=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getTxRecordByTxID"}),Object.defineProperty(e.prototype.getStakersByAccountID=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getStakersByAccountID"}),e}(),FileService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.createFile=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"createFile"}),Object.defineProperty(e.prototype.updateFile=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"updateFile"}),Object.defineProperty(e.prototype.deleteFile=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"deleteFile"}),Object.defineProperty(e.prototype.appendContent=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"appendContent"}),Object.defineProperty(e.prototype.getFileContent=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getFileContent"}),Object.defineProperty(e.prototype.getFileInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getFileInfo"}),Object.defineProperty(e.prototype.systemDelete=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"systemDelete"}),Object.defineProperty(e.prototype.systemUndelete=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"systemUndelete"}),e}(),FreezeService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.freeze=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"freeze"}),e}(),ConsensusTopicQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.topicID=null,e.prototype.consensusStartTime=null,e.prototype.consensusEndTime=null,e.prototype.limit=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(10).fork()).ldelim(),null!=e.consensusStartTime&&Object.hasOwnProperty.call(e,"consensusStartTime")&&$root.proto.Timestamp.encode(e.consensusStartTime,o.uint32(18).fork()).ldelim(),null!=e.consensusEndTime&&Object.hasOwnProperty.call(e,"consensusEndTime")&&$root.proto.Timestamp.encode(e.consensusEndTime,o.uint32(26).fork()).ldelim(),null!=e.limit&&Object.hasOwnProperty.call(e,"limit")&&o.uint32(32).uint64(e.limit),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusTopicQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;case 2:d.consensusStartTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 3:d.consensusEndTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 4:d.limit=e.uint64();break;default:e.skipType(7&i);}return d},e}(),ConsensusTopicResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.consensusTimestamp=null,e.prototype.message=$util.newBuffer([]),e.prototype.runningHash=$util.newBuffer([]),e.prototype.sequenceNumber=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.runningHashVersion=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.chunkInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.consensusTimestamp&&Object.hasOwnProperty.call(e,"consensusTimestamp")&&$root.proto.Timestamp.encode(e.consensusTimestamp,o.uint32(10).fork()).ldelim(),null!=e.message&&Object.hasOwnProperty.call(e,"message")&&o.uint32(18).bytes(e.message),null!=e.runningHash&&Object.hasOwnProperty.call(e,"runningHash")&&o.uint32(26).bytes(e.runningHash),null!=e.sequenceNumber&&Object.hasOwnProperty.call(e,"sequenceNumber")&&o.uint32(32).uint64(e.sequenceNumber),null!=e.runningHashVersion&&Object.hasOwnProperty.call(e,"runningHashVersion")&&o.uint32(40).uint64(e.runningHashVersion),null!=e.chunkInfo&&Object.hasOwnProperty.call(e,"chunkInfo")&&$root.proto.ConsensusMessageChunkInfo.encode(e.chunkInfo,o.uint32(50).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusTopicResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.consensusTimestamp=$root.proto.Timestamp.decode(e,e.uint32());break;case 2:d.message=e.bytes();break;case 3:d.runningHash=e.bytes();break;case 4:d.sequenceNumber=e.uint64();break;case 5:d.runningHashVersion=e.uint64();break;case 6:d.chunkInfo=$root.proto.ConsensusMessageChunkInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),MirrorConsensusService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.subscribeTopic=function e(o,t){return this.rpcCall(e,$root.proto.ConsensusTopicQuery,$root.proto.ConsensusTopicResponse,o,t)},"name",{value:"subscribeTopic"}),e}(),NetworkService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.getVersionInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getVersionInfo"}),Object.defineProperty(e.prototype.uncheckedSubmit=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"uncheckedSubmit"}),e}(),ScheduleCreateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.scheduledTransactionBody=null,e.prototype.memo="",e.prototype.adminKey=null,e.prototype.payerAccountID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.scheduledTransactionBody&&Object.hasOwnProperty.call(e,"scheduledTransactionBody")&&$root.proto.SchedulableTransactionBody.encode(e.scheduledTransactionBody,o.uint32(10).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(18).string(e.memo),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(26).fork()).ldelim(),null!=e.payerAccountID&&Object.hasOwnProperty.call(e,"payerAccountID")&&$root.proto.AccountID.encode(e.payerAccountID,o.uint32(34).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleCreateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.scheduledTransactionBody=$root.proto.SchedulableTransactionBody.decode(e,e.uint32());break;case 2:d.memo=e.string();break;case 3:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 4:d.payerAccountID=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ScheduleService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.createSchedule=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"createSchedule"}),Object.defineProperty(e.prototype.signSchedule=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"signSchedule"}),Object.defineProperty(e.prototype.deleteSchedule=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"deleteSchedule"}),Object.defineProperty(e.prototype.getScheduleInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getScheduleInfo"}),e}(),ScheduleSignTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.scheduleID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.scheduleID&&Object.hasOwnProperty.call(e,"scheduleID")&&$root.proto.ScheduleID.encode(e.scheduleID,o.uint32(10).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleSignTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.scheduleID=$root.proto.ScheduleID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),SmartContractService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.createContract=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"createContract"}),Object.defineProperty(e.prototype.updateContract=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"updateContract"}),Object.defineProperty(e.prototype.contractCallMethod=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"contractCallMethod"}),Object.defineProperty(e.prototype.getContractInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getContractInfo"}),Object.defineProperty(e.prototype.contractCallLocalMethod=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"contractCallLocalMethod"}),Object.defineProperty(e.prototype.contractGetBytecode=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"ContractGetBytecode"}),Object.defineProperty(e.prototype.getBySolidityID=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getBySolidityID"}),Object.defineProperty(e.prototype.getTxRecordByContractID=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getTxRecordByContractID"}),Object.defineProperty(e.prototype.deleteContract=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"deleteContract"}),Object.defineProperty(e.prototype.systemDelete=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"systemDelete"}),Object.defineProperty(e.prototype.systemUndelete=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"systemUndelete"}),e}(),ThrottleGroup:function(){function e(e){if(this.operations=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.operations=$util.emptyArray,e.prototype.milliOpsPerSec=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.operations&&e.operations.length){o.uint32(10).fork();for(var t=0;t<e.operations.length;++t)o.int32(e.operations[t]);o.ldelim()}return null!=e.milliOpsPerSec&&Object.hasOwnProperty.call(e,"milliOpsPerSec")&&o.uint32(16).uint64(e.milliOpsPerSec),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ThrottleGroup,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:if(d.operations&&d.operations.length||(d.operations=[]),2==(7&i))for(var a=e.uint32()+e.pos;e.pos<a;)d.operations.push(e.int32());else d.operations.push(e.int32());break;case 2:d.milliOpsPerSec=e.uint64();break;default:e.skipType(7&i);}return d},e}(),ThrottleBucket:function(){function e(e){if(this.throttleGroups=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.name="",e.prototype.burstPeriodMs=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.throttleGroups=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.name&&Object.hasOwnProperty.call(e,"name")&&o.uint32(10).string(e.name),null!=e.burstPeriodMs&&Object.hasOwnProperty.call(e,"burstPeriodMs")&&o.uint32(16).uint64(e.burstPeriodMs),null!=e.throttleGroups&&e.throttleGroups.length)for(var t=0;t<e.throttleGroups.length;++t)$root.proto.ThrottleGroup.encode(e.throttleGroups[t],o.uint32(26).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ThrottleBucket,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.name=e.string();break;case 2:d.burstPeriodMs=e.uint64();break;case 3:d.throttleGroups&&d.throttleGroups.length||(d.throttleGroups=[]),d.throttleGroups.push($root.proto.ThrottleGroup.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),ThrottleDefinitions:function(){function e(e){if(this.throttleBuckets=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.throttleBuckets=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.throttleBuckets&&e.throttleBuckets.length)for(var t=0;t<e.throttleBuckets.length;++t)$root.proto.ThrottleBucket.encode(e.throttleBuckets[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ThrottleDefinitions,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.throttleBuckets&&d.throttleBuckets.length||(d.throttleBuckets=[]),d.throttleBuckets.push($root.proto.ThrottleBucket.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TokenService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.createToken=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"createToken"}),Object.defineProperty(e.prototype.updateToken=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"updateToken"}),Object.defineProperty(e.prototype.mintToken=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"mintToken"}),Object.defineProperty(e.prototype.burnToken=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"burnToken"}),Object.defineProperty(e.prototype.deleteToken=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"deleteToken"}),Object.defineProperty(e.prototype.wipeTokenAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"wipeTokenAccount"}),Object.defineProperty(e.prototype.freezeTokenAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"freezeTokenAccount"}),Object.defineProperty(e.prototype.unfreezeTokenAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"unfreezeTokenAccount"}),Object.defineProperty(e.prototype.grantKycToTokenAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"grantKycToTokenAccount"}),Object.defineProperty(e.prototype.revokeKycFromTokenAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"revokeKycFromTokenAccount"}),Object.defineProperty(e.prototype.associateTokens=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"associateTokens"}),Object.defineProperty(e.prototype.dissociateTokens=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"dissociateTokens"}),Object.defineProperty(e.prototype.getTokenInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getTokenInfo"}),e}(),TokenTransfersTransactionBody:function(){function e(e){if(this.tokenTransfers=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenTransfers=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.tokenTransfers&&e.tokenTransfers.length)for(var t=0;t<e.tokenTransfers.length;++t)$root.proto.TokenTransferList.encode(e.tokenTransfers[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenTransfersTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenTransfers&&d.tokenTransfers.length||(d.tokenTransfers=[]),d.tokenTransfers.push($root.proto.TokenTransferList.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.transactionID=null,e.prototype.nodeAccountID=null,e.prototype.transactionFee=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.transactionValidDuration=null,e.prototype.generateRecord=!1,e.prototype.memo="",e.prototype.contractCall=null,e.prototype.contractCreateInstance=null,e.prototype.contractUpdateInstance=null,e.prototype.contractDeleteInstance=null,e.prototype.cryptoAddLiveHash=null,e.prototype.cryptoCreateAccount=null,e.prototype.cryptoDelete=null,e.prototype.cryptoDeleteLiveHash=null,e.prototype.cryptoTransfer=null,e.prototype.cryptoUpdateAccount=null,e.prototype.fileAppend=null,e.prototype.fileCreate=null,e.prototype.fileDelete=null,e.prototype.fileUpdate=null,e.prototype.systemDelete=null,e.prototype.systemUndelete=null,e.prototype.freeze=null,e.prototype.consensusCreateTopic=null,e.prototype.consensusUpdateTopic=null,e.prototype.consensusDeleteTopic=null,e.prototype.consensusSubmitMessage=null,e.prototype.uncheckedSubmit=null,e.prototype.tokenCreation=null,e.prototype.tokenFreeze=null,e.prototype.tokenUnfreeze=null,e.prototype.tokenGrantKyc=null,e.prototype.tokenRevokeKyc=null,e.prototype.tokenDeletion=null,e.prototype.tokenUpdate=null,e.prototype.tokenMint=null,e.prototype.tokenBurn=null,e.prototype.tokenWipe=null,e.prototype.tokenAssociate=null,e.prototype.tokenDissociate=null,e.prototype.scheduleCreate=null,e.prototype.scheduleDelete=null,e.prototype.scheduleSign=null;let o;return Object.defineProperty(e.prototype,"data",{get:$util.oneOfGetter(o=["contractCall","contractCreateInstance","contractUpdateInstance","contractDeleteInstance","cryptoAddLiveHash","cryptoCreateAccount","cryptoDelete","cryptoDeleteLiveHash","cryptoTransfer","cryptoUpdateAccount","fileAppend","fileCreate","fileDelete","fileUpdate","systemDelete","systemUndelete","freeze","consensusCreateTopic","consensusUpdateTopic","consensusDeleteTopic","consensusSubmitMessage","uncheckedSubmit","tokenCreation","tokenFreeze","tokenUnfreeze","tokenGrantKyc","tokenRevokeKyc","tokenDeletion","tokenUpdate","tokenMint","tokenBurn","tokenWipe","tokenAssociate","tokenDissociate","scheduleCreate","scheduleDelete","scheduleSign"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.transactionID&&Object.hasOwnProperty.call(e,"transactionID")&&$root.proto.TransactionID.encode(e.transactionID,o.uint32(10).fork()).ldelim(),null!=e.nodeAccountID&&Object.hasOwnProperty.call(e,"nodeAccountID")&&$root.proto.AccountID.encode(e.nodeAccountID,o.uint32(18).fork()).ldelim(),null!=e.transactionFee&&Object.hasOwnProperty.call(e,"transactionFee")&&o.uint32(24).uint64(e.transactionFee),null!=e.transactionValidDuration&&Object.hasOwnProperty.call(e,"transactionValidDuration")&&$root.proto.Duration.encode(e.transactionValidDuration,o.uint32(34).fork()).ldelim(),null!=e.generateRecord&&Object.hasOwnProperty.call(e,"generateRecord")&&o.uint32(40).bool(e.generateRecord),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(50).string(e.memo),null!=e.contractCall&&Object.hasOwnProperty.call(e,"contractCall")&&$root.proto.ContractCallTransactionBody.encode(e.contractCall,o.uint32(58).fork()).ldelim(),null!=e.contractCreateInstance&&Object.hasOwnProperty.call(e,"contractCreateInstance")&&$root.proto.ContractCreateTransactionBody.encode(e.contractCreateInstance,o.uint32(66).fork()).ldelim(),null!=e.contractUpdateInstance&&Object.hasOwnProperty.call(e,"contractUpdateInstance")&&$root.proto.ContractUpdateTransactionBody.encode(e.contractUpdateInstance,o.uint32(74).fork()).ldelim(),null!=e.cryptoAddLiveHash&&Object.hasOwnProperty.call(e,"cryptoAddLiveHash")&&$root.proto.CryptoAddLiveHashTransactionBody.encode(e.cryptoAddLiveHash,o.uint32(82).fork()).ldelim(),null!=e.cryptoCreateAccount&&Object.hasOwnProperty.call(e,"cryptoCreateAccount")&&$root.proto.CryptoCreateTransactionBody.encode(e.cryptoCreateAccount,o.uint32(90).fork()).ldelim(),null!=e.cryptoDelete&&Object.hasOwnProperty.call(e,"cryptoDelete")&&$root.proto.CryptoDeleteTransactionBody.encode(e.cryptoDelete,o.uint32(98).fork()).ldelim(),null!=e.cryptoDeleteLiveHash&&Object.hasOwnProperty.call(e,"cryptoDeleteLiveHash")&&$root.proto.CryptoDeleteLiveHashTransactionBody.encode(e.cryptoDeleteLiveHash,o.uint32(106).fork()).ldelim(),null!=e.cryptoTransfer&&Object.hasOwnProperty.call(e,"cryptoTransfer")&&$root.proto.CryptoTransferTransactionBody.encode(e.cryptoTransfer,o.uint32(114).fork()).ldelim(),null!=e.cryptoUpdateAccount&&Object.hasOwnProperty.call(e,"cryptoUpdateAccount")&&$root.proto.CryptoUpdateTransactionBody.encode(e.cryptoUpdateAccount,o.uint32(122).fork()).ldelim(),null!=e.fileAppend&&Object.hasOwnProperty.call(e,"fileAppend")&&$root.proto.FileAppendTransactionBody.encode(e.fileAppend,o.uint32(130).fork()).ldelim(),null!=e.fileCreate&&Object.hasOwnProperty.call(e,"fileCreate")&&$root.proto.FileCreateTransactionBody.encode(e.fileCreate,o.uint32(138).fork()).ldelim(),null!=e.fileDelete&&Object.hasOwnProperty.call(e,"fileDelete")&&$root.proto.FileDeleteTransactionBody.encode(e.fileDelete,o.uint32(146).fork()).ldelim(),null!=e.fileUpdate&&Object.hasOwnProperty.call(e,"fileUpdate")&&$root.proto.FileUpdateTransactionBody.encode(e.fileUpdate,o.uint32(154).fork()).ldelim(),null!=e.systemDelete&&Object.hasOwnProperty.call(e,"systemDelete")&&$root.proto.SystemDeleteTransactionBody.encode(e.systemDelete,o.uint32(162).fork()).ldelim(),null!=e.systemUndelete&&Object.hasOwnProperty.call(e,"systemUndelete")&&$root.proto.SystemUndeleteTransactionBody.encode(e.systemUndelete,o.uint32(170).fork()).ldelim(),null!=e.contractDeleteInstance&&Object.hasOwnProperty.call(e,"contractDeleteInstance")&&$root.proto.ContractDeleteTransactionBody.encode(e.contractDeleteInstance,o.uint32(178).fork()).ldelim(),null!=e.freeze&&Object.hasOwnProperty.call(e,"freeze")&&$root.proto.FreezeTransactionBody.encode(e.freeze,o.uint32(186).fork()).ldelim(),null!=e.consensusCreateTopic&&Object.hasOwnProperty.call(e,"consensusCreateTopic")&&$root.proto.ConsensusCreateTopicTransactionBody.encode(e.consensusCreateTopic,o.uint32(194).fork()).ldelim(),null!=e.consensusUpdateTopic&&Object.hasOwnProperty.call(e,"consensusUpdateTopic")&&$root.proto.ConsensusUpdateTopicTransactionBody.encode(e.consensusUpdateTopic,o.uint32(202).fork()).ldelim(),null!=e.consensusDeleteTopic&&Object.hasOwnProperty.call(e,"consensusDeleteTopic")&&$root.proto.ConsensusDeleteTopicTransactionBody.encode(e.consensusDeleteTopic,o.uint32(210).fork()).ldelim(),null!=e.consensusSubmitMessage&&Object.hasOwnProperty.call(e,"consensusSubmitMessage")&&$root.proto.ConsensusSubmitMessageTransactionBody.encode(e.consensusSubmitMessage,o.uint32(218).fork()).ldelim(),null!=e.uncheckedSubmit&&Object.hasOwnProperty.call(e,"uncheckedSubmit")&&$root.proto.UncheckedSubmitBody.encode(e.uncheckedSubmit,o.uint32(226).fork()).ldelim(),null!=e.tokenCreation&&Object.hasOwnProperty.call(e,"tokenCreation")&&$root.proto.TokenCreateTransactionBody.encode(e.tokenCreation,o.uint32(234).fork()).ldelim(),null!=e.tokenFreeze&&Object.hasOwnProperty.call(e,"tokenFreeze")&&$root.proto.TokenFreezeAccountTransactionBody.encode(e.tokenFreeze,o.uint32(250).fork()).ldelim(),null!=e.tokenUnfreeze&&Object.hasOwnProperty.call(e,"tokenUnfreeze")&&$root.proto.TokenUnfreezeAccountTransactionBody.encode(e.tokenUnfreeze,o.uint32(258).fork()).ldelim(),null!=e.tokenGrantKyc&&Object.hasOwnProperty.call(e,"tokenGrantKyc")&&$root.proto.TokenGrantKycTransactionBody.encode(e.tokenGrantKyc,o.uint32(266).fork()).ldelim(),null!=e.tokenRevokeKyc&&Object.hasOwnProperty.call(e,"tokenRevokeKyc")&&$root.proto.TokenRevokeKycTransactionBody.encode(e.tokenRevokeKyc,o.uint32(274).fork()).ldelim(),null!=e.tokenDeletion&&Object.hasOwnProperty.call(e,"tokenDeletion")&&$root.proto.TokenDeleteTransactionBody.encode(e.tokenDeletion,o.uint32(282).fork()).ldelim(),null!=e.tokenUpdate&&Object.hasOwnProperty.call(e,"tokenUpdate")&&$root.proto.TokenUpdateTransactionBody.encode(e.tokenUpdate,o.uint32(290).fork()).ldelim(),null!=e.tokenMint&&Object.hasOwnProperty.call(e,"tokenMint")&&$root.proto.TokenMintTransactionBody.encode(e.tokenMint,o.uint32(298).fork()).ldelim(),null!=e.tokenBurn&&Object.hasOwnProperty.call(e,"tokenBurn")&&$root.proto.TokenBurnTransactionBody.encode(e.tokenBurn,o.uint32(306).fork()).ldelim(),null!=e.tokenWipe&&Object.hasOwnProperty.call(e,"tokenWipe")&&$root.proto.TokenWipeAccountTransactionBody.encode(e.tokenWipe,o.uint32(314).fork()).ldelim(),null!=e.tokenAssociate&&Object.hasOwnProperty.call(e,"tokenAssociate")&&$root.proto.TokenAssociateTransactionBody.encode(e.tokenAssociate,o.uint32(322).fork()).ldelim(),null!=e.tokenDissociate&&Object.hasOwnProperty.call(e,"tokenDissociate")&&$root.proto.TokenDissociateTransactionBody.encode(e.tokenDissociate,o.uint32(330).fork()).ldelim(),null!=e.scheduleCreate&&Object.hasOwnProperty.call(e,"scheduleCreate")&&$root.proto.ScheduleCreateTransactionBody.encode(e.scheduleCreate,o.uint32(338).fork()).ldelim(),null!=e.scheduleDelete&&Object.hasOwnProperty.call(e,"scheduleDelete")&&$root.proto.ScheduleDeleteTransactionBody.encode(e.scheduleDelete,o.uint32(346).fork()).ldelim(),null!=e.scheduleSign&&Object.hasOwnProperty.call(e,"scheduleSign")&&$root.proto.ScheduleSignTransactionBody.encode(e.scheduleSign,o.uint32(354).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transactionID=$root.proto.TransactionID.decode(e,e.uint32());break;case 2:d.nodeAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.transactionFee=e.uint64();break;case 4:d.transactionValidDuration=$root.proto.Duration.decode(e,e.uint32());break;case 5:d.generateRecord=e.bool();break;case 6:d.memo=e.string();break;case 7:d.contractCall=$root.proto.ContractCallTransactionBody.decode(e,e.uint32());break;case 8:d.contractCreateInstance=$root.proto.ContractCreateTransactionBody.decode(e,e.uint32());break;case 9:d.contractUpdateInstance=$root.proto.ContractUpdateTransactionBody.decode(e,e.uint32());break;case 22:d.contractDeleteInstance=$root.proto.ContractDeleteTransactionBody.decode(e,e.uint32());break;case 10:d.cryptoAddLiveHash=$root.proto.CryptoAddLiveHashTransactionBody.decode(e,e.uint32());break;case 11:d.cryptoCreateAccount=$root.proto.CryptoCreateTransactionBody.decode(e,e.uint32());break;case 12:d.cryptoDelete=$root.proto.CryptoDeleteTransactionBody.decode(e,e.uint32());break;case 13:d.cryptoDeleteLiveHash=$root.proto.CryptoDeleteLiveHashTransactionBody.decode(e,e.uint32());break;case 14:d.cryptoTransfer=$root.proto.CryptoTransferTransactionBody.decode(e,e.uint32());break;case 15:d.cryptoUpdateAccount=$root.proto.CryptoUpdateTransactionBody.decode(e,e.uint32());break;case 16:d.fileAppend=$root.proto.FileAppendTransactionBody.decode(e,e.uint32());break;case 17:d.fileCreate=$root.proto.FileCreateTransactionBody.decode(e,e.uint32());break;case 18:d.fileDelete=$root.proto.FileDeleteTransactionBody.decode(e,e.uint32());break;case 19:d.fileUpdate=$root.proto.FileUpdateTransactionBody.decode(e,e.uint32());break;case 20:d.systemDelete=$root.proto.SystemDeleteTransactionBody.decode(e,e.uint32());break;case 21:d.systemUndelete=$root.proto.SystemUndeleteTransactionBody.decode(e,e.uint32());break;case 23:d.freeze=$root.proto.FreezeTransactionBody.decode(e,e.uint32());break;case 24:d.consensusCreateTopic=$root.proto.ConsensusCreateTopicTransactionBody.decode(e,e.uint32());break;case 25:d.consensusUpdateTopic=$root.proto.ConsensusUpdateTopicTransactionBody.decode(e,e.uint32());break;case 26:d.consensusDeleteTopic=$root.proto.ConsensusDeleteTopicTransactionBody.decode(e,e.uint32());break;case 27:d.consensusSubmitMessage=$root.proto.ConsensusSubmitMessageTransactionBody.decode(e,e.uint32());break;case 28:d.uncheckedSubmit=$root.proto.UncheckedSubmitBody.decode(e,e.uint32());break;case 29:d.tokenCreation=$root.proto.TokenCreateTransactionBody.decode(e,e.uint32());break;case 31:d.tokenFreeze=$root.proto.TokenFreezeAccountTransactionBody.decode(e,e.uint32());break;case 32:d.tokenUnfreeze=$root.proto.TokenUnfreezeAccountTransactionBody.decode(e,e.uint32());break;case 33:d.tokenGrantKyc=$root.proto.TokenGrantKycTransactionBody.decode(e,e.uint32());break;case 34:d.tokenRevokeKyc=$root.proto.TokenRevokeKycTransactionBody.decode(e,e.uint32());break;case 35:d.tokenDeletion=$root.proto.TokenDeleteTransactionBody.decode(e,e.uint32());break;case 36:d.tokenUpdate=$root.proto.TokenUpdateTransactionBody.decode(e,e.uint32());break;case 37:d.tokenMint=$root.proto.TokenMintTransactionBody.decode(e,e.uint32());break;case 38:d.tokenBurn=$root.proto.TokenBurnTransactionBody.decode(e,e.uint32());break;case 39:d.tokenWipe=$root.proto.TokenWipeAccountTransactionBody.decode(e,e.uint32());break;case 40:d.tokenAssociate=$root.proto.TokenAssociateTransactionBody.decode(e,e.uint32());break;case 41:d.tokenDissociate=$root.proto.TokenDissociateTransactionBody.decode(e,e.uint32());break;case 42:d.scheduleCreate=$root.proto.ScheduleCreateTransactionBody.decode(e,e.uint32());break;case 43:d.scheduleDelete=$root.proto.ScheduleDeleteTransactionBody.decode(e,e.uint32());break;case 44:d.scheduleSign=$root.proto.ScheduleSignTransactionBody.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),UncheckedSubmitBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.transactionBytes=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.transactionBytes&&Object.hasOwnProperty.call(e,"transactionBytes")&&o.uint32(10).bytes(e.transactionBytes),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.UncheckedSubmitBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transactionBytes=e.bytes();break;default:e.skipType(7&i);}return d},e}(),SignedTransaction:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.bodyBytes=$util.newBuffer([]),e.prototype.sigMap=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.bodyBytes&&Object.hasOwnProperty.call(e,"bodyBytes")&&o.uint32(10).bytes(e.bodyBytes),null!=e.sigMap&&Object.hasOwnProperty.call(e,"sigMap")&&$root.proto.SignatureMap.encode(e.sigMap,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SignedTransaction,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.bodyBytes=e.bytes();break;case 2:d.sigMap=$root.proto.SignatureMap.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TransactionList:function(){function e(e){if(this.transactionList=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.transactionList=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.transactionList&&e.transactionList.length)for(var t=0;t<e.transactionList.length;++t)$root.proto.Transaction.encode(e.transactionList[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionList,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transactionList&&d.transactionList.length||(d.transactionList=[]),d.transactionList.push($root.proto.Transaction.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),DoubleValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(9).double(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.DoubleValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.double();break;default:e.skipType(7&i);}return d},e}(),FloatValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(13).float(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FloatValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.float();break;default:e.skipType(7&i);}return d},e}(),Int64Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).int64(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Int64Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.int64();break;default:e.skipType(7&i);}return d},e}(),UInt64Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).uint64(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.UInt64Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.uint64();break;default:e.skipType(7&i);}return d},e}(),Int32Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).int32(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Int32Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.int32();break;default:e.skipType(7&i);}return d},e}(),UInt32Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).uint32(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.UInt32Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.uint32();break;default:e.skipType(7&i);}return d},e}(),BoolValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=!1,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).bool(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.BoolValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.bool();break;default:e.skipType(7&i);}return d},e}(),StringValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(10).string(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.StringValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.string();break;default:e.skipType(7&i);}return d},e}(),BytesValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(10).bytes(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.BytesValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.bytes();break;default:e.skipType(7&i);}return d},e}()};return e})();exports.proto=proto;const google=$root.google=(()=>{const e={protobuf:function(){const e={DoubleValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(9).double(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.DoubleValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.double();break;default:e.skipType(7&i);}return d},e}(),FloatValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(13).float(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.FloatValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.float();break;default:e.skipType(7&i);}return d},e}(),Int64Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).int64(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.Int64Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.int64();break;default:e.skipType(7&i);}return d},e}(),UInt64Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).uint64(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.UInt64Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.uint64();break;default:e.skipType(7&i);}return d},e}(),Int32Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).int32(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.Int32Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.int32();break;default:e.skipType(7&i);}return d},e}(),UInt32Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).uint32(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.UInt32Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.uint32();break;default:e.skipType(7&i);}return d},e}(),BoolValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=!1,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).bool(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.BoolValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.bool();break;default:e.skipType(7&i);}return d},e}(),StringValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(10).string(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.StringValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.string();break;default:e.skipType(7&i);}return d},e}(),BytesValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(10).bytes(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.BytesValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.bytes();break;default:e.skipType(7&i);}return d},e}()};return e}()};return e})();exports.google=google;
+var $protobuf=_interopRequireWildcard(__nccwpck_require__(6738));Object.defineProperty(exports, "__esModule", ({value:!0})),exports.default=exports.google=exports.proto=void 0;function _getRequireWildcardCache(e){if("function"!=typeof WeakMap)return null;var o=new WeakMap,t=new WeakMap;return(_getRequireWildcardCache=function(e){return e?t:o})(e)}function _interopRequireWildcard(e,o){if(!o&&e&&e.__esModule)return e;if(null===e||"object"!=typeof e&&"function"!=typeof e)return{default:e};var t=_getRequireWildcardCache(o);if(t&&t.has(e))return t.get(e);var n={},r=Object.defineProperty&&Object.getOwnPropertyDescriptor;for(var d in e)if("default"!=d&&Object.prototype.hasOwnProperty.call(e,d)){var i=r?Object.getOwnPropertyDescriptor(e,d):null;i&&(i.get||i.set)?Object.defineProperty(n,d,i):n[d]=e[d]}return n.default=e,t&&t.set(e,n),n}const $Reader=$protobuf.Reader,$Writer=$protobuf.Writer,$util=$protobuf.util,$root=$protobuf.roots["default"]||($protobuf.roots["default"]={});exports.default=$root;const proto=$root.proto=(()=>{const e={TokenUnitBalance:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenId=null,e.prototype.balance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.tokenId&&Object.hasOwnProperty.call(e,"tokenId")&&$root.proto.TokenID.encode(e.tokenId,o.uint32(10).fork()).ldelim(),null!=e.balance&&Object.hasOwnProperty.call(e,"balance")&&o.uint32(16).uint64(e.balance),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenUnitBalance,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenId=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.balance=e.uint64();break;default:e.skipType(7&i);}return d},e}(),SingleAccountBalances:function(){function e(e){if(this.tokenUnitBalances=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountID=null,e.prototype.hbarBalance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.tokenUnitBalances=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.hbarBalance&&Object.hasOwnProperty.call(e,"hbarBalance")&&o.uint32(16).uint64(e.hbarBalance),null!=e.tokenUnitBalances&&e.tokenUnitBalances.length)for(var t=0;t<e.tokenUnitBalances.length;++t)$root.proto.TokenUnitBalance.encode(e.tokenUnitBalances[t],o.uint32(26).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SingleAccountBalances,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.hbarBalance=e.uint64();break;case 3:d.tokenUnitBalances&&d.tokenUnitBalances.length||(d.tokenUnitBalances=[]),d.tokenUnitBalances.push($root.proto.TokenUnitBalance.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),AllAccountBalances:function(){function e(e){if(this.allAccounts=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.consensusTimestamp=null,e.prototype.allAccounts=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.consensusTimestamp&&Object.hasOwnProperty.call(e,"consensusTimestamp")&&$root.proto.Timestamp.encode(e.consensusTimestamp,o.uint32(10).fork()).ldelim(),null!=e.allAccounts&&e.allAccounts.length)for(var t=0;t<e.allAccounts.length;++t)$root.proto.SingleAccountBalances.encode(e.allAccounts[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.AllAccountBalances,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.consensusTimestamp=$root.proto.Timestamp.decode(e,e.uint32());break;case 2:d.allAccounts&&d.allAccounts.length||(d.allAccounts=[]),d.allAccounts.push($root.proto.SingleAccountBalances.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),ShardID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ShardID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),RealmID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.RealmID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),AccountID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.accountNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),null!=e.accountNum&&Object.hasOwnProperty.call(e,"accountNum")&&o.uint32(24).int64(e.accountNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.AccountID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;case 3:d.accountNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),FileID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.fileNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),null!=e.fileNum&&Object.hasOwnProperty.call(e,"fileNum")&&o.uint32(24).int64(e.fileNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;case 3:d.fileNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),ContractID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.contractNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),null!=e.contractNum&&Object.hasOwnProperty.call(e,"contractNum")&&o.uint32(24).int64(e.contractNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;case 3:d.contractNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),TransactionID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.transactionValidStart=null,e.prototype.accountID=null,e.prototype.scheduled=!1,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.transactionValidStart&&Object.hasOwnProperty.call(e,"transactionValidStart")&&$root.proto.Timestamp.encode(e.transactionValidStart,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.scheduled&&Object.hasOwnProperty.call(e,"scheduled")&&o.uint32(24).bool(e.scheduled),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transactionValidStart=$root.proto.Timestamp.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.scheduled=e.bool();break;default:e.skipType(7&i);}return d},e}(),AccountAmount:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountID=null,e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(16).sint64(e.amount),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.AccountAmount,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.amount=e.sint64();break;default:e.skipType(7&i);}return d},e}(),TransferList:function(){function e(e){if(this.accountAmounts=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountAmounts=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.accountAmounts&&e.accountAmounts.length)for(var t=0;t<e.accountAmounts.length;++t)$root.proto.AccountAmount.encode(e.accountAmounts[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransferList,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountAmounts&&d.accountAmounts.length||(d.accountAmounts=[]),d.accountAmounts.push($root.proto.AccountAmount.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),NftTransfer:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.senderAccountID=null,e.prototype.receiverAccountID=null,e.prototype.serialNumber=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.senderAccountID&&Object.hasOwnProperty.call(e,"senderAccountID")&&$root.proto.AccountID.encode(e.senderAccountID,o.uint32(10).fork()).ldelim(),null!=e.receiverAccountID&&Object.hasOwnProperty.call(e,"receiverAccountID")&&$root.proto.AccountID.encode(e.receiverAccountID,o.uint32(18).fork()).ldelim(),null!=e.serialNumber&&Object.hasOwnProperty.call(e,"serialNumber")&&o.uint32(24).int64(e.serialNumber),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.NftTransfer,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.senderAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.receiverAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.serialNumber=e.int64();break;default:e.skipType(7&i);}return d},e}(),TokenTransferList:function(){function e(e){if(this.transfers=[],this.nftTransfers=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.transfers=$util.emptyArray,e.prototype.nftTransfers=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.transfers&&e.transfers.length)for(var t=0;t<e.transfers.length;++t)$root.proto.AccountAmount.encode(e.transfers[t],o.uint32(18).fork()).ldelim();if(null!=e.nftTransfers&&e.nftTransfers.length)for(var t=0;t<e.nftTransfers.length;++t)$root.proto.NftTransfer.encode(e.nftTransfers[t],o.uint32(26).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenTransferList,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.transfers&&d.transfers.length||(d.transfers=[]),d.transfers.push($root.proto.AccountAmount.decode(e,e.uint32()));break;case 3:d.nftTransfers&&d.nftTransfers.length||(d.nftTransfers=[]),d.nftTransfers.push($root.proto.NftTransfer.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),Fraction:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.numerator=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.denominator=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.numerator&&Object.hasOwnProperty.call(e,"numerator")&&o.uint32(8).int64(e.numerator),null!=e.denominator&&Object.hasOwnProperty.call(e,"denominator")&&o.uint32(16).int64(e.denominator),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Fraction,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.numerator=e.int64();break;case 2:d.denominator=e.int64();break;default:e.skipType(7&i);}return d},e}(),TopicID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.topicNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),null!=e.topicNum&&Object.hasOwnProperty.call(e,"topicNum")&&o.uint32(24).int64(e.topicNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TopicID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;case 3:d.topicNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),TokenID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.tokenNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),null!=e.tokenNum&&Object.hasOwnProperty.call(e,"tokenNum")&&o.uint32(24).int64(e.tokenNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;case 3:d.tokenNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),ScheduleID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.shardNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.realmNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.scheduleNum=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.shardNum&&Object.hasOwnProperty.call(e,"shardNum")&&o.uint32(8).int64(e.shardNum),null!=e.realmNum&&Object.hasOwnProperty.call(e,"realmNum")&&o.uint32(16).int64(e.realmNum),null!=e.scheduleNum&&Object.hasOwnProperty.call(e,"scheduleNum")&&o.uint32(24).int64(e.scheduleNum),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.shardNum=e.int64();break;case 2:d.realmNum=e.int64();break;case 3:d.scheduleNum=e.int64();break;default:e.skipType(7&i);}return d},e}(),TokenType:function(){const e={},o=Object.create(e);return o[e[0]="FUNGIBLE_COMMON"]=0,o[e[1]="NON_FUNGIBLE_UNIQUE"]=1,o}(),SubType:function(){const e={},o=Object.create(e);return o[e[0]="DEFAULT"]=0,o[e[1]="TOKEN_FUNGIBLE_COMMON"]=1,o[e[2]="TOKEN_NON_FUNGIBLE_UNIQUE"]=2,o[e[3]="TOKEN_FUNGIBLE_COMMON_WITH_CUSTOM_FEES"]=3,o[e[4]="TOKEN_NON_FUNGIBLE_UNIQUE_WITH_CUSTOM_FEES"]=4,o}(),TokenSupplyType:function(){const e={},o=Object.create(e);return o[e[0]="INFINITE"]=0,o[e[1]="FINITE"]=1,o}(),TokenFreezeStatus:function(){const e={},o=Object.create(e);return o[e[0]="FreezeNotApplicable"]=0,o[e[1]="Frozen"]=1,o[e[2]="Unfrozen"]=2,o}(),TokenKycStatus:function(){const e={},o=Object.create(e);return o[e[0]="KycNotApplicable"]=0,o[e[1]="Granted"]=1,o[e[2]="Revoked"]=2,o}(),Key:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.contractID=null,e.prototype.ed25519=null,e.prototype.RSA_3072=null,e.prototype.ECDSA_384=null,e.prototype.thresholdKey=null,e.prototype.keyList=null;let o;return Object.defineProperty(e.prototype,"key",{get:$util.oneOfGetter(o=["contractID","ed25519","RSA_3072","ECDSA_384","thresholdKey","keyList"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.ed25519&&Object.hasOwnProperty.call(e,"ed25519")&&o.uint32(18).bytes(e.ed25519),null!=e.RSA_3072&&Object.hasOwnProperty.call(e,"RSA_3072")&&o.uint32(26).bytes(e.RSA_3072),null!=e.ECDSA_384&&Object.hasOwnProperty.call(e,"ECDSA_384")&&o.uint32(34).bytes(e.ECDSA_384),null!=e.thresholdKey&&Object.hasOwnProperty.call(e,"thresholdKey")&&$root.proto.ThresholdKey.encode(e.thresholdKey,o.uint32(42).fork()).ldelim(),null!=e.keyList&&Object.hasOwnProperty.call(e,"keyList")&&$root.proto.KeyList.encode(e.keyList,o.uint32(50).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Key,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.ed25519=e.bytes();break;case 3:d.RSA_3072=e.bytes();break;case 4:d.ECDSA_384=e.bytes();break;case 5:d.thresholdKey=$root.proto.ThresholdKey.decode(e,e.uint32());break;case 6:d.keyList=$root.proto.KeyList.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ThresholdKey:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.threshold=0,e.prototype.keys=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.threshold&&Object.hasOwnProperty.call(e,"threshold")&&o.uint32(8).uint32(e.threshold),null!=e.keys&&Object.hasOwnProperty.call(e,"keys")&&$root.proto.KeyList.encode(e.keys,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ThresholdKey,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.threshold=e.uint32();break;case 2:d.keys=$root.proto.KeyList.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),KeyList:function(){function e(e){if(this.keys=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.keys=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.keys&&e.keys.length)for(var t=0;t<e.keys.length;++t)$root.proto.Key.encode(e.keys[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.KeyList,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.keys&&d.keys.length||(d.keys=[]),d.keys.push($root.proto.Key.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),Signature:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.contract=null,e.prototype.ed25519=null,e.prototype.RSA_3072=null,e.prototype.ECDSA_384=null,e.prototype.thresholdSignature=null,e.prototype.signatureList=null;let o;return Object.defineProperty(e.prototype,"signature",{get:$util.oneOfGetter(o=["contract","ed25519","RSA_3072","ECDSA_384","thresholdSignature","signatureList"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.contract&&Object.hasOwnProperty.call(e,"contract")&&o.uint32(10).bytes(e.contract),null!=e.ed25519&&Object.hasOwnProperty.call(e,"ed25519")&&o.uint32(18).bytes(e.ed25519),null!=e.RSA_3072&&Object.hasOwnProperty.call(e,"RSA_3072")&&o.uint32(26).bytes(e.RSA_3072),null!=e.ECDSA_384&&Object.hasOwnProperty.call(e,"ECDSA_384")&&o.uint32(34).bytes(e.ECDSA_384),null!=e.thresholdSignature&&Object.hasOwnProperty.call(e,"thresholdSignature")&&$root.proto.ThresholdSignature.encode(e.thresholdSignature,o.uint32(42).fork()).ldelim(),null!=e.signatureList&&Object.hasOwnProperty.call(e,"signatureList")&&$root.proto.SignatureList.encode(e.signatureList,o.uint32(50).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Signature,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contract=e.bytes();break;case 2:d.ed25519=e.bytes();break;case 3:d.RSA_3072=e.bytes();break;case 4:d.ECDSA_384=e.bytes();break;case 5:d.thresholdSignature=$root.proto.ThresholdSignature.decode(e,e.uint32());break;case 6:d.signatureList=$root.proto.SignatureList.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ThresholdSignature:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.sigs=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.sigs&&Object.hasOwnProperty.call(e,"sigs")&&$root.proto.SignatureList.encode(e.sigs,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ThresholdSignature,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 2:d.sigs=$root.proto.SignatureList.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),SignatureList:function(){function e(e){if(this.sigs=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.sigs=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.sigs&&e.sigs.length)for(var t=0;t<e.sigs.length;++t)$root.proto.Signature.encode(e.sigs[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SignatureList,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 2:d.sigs&&d.sigs.length||(d.sigs=[]),d.sigs.push($root.proto.Signature.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),SignaturePair:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.pubKeyPrefix=$util.newBuffer([]),e.prototype.contract=null,e.prototype.ed25519=null,e.prototype.RSA_3072=null,e.prototype.ECDSA_384=null;let o;return Object.defineProperty(e.prototype,"signature",{get:$util.oneOfGetter(o=["contract","ed25519","RSA_3072","ECDSA_384"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.pubKeyPrefix&&Object.hasOwnProperty.call(e,"pubKeyPrefix")&&o.uint32(10).bytes(e.pubKeyPrefix),null!=e.contract&&Object.hasOwnProperty.call(e,"contract")&&o.uint32(18).bytes(e.contract),null!=e.ed25519&&Object.hasOwnProperty.call(e,"ed25519")&&o.uint32(26).bytes(e.ed25519),null!=e.RSA_3072&&Object.hasOwnProperty.call(e,"RSA_3072")&&o.uint32(34).bytes(e.RSA_3072),null!=e.ECDSA_384&&Object.hasOwnProperty.call(e,"ECDSA_384")&&o.uint32(42).bytes(e.ECDSA_384),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SignaturePair,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.pubKeyPrefix=e.bytes();break;case 2:d.contract=e.bytes();break;case 3:d.ed25519=e.bytes();break;case 4:d.RSA_3072=e.bytes();break;case 5:d.ECDSA_384=e.bytes();break;default:e.skipType(7&i);}return d},e}(),SignatureMap:function(){function e(e){if(this.sigPair=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.sigPair=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.sigPair&&e.sigPair.length)for(var t=0;t<e.sigPair.length;++t)$root.proto.SignaturePair.encode(e.sigPair[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SignatureMap,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.sigPair&&d.sigPair.length||(d.sigPair=[]),d.sigPair.push($root.proto.SignaturePair.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),HederaFunctionality:function(){const e={},o=Object.create(e);return o[e[0]="NONE"]=0,o[e[1]="CryptoTransfer"]=1,o[e[2]="CryptoUpdate"]=2,o[e[3]="CryptoDelete"]=3,o[e[4]="CryptoAddLiveHash"]=4,o[e[5]="CryptoDeleteLiveHash"]=5,o[e[6]="ContractCall"]=6,o[e[7]="ContractCreate"]=7,o[e[8]="ContractUpdate"]=8,o[e[9]="FileCreate"]=9,o[e[10]="FileAppend"]=10,o[e[11]="FileUpdate"]=11,o[e[12]="FileDelete"]=12,o[e[13]="CryptoGetAccountBalance"]=13,o[e[14]="CryptoGetAccountRecords"]=14,o[e[15]="CryptoGetInfo"]=15,o[e[16]="ContractCallLocal"]=16,o[e[17]="ContractGetInfo"]=17,o[e[18]="ContractGetBytecode"]=18,o[e[19]="GetBySolidityID"]=19,o[e[20]="GetByKey"]=20,o[e[21]="CryptoGetLiveHash"]=21,o[e[22]="CryptoGetStakers"]=22,o[e[23]="FileGetContents"]=23,o[e[24]="FileGetInfo"]=24,o[e[25]="TransactionGetRecord"]=25,o[e[26]="ContractGetRecords"]=26,o[e[27]="CryptoCreate"]=27,o[e[28]="SystemDelete"]=28,o[e[29]="SystemUndelete"]=29,o[e[30]="ContractDelete"]=30,o[e[31]="Freeze"]=31,o[e[32]="CreateTransactionRecord"]=32,o[e[33]="CryptoAccountAutoRenew"]=33,o[e[34]="ContractAutoRenew"]=34,o[e[35]="GetVersionInfo"]=35,o[e[36]="TransactionGetReceipt"]=36,o[e[50]="ConsensusCreateTopic"]=50,o[e[51]="ConsensusUpdateTopic"]=51,o[e[52]="ConsensusDeleteTopic"]=52,o[e[53]="ConsensusGetTopicInfo"]=53,o[e[54]="ConsensusSubmitMessage"]=54,o[e[55]="UncheckedSubmit"]=55,o[e[56]="TokenCreate"]=56,o[e[58]="TokenGetInfo"]=58,o[e[59]="TokenFreezeAccount"]=59,o[e[60]="TokenUnfreezeAccount"]=60,o[e[61]="TokenGrantKycToAccount"]=61,o[e[62]="TokenRevokeKycFromAccount"]=62,o[e[63]="TokenDelete"]=63,o[e[64]="TokenUpdate"]=64,o[e[65]="TokenMint"]=65,o[e[66]="TokenBurn"]=66,o[e[67]="TokenAccountWipe"]=67,o[e[68]="TokenAssociateToAccount"]=68,o[e[69]="TokenDissociateFromAccount"]=69,o[e[70]="ScheduleCreate"]=70,o[e[71]="ScheduleDelete"]=71,o[e[72]="ScheduleSign"]=72,o[e[73]="ScheduleGetInfo"]=73,o[e[74]="TokenGetAccountNftInfos"]=74,o[e[75]="TokenGetNftInfo"]=75,o[e[76]="TokenGetNftInfos"]=76,o[e[77]="TokenFeeScheduleUpdate"]=77,o}(),FeeComponents:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.min=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.max=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.constant=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.bpt=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.vpt=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.rbh=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.sbh=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.gas=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.tv=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.bpr=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.sbpr=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.min&&Object.hasOwnProperty.call(e,"min")&&o.uint32(8).int64(e.min),null!=e.max&&Object.hasOwnProperty.call(e,"max")&&o.uint32(16).int64(e.max),null!=e.constant&&Object.hasOwnProperty.call(e,"constant")&&o.uint32(24).int64(e.constant),null!=e.bpt&&Object.hasOwnProperty.call(e,"bpt")&&o.uint32(32).int64(e.bpt),null!=e.vpt&&Object.hasOwnProperty.call(e,"vpt")&&o.uint32(40).int64(e.vpt),null!=e.rbh&&Object.hasOwnProperty.call(e,"rbh")&&o.uint32(48).int64(e.rbh),null!=e.sbh&&Object.hasOwnProperty.call(e,"sbh")&&o.uint32(56).int64(e.sbh),null!=e.gas&&Object.hasOwnProperty.call(e,"gas")&&o.uint32(64).int64(e.gas),null!=e.tv&&Object.hasOwnProperty.call(e,"tv")&&o.uint32(72).int64(e.tv),null!=e.bpr&&Object.hasOwnProperty.call(e,"bpr")&&o.uint32(80).int64(e.bpr),null!=e.sbpr&&Object.hasOwnProperty.call(e,"sbpr")&&o.uint32(88).int64(e.sbpr),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FeeComponents,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.min=e.int64();break;case 2:d.max=e.int64();break;case 3:d.constant=e.int64();break;case 4:d.bpt=e.int64();break;case 5:d.vpt=e.int64();break;case 6:d.rbh=e.int64();break;case 7:d.sbh=e.int64();break;case 8:d.gas=e.int64();break;case 9:d.tv=e.int64();break;case 10:d.bpr=e.int64();break;case 11:d.sbpr=e.int64();break;default:e.skipType(7&i);}return d},e}(),TransactionFeeSchedule:function(){function e(e){if(this.fees=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.hederaFunctionality=0,e.prototype.feeData=null,e.prototype.fees=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.hederaFunctionality&&Object.hasOwnProperty.call(e,"hederaFunctionality")&&o.uint32(8).int32(e.hederaFunctionality),null!=e.feeData&&Object.hasOwnProperty.call(e,"feeData")&&$root.proto.FeeData.encode(e.feeData,o.uint32(18).fork()).ldelim(),null!=e.fees&&e.fees.length)for(var t=0;t<e.fees.length;++t)$root.proto.FeeData.encode(e.fees[t],o.uint32(26).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionFeeSchedule,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.hederaFunctionality=e.int32();break;case 2:d.feeData=$root.proto.FeeData.decode(e,e.uint32());break;case 3:d.fees&&d.fees.length||(d.fees=[]),d.fees.push($root.proto.FeeData.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),FeeData:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.nodedata=null,e.prototype.networkdata=null,e.prototype.servicedata=null,e.prototype.subType=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.nodedata&&Object.hasOwnProperty.call(e,"nodedata")&&$root.proto.FeeComponents.encode(e.nodedata,o.uint32(10).fork()).ldelim(),null!=e.networkdata&&Object.hasOwnProperty.call(e,"networkdata")&&$root.proto.FeeComponents.encode(e.networkdata,o.uint32(18).fork()).ldelim(),null!=e.servicedata&&Object.hasOwnProperty.call(e,"servicedata")&&$root.proto.FeeComponents.encode(e.servicedata,o.uint32(26).fork()).ldelim(),null!=e.subType&&Object.hasOwnProperty.call(e,"subType")&&o.uint32(32).int32(e.subType),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FeeData,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.nodedata=$root.proto.FeeComponents.decode(e,e.uint32());break;case 2:d.networkdata=$root.proto.FeeComponents.decode(e,e.uint32());break;case 3:d.servicedata=$root.proto.FeeComponents.decode(e,e.uint32());break;case 4:d.subType=e.int32();break;default:e.skipType(7&i);}return d},e}(),FeeSchedule:function(){function e(e){if(this.transactionFeeSchedule=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.transactionFeeSchedule=$util.emptyArray,e.prototype.expiryTime=null,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.transactionFeeSchedule&&e.transactionFeeSchedule.length)for(var t=0;t<e.transactionFeeSchedule.length;++t)$root.proto.TransactionFeeSchedule.encode(e.transactionFeeSchedule[t],o.uint32(10).fork()).ldelim();return null!=e.expiryTime&&Object.hasOwnProperty.call(e,"expiryTime")&&$root.proto.TimestampSeconds.encode(e.expiryTime,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FeeSchedule,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transactionFeeSchedule&&d.transactionFeeSchedule.length||(d.transactionFeeSchedule=[]),d.transactionFeeSchedule.push($root.proto.TransactionFeeSchedule.decode(e,e.uint32()));break;case 2:d.expiryTime=$root.proto.TimestampSeconds.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CurrentAndNextFeeSchedule:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.currentFeeSchedule=null,e.prototype.nextFeeSchedule=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.currentFeeSchedule&&Object.hasOwnProperty.call(e,"currentFeeSchedule")&&$root.proto.FeeSchedule.encode(e.currentFeeSchedule,o.uint32(10).fork()).ldelim(),null!=e.nextFeeSchedule&&Object.hasOwnProperty.call(e,"nextFeeSchedule")&&$root.proto.FeeSchedule.encode(e.nextFeeSchedule,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CurrentAndNextFeeSchedule,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.currentFeeSchedule=$root.proto.FeeSchedule.decode(e,e.uint32());break;case 2:d.nextFeeSchedule=$root.proto.FeeSchedule.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ServiceEndpoint:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.ipAddressV4=$util.newBuffer([]),e.prototype.port=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.ipAddressV4&&Object.hasOwnProperty.call(e,"ipAddressV4")&&o.uint32(10).bytes(e.ipAddressV4),null!=e.port&&Object.hasOwnProperty.call(e,"port")&&o.uint32(16).int32(e.port),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ServiceEndpoint,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.ipAddressV4=e.bytes();break;case 2:d.port=e.int32();break;default:e.skipType(7&i);}return d},e}(),NodeAddress:function(){function e(e){if(this.serviceEndpoint=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.ipAddress=$util.newBuffer([]),e.prototype.portno=0,e.prototype.memo=$util.newBuffer([]),e.prototype.RSA_PubKey="",e.prototype.nodeId=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.nodeAccountId=null,e.prototype.nodeCertHash=$util.newBuffer([]),e.prototype.serviceEndpoint=$util.emptyArray,e.prototype.description="",e.prototype.stake=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.ipAddress&&Object.hasOwnProperty.call(e,"ipAddress")&&o.uint32(10).bytes(e.ipAddress),null!=e.portno&&Object.hasOwnProperty.call(e,"portno")&&o.uint32(16).int32(e.portno),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(26).bytes(e.memo),null!=e.RSA_PubKey&&Object.hasOwnProperty.call(e,"RSA_PubKey")&&o.uint32(34).string(e.RSA_PubKey),null!=e.nodeId&&Object.hasOwnProperty.call(e,"nodeId")&&o.uint32(40).int64(e.nodeId),null!=e.nodeAccountId&&Object.hasOwnProperty.call(e,"nodeAccountId")&&$root.proto.AccountID.encode(e.nodeAccountId,o.uint32(50).fork()).ldelim(),null!=e.nodeCertHash&&Object.hasOwnProperty.call(e,"nodeCertHash")&&o.uint32(58).bytes(e.nodeCertHash),null!=e.serviceEndpoint&&e.serviceEndpoint.length)for(var t=0;t<e.serviceEndpoint.length;++t)$root.proto.ServiceEndpoint.encode(e.serviceEndpoint[t],o.uint32(66).fork()).ldelim();return null!=e.description&&Object.hasOwnProperty.call(e,"description")&&o.uint32(74).string(e.description),null!=e.stake&&Object.hasOwnProperty.call(e,"stake")&&o.uint32(80).int64(e.stake),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.NodeAddress,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.ipAddress=e.bytes();break;case 2:d.portno=e.int32();break;case 3:d.memo=e.bytes();break;case 4:d.RSA_PubKey=e.string();break;case 5:d.nodeId=e.int64();break;case 6:d.nodeAccountId=$root.proto.AccountID.decode(e,e.uint32());break;case 7:d.nodeCertHash=e.bytes();break;case 8:d.serviceEndpoint&&d.serviceEndpoint.length||(d.serviceEndpoint=[]),d.serviceEndpoint.push($root.proto.ServiceEndpoint.decode(e,e.uint32()));break;case 9:d.description=e.string();break;case 10:d.stake=e.int64();break;default:e.skipType(7&i);}return d},e}(),NodeAddressBook:function(){function e(e){if(this.nodeAddress=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.nodeAddress=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.nodeAddress&&e.nodeAddress.length)for(var t=0;t<e.nodeAddress.length;++t)$root.proto.NodeAddress.encode(e.nodeAddress[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.NodeAddressBook,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.nodeAddress&&d.nodeAddress.length||(d.nodeAddress=[]),d.nodeAddress.push($root.proto.NodeAddress.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),SemanticVersion:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.major=0,e.prototype.minor=0,e.prototype.patch=0,e.prototype.pre="",e.prototype.build="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.major&&Object.hasOwnProperty.call(e,"major")&&o.uint32(8).int32(e.major),null!=e.minor&&Object.hasOwnProperty.call(e,"minor")&&o.uint32(16).int32(e.minor),null!=e.patch&&Object.hasOwnProperty.call(e,"patch")&&o.uint32(24).int32(e.patch),null!=e.pre&&Object.hasOwnProperty.call(e,"pre")&&o.uint32(34).string(e.pre),null!=e.build&&Object.hasOwnProperty.call(e,"build")&&o.uint32(42).string(e.build),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SemanticVersion,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.major=e.int32();break;case 2:d.minor=e.int32();break;case 3:d.patch=e.int32();break;case 4:d.pre=e.string();break;case 5:d.build=e.string();break;default:e.skipType(7&i);}return d},e}(),Setting:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.name="",e.prototype.value="",e.prototype.data=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.name&&Object.hasOwnProperty.call(e,"name")&&o.uint32(10).string(e.name),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(18).string(e.value),null!=e.data&&Object.hasOwnProperty.call(e,"data")&&o.uint32(26).bytes(e.data),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Setting,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.name=e.string();break;case 2:d.value=e.string();break;case 3:d.data=e.bytes();break;default:e.skipType(7&i);}return d},e}(),ServicesConfigurationList:function(){function e(e){if(this.nameValue=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.nameValue=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.nameValue&&e.nameValue.length)for(var t=0;t<e.nameValue.length;++t)$root.proto.Setting.encode(e.nameValue[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ServicesConfigurationList,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.nameValue&&d.nameValue.length||(d.nameValue=[]),d.nameValue.push($root.proto.Setting.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TokenRelationship:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenId=null,e.prototype.symbol="",e.prototype.balance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.kycStatus=0,e.prototype.freezeStatus=0,e.prototype.decimals=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.tokenId&&Object.hasOwnProperty.call(e,"tokenId")&&$root.proto.TokenID.encode(e.tokenId,o.uint32(10).fork()).ldelim(),null!=e.symbol&&Object.hasOwnProperty.call(e,"symbol")&&o.uint32(18).string(e.symbol),null!=e.balance&&Object.hasOwnProperty.call(e,"balance")&&o.uint32(24).uint64(e.balance),null!=e.kycStatus&&Object.hasOwnProperty.call(e,"kycStatus")&&o.uint32(32).int32(e.kycStatus),null!=e.freezeStatus&&Object.hasOwnProperty.call(e,"freezeStatus")&&o.uint32(40).int32(e.freezeStatus),null!=e.decimals&&Object.hasOwnProperty.call(e,"decimals")&&o.uint32(48).uint32(e.decimals),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenRelationship,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenId=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.symbol=e.string();break;case 3:d.balance=e.uint64();break;case 4:d.kycStatus=e.int32();break;case 5:d.freezeStatus=e.int32();break;case 6:d.decimals=e.uint32();break;default:e.skipType(7&i);}return d},e}(),TokenBalance:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenId=null,e.prototype.balance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.decimals=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.tokenId&&Object.hasOwnProperty.call(e,"tokenId")&&$root.proto.TokenID.encode(e.tokenId,o.uint32(10).fork()).ldelim(),null!=e.balance&&Object.hasOwnProperty.call(e,"balance")&&o.uint32(16).uint64(e.balance),null!=e.decimals&&Object.hasOwnProperty.call(e,"decimals")&&o.uint32(24).uint32(e.decimals),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenBalance,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenId=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.balance=e.uint64();break;case 3:d.decimals=e.uint32();break;default:e.skipType(7&i);}return d},e}(),TokenBalances:function(){function e(e){if(this.tokenBalances=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenBalances=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.tokenBalances&&e.tokenBalances.length)for(var t=0;t<e.tokenBalances.length;++t)$root.proto.TokenBalance.encode(e.tokenBalances[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenBalances,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenBalances&&d.tokenBalances.length||(d.tokenBalances=[]),d.tokenBalances.push($root.proto.TokenBalance.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),Timestamp:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.seconds=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.nanos=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.seconds&&Object.hasOwnProperty.call(e,"seconds")&&o.uint32(8).int64(e.seconds),null!=e.nanos&&Object.hasOwnProperty.call(e,"nanos")&&o.uint32(16).int32(e.nanos),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Timestamp,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.seconds=e.int64();break;case 2:d.nanos=e.int32();break;default:e.skipType(7&i);}return d},e}(),TimestampSeconds:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.seconds=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.seconds&&Object.hasOwnProperty.call(e,"seconds")&&o.uint32(8).int64(e.seconds),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TimestampSeconds,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.seconds=e.int64();break;default:e.skipType(7&i);}return d},e}(),ConsensusCreateTopicTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.memo="",e.prototype.adminKey=null,e.prototype.submitKey=null,e.prototype.autoRenewPeriod=null,e.prototype.autoRenewAccount=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(10).string(e.memo),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(18).fork()).ldelim(),null!=e.submitKey&&Object.hasOwnProperty.call(e,"submitKey")&&$root.proto.Key.encode(e.submitKey,o.uint32(26).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(50).fork()).ldelim(),null!=e.autoRenewAccount&&Object.hasOwnProperty.call(e,"autoRenewAccount")&&$root.proto.AccountID.encode(e.autoRenewAccount,o.uint32(58).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusCreateTopicTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.memo=e.string();break;case 2:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 3:d.submitKey=$root.proto.Key.decode(e,e.uint32());break;case 6:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 7:d.autoRenewAccount=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),Duration:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.seconds=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.seconds&&Object.hasOwnProperty.call(e,"seconds")&&o.uint32(8).int64(e.seconds),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Duration,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.seconds=e.int64();break;default:e.skipType(7&i);}return d},e}(),ConsensusDeleteTopicTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.topicID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(10).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusDeleteTopicTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ConsensusGetTopicInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.topicID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusGetTopicInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ConsensusGetTopicInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.topicID=null,e.prototype.topicInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(18).fork()).ldelim(),null!=e.topicInfo&&Object.hasOwnProperty.call(e,"topicInfo")&&$root.proto.ConsensusTopicInfo.encode(e.topicInfo,o.uint32(42).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusGetTopicInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;case 5:d.topicInfo=$root.proto.ConsensusTopicInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ResponseType:function(){const e={},o=Object.create(e);return o[e[0]="ANSWER_ONLY"]=0,o[e[1]="ANSWER_STATE_PROOF"]=1,o[e[2]="COST_ANSWER"]=2,o[e[3]="COST_ANSWER_STATE_PROOF"]=3,o}(),QueryHeader:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.payment=null,e.prototype.responseType=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.payment&&Object.hasOwnProperty.call(e,"payment")&&$root.proto.Transaction.encode(e.payment,o.uint32(10).fork()).ldelim(),null!=e.responseType&&Object.hasOwnProperty.call(e,"responseType")&&o.uint32(16).int32(e.responseType),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.QueryHeader,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.payment=$root.proto.Transaction.decode(e,e.uint32());break;case 2:d.responseType=e.int32();break;default:e.skipType(7&i);}return d},e}(),Transaction:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.body=null,e.prototype.sigs=null,e.prototype.sigMap=null,e.prototype.bodyBytes=$util.newBuffer([]),e.prototype.signedTransactionBytes=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.body&&Object.hasOwnProperty.call(e,"body")&&$root.proto.TransactionBody.encode(e.body,o.uint32(10).fork()).ldelim(),null!=e.sigs&&Object.hasOwnProperty.call(e,"sigs")&&$root.proto.SignatureList.encode(e.sigs,o.uint32(18).fork()).ldelim(),null!=e.sigMap&&Object.hasOwnProperty.call(e,"sigMap")&&$root.proto.SignatureMap.encode(e.sigMap,o.uint32(26).fork()).ldelim(),null!=e.bodyBytes&&Object.hasOwnProperty.call(e,"bodyBytes")&&o.uint32(34).bytes(e.bodyBytes),null!=e.signedTransactionBytes&&Object.hasOwnProperty.call(e,"signedTransactionBytes")&&o.uint32(42).bytes(e.signedTransactionBytes),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Transaction,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.body=$root.proto.TransactionBody.decode(e,e.uint32());break;case 2:d.sigs=$root.proto.SignatureList.decode(e,e.uint32());break;case 3:d.sigMap=$root.proto.SignatureMap.decode(e,e.uint32());break;case 4:d.bodyBytes=e.bytes();break;case 5:d.signedTransactionBytes=e.bytes();break;default:e.skipType(7&i);}return d},e}(),TransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.transactionID=null,e.prototype.nodeAccountID=null,e.prototype.transactionFee=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.transactionValidDuration=null,e.prototype.generateRecord=!1,e.prototype.memo="",e.prototype.contractCall=null,e.prototype.contractCreateInstance=null,e.prototype.contractUpdateInstance=null,e.prototype.contractDeleteInstance=null,e.prototype.cryptoAddLiveHash=null,e.prototype.cryptoCreateAccount=null,e.prototype.cryptoDelete=null,e.prototype.cryptoDeleteLiveHash=null,e.prototype.cryptoTransfer=null,e.prototype.cryptoUpdateAccount=null,e.prototype.fileAppend=null,e.prototype.fileCreate=null,e.prototype.fileDelete=null,e.prototype.fileUpdate=null,e.prototype.systemDelete=null,e.prototype.systemUndelete=null,e.prototype.freeze=null,e.prototype.consensusCreateTopic=null,e.prototype.consensusUpdateTopic=null,e.prototype.consensusDeleteTopic=null,e.prototype.consensusSubmitMessage=null,e.prototype.uncheckedSubmit=null,e.prototype.tokenCreation=null,e.prototype.tokenFreeze=null,e.prototype.tokenUnfreeze=null,e.prototype.tokenGrantKyc=null,e.prototype.tokenRevokeKyc=null,e.prototype.tokenDeletion=null,e.prototype.tokenUpdate=null,e.prototype.tokenMint=null,e.prototype.tokenBurn=null,e.prototype.tokenWipe=null,e.prototype.tokenAssociate=null,e.prototype.tokenDissociate=null,e.prototype.tokenFeeScheduleUpdate=null,e.prototype.scheduleCreate=null,e.prototype.scheduleDelete=null,e.prototype.scheduleSign=null;let o;return Object.defineProperty(e.prototype,"data",{get:$util.oneOfGetter(o=["contractCall","contractCreateInstance","contractUpdateInstance","contractDeleteInstance","cryptoAddLiveHash","cryptoCreateAccount","cryptoDelete","cryptoDeleteLiveHash","cryptoTransfer","cryptoUpdateAccount","fileAppend","fileCreate","fileDelete","fileUpdate","systemDelete","systemUndelete","freeze","consensusCreateTopic","consensusUpdateTopic","consensusDeleteTopic","consensusSubmitMessage","uncheckedSubmit","tokenCreation","tokenFreeze","tokenUnfreeze","tokenGrantKyc","tokenRevokeKyc","tokenDeletion","tokenUpdate","tokenMint","tokenBurn","tokenWipe","tokenAssociate","tokenDissociate","tokenFeeScheduleUpdate","scheduleCreate","scheduleDelete","scheduleSign"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.transactionID&&Object.hasOwnProperty.call(e,"transactionID")&&$root.proto.TransactionID.encode(e.transactionID,o.uint32(10).fork()).ldelim(),null!=e.nodeAccountID&&Object.hasOwnProperty.call(e,"nodeAccountID")&&$root.proto.AccountID.encode(e.nodeAccountID,o.uint32(18).fork()).ldelim(),null!=e.transactionFee&&Object.hasOwnProperty.call(e,"transactionFee")&&o.uint32(24).uint64(e.transactionFee),null!=e.transactionValidDuration&&Object.hasOwnProperty.call(e,"transactionValidDuration")&&$root.proto.Duration.encode(e.transactionValidDuration,o.uint32(34).fork()).ldelim(),null!=e.generateRecord&&Object.hasOwnProperty.call(e,"generateRecord")&&o.uint32(40).bool(e.generateRecord),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(50).string(e.memo),null!=e.contractCall&&Object.hasOwnProperty.call(e,"contractCall")&&$root.proto.ContractCallTransactionBody.encode(e.contractCall,o.uint32(58).fork()).ldelim(),null!=e.contractCreateInstance&&Object.hasOwnProperty.call(e,"contractCreateInstance")&&$root.proto.ContractCreateTransactionBody.encode(e.contractCreateInstance,o.uint32(66).fork()).ldelim(),null!=e.contractUpdateInstance&&Object.hasOwnProperty.call(e,"contractUpdateInstance")&&$root.proto.ContractUpdateTransactionBody.encode(e.contractUpdateInstance,o.uint32(74).fork()).ldelim(),null!=e.cryptoAddLiveHash&&Object.hasOwnProperty.call(e,"cryptoAddLiveHash")&&$root.proto.CryptoAddLiveHashTransactionBody.encode(e.cryptoAddLiveHash,o.uint32(82).fork()).ldelim(),null!=e.cryptoCreateAccount&&Object.hasOwnProperty.call(e,"cryptoCreateAccount")&&$root.proto.CryptoCreateTransactionBody.encode(e.cryptoCreateAccount,o.uint32(90).fork()).ldelim(),null!=e.cryptoDelete&&Object.hasOwnProperty.call(e,"cryptoDelete")&&$root.proto.CryptoDeleteTransactionBody.encode(e.cryptoDelete,o.uint32(98).fork()).ldelim(),null!=e.cryptoDeleteLiveHash&&Object.hasOwnProperty.call(e,"cryptoDeleteLiveHash")&&$root.proto.CryptoDeleteLiveHashTransactionBody.encode(e.cryptoDeleteLiveHash,o.uint32(106).fork()).ldelim(),null!=e.cryptoTransfer&&Object.hasOwnProperty.call(e,"cryptoTransfer")&&$root.proto.CryptoTransferTransactionBody.encode(e.cryptoTransfer,o.uint32(114).fork()).ldelim(),null!=e.cryptoUpdateAccount&&Object.hasOwnProperty.call(e,"cryptoUpdateAccount")&&$root.proto.CryptoUpdateTransactionBody.encode(e.cryptoUpdateAccount,o.uint32(122).fork()).ldelim(),null!=e.fileAppend&&Object.hasOwnProperty.call(e,"fileAppend")&&$root.proto.FileAppendTransactionBody.encode(e.fileAppend,o.uint32(130).fork()).ldelim(),null!=e.fileCreate&&Object.hasOwnProperty.call(e,"fileCreate")&&$root.proto.FileCreateTransactionBody.encode(e.fileCreate,o.uint32(138).fork()).ldelim(),null!=e.fileDelete&&Object.hasOwnProperty.call(e,"fileDelete")&&$root.proto.FileDeleteTransactionBody.encode(e.fileDelete,o.uint32(146).fork()).ldelim(),null!=e.fileUpdate&&Object.hasOwnProperty.call(e,"fileUpdate")&&$root.proto.FileUpdateTransactionBody.encode(e.fileUpdate,o.uint32(154).fork()).ldelim(),null!=e.systemDelete&&Object.hasOwnProperty.call(e,"systemDelete")&&$root.proto.SystemDeleteTransactionBody.encode(e.systemDelete,o.uint32(162).fork()).ldelim(),null!=e.systemUndelete&&Object.hasOwnProperty.call(e,"systemUndelete")&&$root.proto.SystemUndeleteTransactionBody.encode(e.systemUndelete,o.uint32(170).fork()).ldelim(),null!=e.contractDeleteInstance&&Object.hasOwnProperty.call(e,"contractDeleteInstance")&&$root.proto.ContractDeleteTransactionBody.encode(e.contractDeleteInstance,o.uint32(178).fork()).ldelim(),null!=e.freeze&&Object.hasOwnProperty.call(e,"freeze")&&$root.proto.FreezeTransactionBody.encode(e.freeze,o.uint32(186).fork()).ldelim(),null!=e.consensusCreateTopic&&Object.hasOwnProperty.call(e,"consensusCreateTopic")&&$root.proto.ConsensusCreateTopicTransactionBody.encode(e.consensusCreateTopic,o.uint32(194).fork()).ldelim(),null!=e.consensusUpdateTopic&&Object.hasOwnProperty.call(e,"consensusUpdateTopic")&&$root.proto.ConsensusUpdateTopicTransactionBody.encode(e.consensusUpdateTopic,o.uint32(202).fork()).ldelim(),null!=e.consensusDeleteTopic&&Object.hasOwnProperty.call(e,"consensusDeleteTopic")&&$root.proto.ConsensusDeleteTopicTransactionBody.encode(e.consensusDeleteTopic,o.uint32(210).fork()).ldelim(),null!=e.consensusSubmitMessage&&Object.hasOwnProperty.call(e,"consensusSubmitMessage")&&$root.proto.ConsensusSubmitMessageTransactionBody.encode(e.consensusSubmitMessage,o.uint32(218).fork()).ldelim(),null!=e.uncheckedSubmit&&Object.hasOwnProperty.call(e,"uncheckedSubmit")&&$root.proto.UncheckedSubmitBody.encode(e.uncheckedSubmit,o.uint32(226).fork()).ldelim(),null!=e.tokenCreation&&Object.hasOwnProperty.call(e,"tokenCreation")&&$root.proto.TokenCreateTransactionBody.encode(e.tokenCreation,o.uint32(234).fork()).ldelim(),null!=e.tokenFreeze&&Object.hasOwnProperty.call(e,"tokenFreeze")&&$root.proto.TokenFreezeAccountTransactionBody.encode(e.tokenFreeze,o.uint32(250).fork()).ldelim(),null!=e.tokenUnfreeze&&Object.hasOwnProperty.call(e,"tokenUnfreeze")&&$root.proto.TokenUnfreezeAccountTransactionBody.encode(e.tokenUnfreeze,o.uint32(258).fork()).ldelim(),null!=e.tokenGrantKyc&&Object.hasOwnProperty.call(e,"tokenGrantKyc")&&$root.proto.TokenGrantKycTransactionBody.encode(e.tokenGrantKyc,o.uint32(266).fork()).ldelim(),null!=e.tokenRevokeKyc&&Object.hasOwnProperty.call(e,"tokenRevokeKyc")&&$root.proto.TokenRevokeKycTransactionBody.encode(e.tokenRevokeKyc,o.uint32(274).fork()).ldelim(),null!=e.tokenDeletion&&Object.hasOwnProperty.call(e,"tokenDeletion")&&$root.proto.TokenDeleteTransactionBody.encode(e.tokenDeletion,o.uint32(282).fork()).ldelim(),null!=e.tokenUpdate&&Object.hasOwnProperty.call(e,"tokenUpdate")&&$root.proto.TokenUpdateTransactionBody.encode(e.tokenUpdate,o.uint32(290).fork()).ldelim(),null!=e.tokenMint&&Object.hasOwnProperty.call(e,"tokenMint")&&$root.proto.TokenMintTransactionBody.encode(e.tokenMint,o.uint32(298).fork()).ldelim(),null!=e.tokenBurn&&Object.hasOwnProperty.call(e,"tokenBurn")&&$root.proto.TokenBurnTransactionBody.encode(e.tokenBurn,o.uint32(306).fork()).ldelim(),null!=e.tokenWipe&&Object.hasOwnProperty.call(e,"tokenWipe")&&$root.proto.TokenWipeAccountTransactionBody.encode(e.tokenWipe,o.uint32(314).fork()).ldelim(),null!=e.tokenAssociate&&Object.hasOwnProperty.call(e,"tokenAssociate")&&$root.proto.TokenAssociateTransactionBody.encode(e.tokenAssociate,o.uint32(322).fork()).ldelim(),null!=e.tokenDissociate&&Object.hasOwnProperty.call(e,"tokenDissociate")&&$root.proto.TokenDissociateTransactionBody.encode(e.tokenDissociate,o.uint32(330).fork()).ldelim(),null!=e.scheduleCreate&&Object.hasOwnProperty.call(e,"scheduleCreate")&&$root.proto.ScheduleCreateTransactionBody.encode(e.scheduleCreate,o.uint32(338).fork()).ldelim(),null!=e.scheduleDelete&&Object.hasOwnProperty.call(e,"scheduleDelete")&&$root.proto.ScheduleDeleteTransactionBody.encode(e.scheduleDelete,o.uint32(346).fork()).ldelim(),null!=e.scheduleSign&&Object.hasOwnProperty.call(e,"scheduleSign")&&$root.proto.ScheduleSignTransactionBody.encode(e.scheduleSign,o.uint32(354).fork()).ldelim(),null!=e.tokenFeeScheduleUpdate&&Object.hasOwnProperty.call(e,"tokenFeeScheduleUpdate")&&$root.proto.TokenFeeScheduleUpdateTransactionBody.encode(e.tokenFeeScheduleUpdate,o.uint32(362).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transactionID=$root.proto.TransactionID.decode(e,e.uint32());break;case 2:d.nodeAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.transactionFee=e.uint64();break;case 4:d.transactionValidDuration=$root.proto.Duration.decode(e,e.uint32());break;case 5:d.generateRecord=e.bool();break;case 6:d.memo=e.string();break;case 7:d.contractCall=$root.proto.ContractCallTransactionBody.decode(e,e.uint32());break;case 8:d.contractCreateInstance=$root.proto.ContractCreateTransactionBody.decode(e,e.uint32());break;case 9:d.contractUpdateInstance=$root.proto.ContractUpdateTransactionBody.decode(e,e.uint32());break;case 22:d.contractDeleteInstance=$root.proto.ContractDeleteTransactionBody.decode(e,e.uint32());break;case 10:d.cryptoAddLiveHash=$root.proto.CryptoAddLiveHashTransactionBody.decode(e,e.uint32());break;case 11:d.cryptoCreateAccount=$root.proto.CryptoCreateTransactionBody.decode(e,e.uint32());break;case 12:d.cryptoDelete=$root.proto.CryptoDeleteTransactionBody.decode(e,e.uint32());break;case 13:d.cryptoDeleteLiveHash=$root.proto.CryptoDeleteLiveHashTransactionBody.decode(e,e.uint32());break;case 14:d.cryptoTransfer=$root.proto.CryptoTransferTransactionBody.decode(e,e.uint32());break;case 15:d.cryptoUpdateAccount=$root.proto.CryptoUpdateTransactionBody.decode(e,e.uint32());break;case 16:d.fileAppend=$root.proto.FileAppendTransactionBody.decode(e,e.uint32());break;case 17:d.fileCreate=$root.proto.FileCreateTransactionBody.decode(e,e.uint32());break;case 18:d.fileDelete=$root.proto.FileDeleteTransactionBody.decode(e,e.uint32());break;case 19:d.fileUpdate=$root.proto.FileUpdateTransactionBody.decode(e,e.uint32());break;case 20:d.systemDelete=$root.proto.SystemDeleteTransactionBody.decode(e,e.uint32());break;case 21:d.systemUndelete=$root.proto.SystemUndeleteTransactionBody.decode(e,e.uint32());break;case 23:d.freeze=$root.proto.FreezeTransactionBody.decode(e,e.uint32());break;case 24:d.consensusCreateTopic=$root.proto.ConsensusCreateTopicTransactionBody.decode(e,e.uint32());break;case 25:d.consensusUpdateTopic=$root.proto.ConsensusUpdateTopicTransactionBody.decode(e,e.uint32());break;case 26:d.consensusDeleteTopic=$root.proto.ConsensusDeleteTopicTransactionBody.decode(e,e.uint32());break;case 27:d.consensusSubmitMessage=$root.proto.ConsensusSubmitMessageTransactionBody.decode(e,e.uint32());break;case 28:d.uncheckedSubmit=$root.proto.UncheckedSubmitBody.decode(e,e.uint32());break;case 29:d.tokenCreation=$root.proto.TokenCreateTransactionBody.decode(e,e.uint32());break;case 31:d.tokenFreeze=$root.proto.TokenFreezeAccountTransactionBody.decode(e,e.uint32());break;case 32:d.tokenUnfreeze=$root.proto.TokenUnfreezeAccountTransactionBody.decode(e,e.uint32());break;case 33:d.tokenGrantKyc=$root.proto.TokenGrantKycTransactionBody.decode(e,e.uint32());break;case 34:d.tokenRevokeKyc=$root.proto.TokenRevokeKycTransactionBody.decode(e,e.uint32());break;case 35:d.tokenDeletion=$root.proto.TokenDeleteTransactionBody.decode(e,e.uint32());break;case 36:d.tokenUpdate=$root.proto.TokenUpdateTransactionBody.decode(e,e.uint32());break;case 37:d.tokenMint=$root.proto.TokenMintTransactionBody.decode(e,e.uint32());break;case 38:d.tokenBurn=$root.proto.TokenBurnTransactionBody.decode(e,e.uint32());break;case 39:d.tokenWipe=$root.proto.TokenWipeAccountTransactionBody.decode(e,e.uint32());break;case 40:d.tokenAssociate=$root.proto.TokenAssociateTransactionBody.decode(e,e.uint32());break;case 41:d.tokenDissociate=$root.proto.TokenDissociateTransactionBody.decode(e,e.uint32());break;case 45:d.tokenFeeScheduleUpdate=$root.proto.TokenFeeScheduleUpdateTransactionBody.decode(e,e.uint32());break;case 42:d.scheduleCreate=$root.proto.ScheduleCreateTransactionBody.decode(e,e.uint32());break;case 43:d.scheduleDelete=$root.proto.ScheduleDeleteTransactionBody.decode(e,e.uint32());break;case 44:d.scheduleSign=$root.proto.ScheduleSignTransactionBody.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),SystemDeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.fileID=null,e.prototype.contractID=null,e.prototype.expirationTime=null;let o;return Object.defineProperty(e.prototype,"id",{get:$util.oneOfGetter(o=["fileID","contractID"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.TimestampSeconds.encode(e.expirationTime,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SystemDeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 3:d.expirationTime=$root.proto.TimestampSeconds.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),SystemUndeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.fileID=null,e.prototype.contractID=null;let o;return Object.defineProperty(e.prototype,"id",{get:$util.oneOfGetter(o=["fileID","contractID"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SystemUndeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FreezeTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.startHour=0,e.prototype.startMin=0,e.prototype.endHour=0,e.prototype.endMin=0,e.prototype.updateFile=null,e.prototype.fileHash=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.startHour&&Object.hasOwnProperty.call(e,"startHour")&&o.uint32(8).int32(e.startHour),null!=e.startMin&&Object.hasOwnProperty.call(e,"startMin")&&o.uint32(16).int32(e.startMin),null!=e.endHour&&Object.hasOwnProperty.call(e,"endHour")&&o.uint32(24).int32(e.endHour),null!=e.endMin&&Object.hasOwnProperty.call(e,"endMin")&&o.uint32(32).int32(e.endMin),null!=e.updateFile&&Object.hasOwnProperty.call(e,"updateFile")&&$root.proto.FileID.encode(e.updateFile,o.uint32(42).fork()).ldelim(),null!=e.fileHash&&Object.hasOwnProperty.call(e,"fileHash")&&o.uint32(50).bytes(e.fileHash),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FreezeTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.startHour=e.int32();break;case 2:d.startMin=e.int32();break;case 3:d.endHour=e.int32();break;case 4:d.endMin=e.int32();break;case 5:d.updateFile=$root.proto.FileID.decode(e,e.uint32());break;case 6:d.fileHash=e.bytes();break;default:e.skipType(7&i);}return d},e}(),ContractCallTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.contractID=null,e.prototype.gas=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.functionParameters=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.gas&&Object.hasOwnProperty.call(e,"gas")&&o.uint32(16).int64(e.gas),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(24).int64(e.amount),null!=e.functionParameters&&Object.hasOwnProperty.call(e,"functionParameters")&&o.uint32(34).bytes(e.functionParameters),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractCallTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.gas=e.int64();break;case 3:d.amount=e.int64();break;case 4:d.functionParameters=e.bytes();break;default:e.skipType(7&i);}return d},e}(),ContractCreateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.fileID=null,e.prototype.adminKey=null,e.prototype.gas=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.initialBalance=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.proxyAccountID=null,e.prototype.autoRenewPeriod=null,e.prototype.constructorParameters=$util.newBuffer([]),e.prototype.shardID=null,e.prototype.realmID=null,e.prototype.newRealmAdminKey=null,e.prototype.memo="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(10).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(26).fork()).ldelim(),null!=e.gas&&Object.hasOwnProperty.call(e,"gas")&&o.uint32(32).int64(e.gas),null!=e.initialBalance&&Object.hasOwnProperty.call(e,"initialBalance")&&o.uint32(40).int64(e.initialBalance),null!=e.proxyAccountID&&Object.hasOwnProperty.call(e,"proxyAccountID")&&$root.proto.AccountID.encode(e.proxyAccountID,o.uint32(50).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(66).fork()).ldelim(),null!=e.constructorParameters&&Object.hasOwnProperty.call(e,"constructorParameters")&&o.uint32(74).bytes(e.constructorParameters),null!=e.shardID&&Object.hasOwnProperty.call(e,"shardID")&&$root.proto.ShardID.encode(e.shardID,o.uint32(82).fork()).ldelim(),null!=e.realmID&&Object.hasOwnProperty.call(e,"realmID")&&$root.proto.RealmID.encode(e.realmID,o.uint32(90).fork()).ldelim(),null!=e.newRealmAdminKey&&Object.hasOwnProperty.call(e,"newRealmAdminKey")&&$root.proto.Key.encode(e.newRealmAdminKey,o.uint32(98).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(106).string(e.memo),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractCreateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 3:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 4:d.gas=e.int64();break;case 5:d.initialBalance=e.int64();break;case 6:d.proxyAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 8:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 9:d.constructorParameters=e.bytes();break;case 10:d.shardID=$root.proto.ShardID.decode(e,e.uint32());break;case 11:d.realmID=$root.proto.RealmID.decode(e,e.uint32());break;case 12:d.newRealmAdminKey=$root.proto.Key.decode(e,e.uint32());break;case 13:d.memo=e.string();break;default:e.skipType(7&i);}return d},e}(),ContractUpdateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.contractID=null,e.prototype.expirationTime=null,e.prototype.adminKey=null,e.prototype.proxyAccountID=null,e.prototype.autoRenewPeriod=null,e.prototype.fileID=null,e.prototype.memo=null,e.prototype.memoWrapper=null;let o;return Object.defineProperty(e.prototype,"memoField",{get:$util.oneOfGetter(o=["memo","memoWrapper"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(18).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(26).fork()).ldelim(),null!=e.proxyAccountID&&Object.hasOwnProperty.call(e,"proxyAccountID")&&$root.proto.AccountID.encode(e.proxyAccountID,o.uint32(50).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(58).fork()).ldelim(),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(66).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(74).string(e.memo),null!=e.memoWrapper&&Object.hasOwnProperty.call(e,"memoWrapper")&&$root.google.protobuf.StringValue.encode(e.memoWrapper,o.uint32(82).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractUpdateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 3:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 6:d.proxyAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 7:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 8:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 9:d.memo=e.string();break;case 10:d.memoWrapper=$root.google.protobuf.StringValue.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),LiveHash:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountId=null,e.prototype.hash=$util.newBuffer([]),e.prototype.keys=null,e.prototype.duration=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountId&&Object.hasOwnProperty.call(e,"accountId")&&$root.proto.AccountID.encode(e.accountId,o.uint32(10).fork()).ldelim(),null!=e.hash&&Object.hasOwnProperty.call(e,"hash")&&o.uint32(18).bytes(e.hash),null!=e.keys&&Object.hasOwnProperty.call(e,"keys")&&$root.proto.KeyList.encode(e.keys,o.uint32(26).fork()).ldelim(),null!=e.duration&&Object.hasOwnProperty.call(e,"duration")&&$root.proto.Duration.encode(e.duration,o.uint32(42).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.LiveHash,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountId=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.hash=e.bytes();break;case 3:d.keys=$root.proto.KeyList.decode(e,e.uint32());break;case 5:d.duration=$root.proto.Duration.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoAddLiveHashTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.liveHash=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.liveHash&&Object.hasOwnProperty.call(e,"liveHash")&&$root.proto.LiveHash.encode(e.liveHash,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoAddLiveHashTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 3:d.liveHash=$root.proto.LiveHash.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoCreateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.key=null,e.prototype.initialBalance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.proxyAccountID=null,e.prototype.sendRecordThreshold=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.receiveRecordThreshold=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.receiverSigRequired=!1,e.prototype.autoRenewPeriod=null,e.prototype.shardID=null,e.prototype.realmID=null,e.prototype.newRealmAdminKey=null,e.prototype.memo="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.key&&Object.hasOwnProperty.call(e,"key")&&$root.proto.Key.encode(e.key,o.uint32(10).fork()).ldelim(),null!=e.initialBalance&&Object.hasOwnProperty.call(e,"initialBalance")&&o.uint32(16).uint64(e.initialBalance),null!=e.proxyAccountID&&Object.hasOwnProperty.call(e,"proxyAccountID")&&$root.proto.AccountID.encode(e.proxyAccountID,o.uint32(26).fork()).ldelim(),null!=e.sendRecordThreshold&&Object.hasOwnProperty.call(e,"sendRecordThreshold")&&o.uint32(48).uint64(e.sendRecordThreshold),null!=e.receiveRecordThreshold&&Object.hasOwnProperty.call(e,"receiveRecordThreshold")&&o.uint32(56).uint64(e.receiveRecordThreshold),null!=e.receiverSigRequired&&Object.hasOwnProperty.call(e,"receiverSigRequired")&&o.uint32(64).bool(e.receiverSigRequired),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(74).fork()).ldelim(),null!=e.shardID&&Object.hasOwnProperty.call(e,"shardID")&&$root.proto.ShardID.encode(e.shardID,o.uint32(82).fork()).ldelim(),null!=e.realmID&&Object.hasOwnProperty.call(e,"realmID")&&$root.proto.RealmID.encode(e.realmID,o.uint32(90).fork()).ldelim(),null!=e.newRealmAdminKey&&Object.hasOwnProperty.call(e,"newRealmAdminKey")&&$root.proto.Key.encode(e.newRealmAdminKey,o.uint32(98).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(106).string(e.memo),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoCreateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.key=$root.proto.Key.decode(e,e.uint32());break;case 2:d.initialBalance=e.uint64();break;case 3:d.proxyAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 6:d.sendRecordThreshold=e.uint64();break;case 7:d.receiveRecordThreshold=e.uint64();break;case 8:d.receiverSigRequired=e.bool();break;case 9:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 10:d.shardID=$root.proto.ShardID.decode(e,e.uint32());break;case 11:d.realmID=$root.proto.RealmID.decode(e,e.uint32());break;case 12:d.newRealmAdminKey=$root.proto.Key.decode(e,e.uint32());break;case 13:d.memo=e.string();break;default:e.skipType(7&i);}return d},e}(),CryptoDeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.transferAccountID=null,e.prototype.deleteAccountID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.transferAccountID&&Object.hasOwnProperty.call(e,"transferAccountID")&&$root.proto.AccountID.encode(e.transferAccountID,o.uint32(10).fork()).ldelim(),null!=e.deleteAccountID&&Object.hasOwnProperty.call(e,"deleteAccountID")&&$root.proto.AccountID.encode(e.deleteAccountID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoDeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transferAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.deleteAccountID=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoDeleteLiveHashTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountOfLiveHash=null,e.prototype.liveHashToDelete=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountOfLiveHash&&Object.hasOwnProperty.call(e,"accountOfLiveHash")&&$root.proto.AccountID.encode(e.accountOfLiveHash,o.uint32(10).fork()).ldelim(),null!=e.liveHashToDelete&&Object.hasOwnProperty.call(e,"liveHashToDelete")&&o.uint32(18).bytes(e.liveHashToDelete),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoDeleteLiveHashTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountOfLiveHash=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.liveHashToDelete=e.bytes();break;default:e.skipType(7&i);}return d},e}(),CryptoTransferTransactionBody:function(){function e(e){if(this.tokenTransfers=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.transfers=null,e.prototype.tokenTransfers=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.transfers&&Object.hasOwnProperty.call(e,"transfers")&&$root.proto.TransferList.encode(e.transfers,o.uint32(10).fork()).ldelim(),null!=e.tokenTransfers&&e.tokenTransfers.length)for(var t=0;t<e.tokenTransfers.length;++t)$root.proto.TokenTransferList.encode(e.tokenTransfers[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoTransferTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transfers=$root.proto.TransferList.decode(e,e.uint32());break;case 2:d.tokenTransfers&&d.tokenTransfers.length||(d.tokenTransfers=[]),d.tokenTransfers.push($root.proto.TokenTransferList.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),CryptoUpdateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.accountIDToUpdate=null,e.prototype.key=null,e.prototype.proxyAccountID=null,e.prototype.proxyFraction=0,e.prototype.sendRecordThreshold=null,e.prototype.sendRecordThresholdWrapper=null,e.prototype.receiveRecordThreshold=null,e.prototype.receiveRecordThresholdWrapper=null,e.prototype.autoRenewPeriod=null,e.prototype.expirationTime=null,e.prototype.receiverSigRequired=null,e.prototype.receiverSigRequiredWrapper=null,e.prototype.memo=null;let o;return Object.defineProperty(e.prototype,"sendRecordThresholdField",{get:$util.oneOfGetter(o=["sendRecordThreshold","sendRecordThresholdWrapper"]),set:$util.oneOfSetter(o)}),Object.defineProperty(e.prototype,"receiveRecordThresholdField",{get:$util.oneOfGetter(o=["receiveRecordThreshold","receiveRecordThresholdWrapper"]),set:$util.oneOfSetter(o)}),Object.defineProperty(e.prototype,"receiverSigRequiredField",{get:$util.oneOfGetter(o=["receiverSigRequired","receiverSigRequiredWrapper"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountIDToUpdate&&Object.hasOwnProperty.call(e,"accountIDToUpdate")&&$root.proto.AccountID.encode(e.accountIDToUpdate,o.uint32(18).fork()).ldelim(),null!=e.key&&Object.hasOwnProperty.call(e,"key")&&$root.proto.Key.encode(e.key,o.uint32(26).fork()).ldelim(),null!=e.proxyAccountID&&Object.hasOwnProperty.call(e,"proxyAccountID")&&$root.proto.AccountID.encode(e.proxyAccountID,o.uint32(34).fork()).ldelim(),null!=e.proxyFraction&&Object.hasOwnProperty.call(e,"proxyFraction")&&o.uint32(40).int32(e.proxyFraction),null!=e.sendRecordThreshold&&Object.hasOwnProperty.call(e,"sendRecordThreshold")&&o.uint32(48).uint64(e.sendRecordThreshold),null!=e.receiveRecordThreshold&&Object.hasOwnProperty.call(e,"receiveRecordThreshold")&&o.uint32(56).uint64(e.receiveRecordThreshold),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(66).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(74).fork()).ldelim(),null!=e.receiverSigRequired&&Object.hasOwnProperty.call(e,"receiverSigRequired")&&o.uint32(80).bool(e.receiverSigRequired),null!=e.sendRecordThresholdWrapper&&Object.hasOwnProperty.call(e,"sendRecordThresholdWrapper")&&$root.google.protobuf.UInt64Value.encode(e.sendRecordThresholdWrapper,o.uint32(90).fork()).ldelim(),null!=e.receiveRecordThresholdWrapper&&Object.hasOwnProperty.call(e,"receiveRecordThresholdWrapper")&&$root.google.protobuf.UInt64Value.encode(e.receiveRecordThresholdWrapper,o.uint32(98).fork()).ldelim(),null!=e.receiverSigRequiredWrapper&&Object.hasOwnProperty.call(e,"receiverSigRequiredWrapper")&&$root.google.protobuf.BoolValue.encode(e.receiverSigRequiredWrapper,o.uint32(106).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&$root.google.protobuf.StringValue.encode(e.memo,o.uint32(114).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoUpdateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 2:d.accountIDToUpdate=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.key=$root.proto.Key.decode(e,e.uint32());break;case 4:d.proxyAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 5:d.proxyFraction=e.int32();break;case 6:d.sendRecordThreshold=e.uint64();break;case 11:d.sendRecordThresholdWrapper=$root.google.protobuf.UInt64Value.decode(e,e.uint32());break;case 7:d.receiveRecordThreshold=e.uint64();break;case 12:d.receiveRecordThresholdWrapper=$root.google.protobuf.UInt64Value.decode(e,e.uint32());break;case 8:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 9:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 10:d.receiverSigRequired=e.bool();break;case 13:d.receiverSigRequiredWrapper=$root.google.protobuf.BoolValue.decode(e,e.uint32());break;case 14:d.memo=$root.google.protobuf.StringValue.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FileAppendTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.fileID=null,e.prototype.contents=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(18).fork()).ldelim(),null!=e.contents&&Object.hasOwnProperty.call(e,"contents")&&o.uint32(34).bytes(e.contents),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileAppendTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 2:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 4:d.contents=e.bytes();break;default:e.skipType(7&i);}return d},e}(),FileCreateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.expirationTime=null,e.prototype.keys=null,e.prototype.contents=$util.newBuffer([]),e.prototype.shardID=null,e.prototype.realmID=null,e.prototype.newRealmAdminKey=null,e.prototype.memo="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(18).fork()).ldelim(),null!=e.keys&&Object.hasOwnProperty.call(e,"keys")&&$root.proto.KeyList.encode(e.keys,o.uint32(26).fork()).ldelim(),null!=e.contents&&Object.hasOwnProperty.call(e,"contents")&&o.uint32(34).bytes(e.contents),null!=e.shardID&&Object.hasOwnProperty.call(e,"shardID")&&$root.proto.ShardID.encode(e.shardID,o.uint32(42).fork()).ldelim(),null!=e.realmID&&Object.hasOwnProperty.call(e,"realmID")&&$root.proto.RealmID.encode(e.realmID,o.uint32(50).fork()).ldelim(),null!=e.newRealmAdminKey&&Object.hasOwnProperty.call(e,"newRealmAdminKey")&&$root.proto.Key.encode(e.newRealmAdminKey,o.uint32(58).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(66).string(e.memo),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileCreateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 2:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 3:d.keys=$root.proto.KeyList.decode(e,e.uint32());break;case 4:d.contents=e.bytes();break;case 5:d.shardID=$root.proto.ShardID.decode(e,e.uint32());break;case 6:d.realmID=$root.proto.RealmID.decode(e,e.uint32());break;case 7:d.newRealmAdminKey=$root.proto.Key.decode(e,e.uint32());break;case 8:d.memo=e.string();break;default:e.skipType(7&i);}return d},e}(),FileDeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.fileID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileDeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 2:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FileUpdateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.fileID=null,e.prototype.expirationTime=null,e.prototype.keys=null,e.prototype.contents=$util.newBuffer([]),e.prototype.memo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(10).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(18).fork()).ldelim(),null!=e.keys&&Object.hasOwnProperty.call(e,"keys")&&$root.proto.KeyList.encode(e.keys,o.uint32(26).fork()).ldelim(),null!=e.contents&&Object.hasOwnProperty.call(e,"contents")&&o.uint32(34).bytes(e.contents),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&$root.google.protobuf.StringValue.encode(e.memo,o.uint32(42).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileUpdateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 2:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 3:d.keys=$root.proto.KeyList.decode(e,e.uint32());break;case 4:d.contents=e.bytes();break;case 5:d.memo=$root.google.protobuf.StringValue.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ContractDeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.contractID=null,e.prototype.transferAccountID=null,e.prototype.transferContractID=null;let o;return Object.defineProperty(e.prototype,"obtainers",{get:$util.oneOfGetter(o=["transferAccountID","transferContractID"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.transferAccountID&&Object.hasOwnProperty.call(e,"transferAccountID")&&$root.proto.AccountID.encode(e.transferAccountID,o.uint32(18).fork()).ldelim(),null!=e.transferContractID&&Object.hasOwnProperty.call(e,"transferContractID")&&$root.proto.ContractID.encode(e.transferContractID,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractDeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.transferAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.transferContractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ConsensusUpdateTopicTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.topicID=null,e.prototype.memo=null,e.prototype.expirationTime=null,e.prototype.adminKey=null,e.prototype.submitKey=null,e.prototype.autoRenewPeriod=null,e.prototype.autoRenewAccount=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(10).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&$root.google.protobuf.StringValue.encode(e.memo,o.uint32(18).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(34).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(50).fork()).ldelim(),null!=e.submitKey&&Object.hasOwnProperty.call(e,"submitKey")&&$root.proto.Key.encode(e.submitKey,o.uint32(58).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(66).fork()).ldelim(),null!=e.autoRenewAccount&&Object.hasOwnProperty.call(e,"autoRenewAccount")&&$root.proto.AccountID.encode(e.autoRenewAccount,o.uint32(74).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusUpdateTopicTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;case 2:d.memo=$root.google.protobuf.StringValue.decode(e,e.uint32());break;case 4:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 6:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 7:d.submitKey=$root.proto.Key.decode(e,e.uint32());break;case 8:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 9:d.autoRenewAccount=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ConsensusMessageChunkInfo:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.initialTransactionID=null,e.prototype.total=0,e.prototype.number=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.initialTransactionID&&Object.hasOwnProperty.call(e,"initialTransactionID")&&$root.proto.TransactionID.encode(e.initialTransactionID,o.uint32(10).fork()).ldelim(),null!=e.total&&Object.hasOwnProperty.call(e,"total")&&o.uint32(16).int32(e.total),null!=e.number&&Object.hasOwnProperty.call(e,"number")&&o.uint32(24).int32(e.number),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusMessageChunkInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.initialTransactionID=$root.proto.TransactionID.decode(e,e.uint32());break;case 2:d.total=e.int32();break;case 3:d.number=e.int32();break;default:e.skipType(7&i);}return d},e}(),ConsensusSubmitMessageTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.topicID=null,e.prototype.message=$util.newBuffer([]),e.prototype.chunkInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(10).fork()).ldelim(),null!=e.message&&Object.hasOwnProperty.call(e,"message")&&o.uint32(18).bytes(e.message),null!=e.chunkInfo&&Object.hasOwnProperty.call(e,"chunkInfo")&&$root.proto.ConsensusMessageChunkInfo.encode(e.chunkInfo,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusSubmitMessageTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;case 2:d.message=e.bytes();break;case 3:d.chunkInfo=$root.proto.ConsensusMessageChunkInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),UncheckedSubmitBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.transactionBytes=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.transactionBytes&&Object.hasOwnProperty.call(e,"transactionBytes")&&o.uint32(10).bytes(e.transactionBytes),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.UncheckedSubmitBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transactionBytes=e.bytes();break;default:e.skipType(7&i);}return d},e}(),TokenCreateTransactionBody:function(){function e(e){if(this.customFees=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.name="",e.prototype.symbol="",e.prototype.decimals=0,e.prototype.initialSupply=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.treasury=null,e.prototype.adminKey=null,e.prototype.kycKey=null,e.prototype.freezeKey=null,e.prototype.wipeKey=null,e.prototype.supplyKey=null,e.prototype.freezeDefault=!1,e.prototype.expiry=null,e.prototype.autoRenewAccount=null,e.prototype.autoRenewPeriod=null,e.prototype.memo="",e.prototype.tokenType=0,e.prototype.supplyType=0,e.prototype.maxSupply=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.feeScheduleKey=null,e.prototype.customFees=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.name&&Object.hasOwnProperty.call(e,"name")&&o.uint32(10).string(e.name),null!=e.symbol&&Object.hasOwnProperty.call(e,"symbol")&&o.uint32(18).string(e.symbol),null!=e.decimals&&Object.hasOwnProperty.call(e,"decimals")&&o.uint32(24).uint32(e.decimals),null!=e.initialSupply&&Object.hasOwnProperty.call(e,"initialSupply")&&o.uint32(32).uint64(e.initialSupply),null!=e.treasury&&Object.hasOwnProperty.call(e,"treasury")&&$root.proto.AccountID.encode(e.treasury,o.uint32(42).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(50).fork()).ldelim(),null!=e.kycKey&&Object.hasOwnProperty.call(e,"kycKey")&&$root.proto.Key.encode(e.kycKey,o.uint32(58).fork()).ldelim(),null!=e.freezeKey&&Object.hasOwnProperty.call(e,"freezeKey")&&$root.proto.Key.encode(e.freezeKey,o.uint32(66).fork()).ldelim(),null!=e.wipeKey&&Object.hasOwnProperty.call(e,"wipeKey")&&$root.proto.Key.encode(e.wipeKey,o.uint32(74).fork()).ldelim(),null!=e.supplyKey&&Object.hasOwnProperty.call(e,"supplyKey")&&$root.proto.Key.encode(e.supplyKey,o.uint32(82).fork()).ldelim(),null!=e.freezeDefault&&Object.hasOwnProperty.call(e,"freezeDefault")&&o.uint32(88).bool(e.freezeDefault),null!=e.expiry&&Object.hasOwnProperty.call(e,"expiry")&&$root.proto.Timestamp.encode(e.expiry,o.uint32(106).fork()).ldelim(),null!=e.autoRenewAccount&&Object.hasOwnProperty.call(e,"autoRenewAccount")&&$root.proto.AccountID.encode(e.autoRenewAccount,o.uint32(114).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(122).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(130).string(e.memo),null!=e.tokenType&&Object.hasOwnProperty.call(e,"tokenType")&&o.uint32(136).int32(e.tokenType),null!=e.supplyType&&Object.hasOwnProperty.call(e,"supplyType")&&o.uint32(144).int32(e.supplyType),null!=e.maxSupply&&Object.hasOwnProperty.call(e,"maxSupply")&&o.uint32(152).int64(e.maxSupply),null!=e.feeScheduleKey&&Object.hasOwnProperty.call(e,"feeScheduleKey")&&$root.proto.Key.encode(e.feeScheduleKey,o.uint32(162).fork()).ldelim(),null!=e.customFees&&e.customFees.length)for(var t=0;t<e.customFees.length;++t)$root.proto.CustomFee.encode(e.customFees[t],o.uint32(170).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenCreateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.name=e.string();break;case 2:d.symbol=e.string();break;case 3:d.decimals=e.uint32();break;case 4:d.initialSupply=e.uint64();break;case 5:d.treasury=$root.proto.AccountID.decode(e,e.uint32());break;case 6:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 7:d.kycKey=$root.proto.Key.decode(e,e.uint32());break;case 8:d.freezeKey=$root.proto.Key.decode(e,e.uint32());break;case 9:d.wipeKey=$root.proto.Key.decode(e,e.uint32());break;case 10:d.supplyKey=$root.proto.Key.decode(e,e.uint32());break;case 11:d.freezeDefault=e.bool();break;case 13:d.expiry=$root.proto.Timestamp.decode(e,e.uint32());break;case 14:d.autoRenewAccount=$root.proto.AccountID.decode(e,e.uint32());break;case 15:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 16:d.memo=e.string();break;case 17:d.tokenType=e.int32();break;case 18:d.supplyType=e.int32();break;case 19:d.maxSupply=e.int64();break;case 20:d.feeScheduleKey=$root.proto.Key.decode(e,e.uint32());break;case 21:d.customFees&&d.customFees.length||(d.customFees=[]),d.customFees.push($root.proto.CustomFee.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),FractionalFee:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.fractionalAmount=null,e.prototype.minimumAmount=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.maximumAmount=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fractionalAmount&&Object.hasOwnProperty.call(e,"fractionalAmount")&&$root.proto.Fraction.encode(e.fractionalAmount,o.uint32(10).fork()).ldelim(),null!=e.minimumAmount&&Object.hasOwnProperty.call(e,"minimumAmount")&&o.uint32(16).int64(e.minimumAmount),null!=e.maximumAmount&&Object.hasOwnProperty.call(e,"maximumAmount")&&o.uint32(24).int64(e.maximumAmount),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FractionalFee,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fractionalAmount=$root.proto.Fraction.decode(e,e.uint32());break;case 2:d.minimumAmount=e.int64();break;case 3:d.maximumAmount=e.int64();break;default:e.skipType(7&i);}return d},e}(),FixedFee:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.denominatingTokenId=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(8).int64(e.amount),null!=e.denominatingTokenId&&Object.hasOwnProperty.call(e,"denominatingTokenId")&&$root.proto.TokenID.encode(e.denominatingTokenId,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FixedFee,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.amount=e.int64();break;case 2:d.denominatingTokenId=$root.proto.TokenID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CustomFee:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.fixedFee=null,e.prototype.fractionalFee=null,e.prototype.feeCollectorAccountId=null;let o;return Object.defineProperty(e.prototype,"fee",{get:$util.oneOfGetter(o=["fixedFee","fractionalFee"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fixedFee&&Object.hasOwnProperty.call(e,"fixedFee")&&$root.proto.FixedFee.encode(e.fixedFee,o.uint32(10).fork()).ldelim(),null!=e.fractionalFee&&Object.hasOwnProperty.call(e,"fractionalFee")&&$root.proto.FractionalFee.encode(e.fractionalFee,o.uint32(18).fork()).ldelim(),null!=e.feeCollectorAccountId&&Object.hasOwnProperty.call(e,"feeCollectorAccountId")&&$root.proto.AccountID.encode(e.feeCollectorAccountId,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CustomFee,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fixedFee=$root.proto.FixedFee.decode(e,e.uint32());break;case 2:d.fractionalFee=$root.proto.FractionalFee.decode(e,e.uint32());break;case 3:d.feeCollectorAccountId=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),AssessedCustomFee:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.tokenId=null,e.prototype.feeCollectorAccountId=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(8).int64(e.amount),null!=e.tokenId&&Object.hasOwnProperty.call(e,"tokenId")&&$root.proto.TokenID.encode(e.tokenId,o.uint32(18).fork()).ldelim(),null!=e.feeCollectorAccountId&&Object.hasOwnProperty.call(e,"feeCollectorAccountId")&&$root.proto.AccountID.encode(e.feeCollectorAccountId,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.AssessedCustomFee,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.amount=e.int64();break;case 2:d.tokenId=$root.proto.TokenID.decode(e,e.uint32());break;case 3:d.feeCollectorAccountId=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenFreezeAccountTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.account=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenFreezeAccountTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.account=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenUnfreezeAccountTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.account=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenUnfreezeAccountTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.account=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenGrantKycTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.account=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGrantKycTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.account=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenRevokeKycTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.account=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenRevokeKycTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.account=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenDeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenDeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenUpdateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.symbol="",e.prototype.name="",e.prototype.treasury=null,e.prototype.adminKey=null,e.prototype.kycKey=null,e.prototype.freezeKey=null,e.prototype.wipeKey=null,e.prototype.supplyKey=null,e.prototype.autoRenewAccount=null,e.prototype.autoRenewPeriod=null,e.prototype.expiry=null,e.prototype.memo=null,e.prototype.feeScheduleKey=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.symbol&&Object.hasOwnProperty.call(e,"symbol")&&o.uint32(18).string(e.symbol),null!=e.name&&Object.hasOwnProperty.call(e,"name")&&o.uint32(26).string(e.name),null!=e.treasury&&Object.hasOwnProperty.call(e,"treasury")&&$root.proto.AccountID.encode(e.treasury,o.uint32(34).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(42).fork()).ldelim(),null!=e.kycKey&&Object.hasOwnProperty.call(e,"kycKey")&&$root.proto.Key.encode(e.kycKey,o.uint32(50).fork()).ldelim(),null!=e.freezeKey&&Object.hasOwnProperty.call(e,"freezeKey")&&$root.proto.Key.encode(e.freezeKey,o.uint32(58).fork()).ldelim(),null!=e.wipeKey&&Object.hasOwnProperty.call(e,"wipeKey")&&$root.proto.Key.encode(e.wipeKey,o.uint32(66).fork()).ldelim(),null!=e.supplyKey&&Object.hasOwnProperty.call(e,"supplyKey")&&$root.proto.Key.encode(e.supplyKey,o.uint32(74).fork()).ldelim(),null!=e.autoRenewAccount&&Object.hasOwnProperty.call(e,"autoRenewAccount")&&$root.proto.AccountID.encode(e.autoRenewAccount,o.uint32(82).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(90).fork()).ldelim(),null!=e.expiry&&Object.hasOwnProperty.call(e,"expiry")&&$root.proto.Timestamp.encode(e.expiry,o.uint32(98).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&$root.google.protobuf.StringValue.encode(e.memo,o.uint32(106).fork()).ldelim(),null!=e.feeScheduleKey&&Object.hasOwnProperty.call(e,"feeScheduleKey")&&$root.proto.Key.encode(e.feeScheduleKey,o.uint32(114).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenUpdateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.symbol=e.string();break;case 3:d.name=e.string();break;case 4:d.treasury=$root.proto.AccountID.decode(e,e.uint32());break;case 5:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 6:d.kycKey=$root.proto.Key.decode(e,e.uint32());break;case 7:d.freezeKey=$root.proto.Key.decode(e,e.uint32());break;case 8:d.wipeKey=$root.proto.Key.decode(e,e.uint32());break;case 9:d.supplyKey=$root.proto.Key.decode(e,e.uint32());break;case 10:d.autoRenewAccount=$root.proto.AccountID.decode(e,e.uint32());break;case 11:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 12:d.expiry=$root.proto.Timestamp.decode(e,e.uint32());break;case 13:d.memo=$root.google.protobuf.StringValue.decode(e,e.uint32());break;case 14:d.feeScheduleKey=$root.proto.Key.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenMintTransactionBody:function(){function e(e){if(this.metadata=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.metadata=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(16).uint64(e.amount),null!=e.metadata&&e.metadata.length)for(var t=0;t<e.metadata.length;++t)o.uint32(26).bytes(e.metadata[t]);return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenMintTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.amount=e.uint64();break;case 3:d.metadata&&d.metadata.length||(d.metadata=[]),d.metadata.push(e.bytes());break;default:e.skipType(7&i);}return d},e}(),TokenBurnTransactionBody:function(){function e(e){if(this.serialNumbers=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.serialNumbers=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(16).uint64(e.amount),null!=e.serialNumbers&&e.serialNumbers.length){o.uint32(26).fork();for(var t=0;t<e.serialNumbers.length;++t)o.int64(e.serialNumbers[t]);o.ldelim()}return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenBurnTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.amount=e.uint64();break;case 3:if(d.serialNumbers&&d.serialNumbers.length||(d.serialNumbers=[]),2==(7&i))for(var a=e.uint32()+e.pos;e.pos<a;)d.serialNumbers.push(e.int64());else d.serialNumbers.push(e.int64());break;default:e.skipType(7&i);}return d},e}(),TokenWipeAccountTransactionBody:function(){function e(e){if(this.serialNumbers=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.token=null,e.prototype.account=null,e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.serialNumbers=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(10).fork()).ldelim(),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(18).fork()).ldelim(),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(24).uint64(e.amount),null!=e.serialNumbers&&e.serialNumbers.length){o.uint32(34).fork();for(var t=0;t<e.serialNumbers.length;++t)o.int64(e.serialNumbers[t]);o.ldelim()}return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenWipeAccountTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.token=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.account=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.amount=e.uint64();break;case 4:if(d.serialNumbers&&d.serialNumbers.length||(d.serialNumbers=[]),2==(7&i))for(var a=e.uint32()+e.pos;e.pos<a;)d.serialNumbers.push(e.int64());else d.serialNumbers.push(e.int64());break;default:e.skipType(7&i);}return d},e}(),TokenAssociateTransactionBody:function(){function e(e){if(this.tokens=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.account=null,e.prototype.tokens=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(10).fork()).ldelim(),null!=e.tokens&&e.tokens.length)for(var t=0;t<e.tokens.length;++t)$root.proto.TokenID.encode(e.tokens[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenAssociateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.account=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.tokens&&d.tokens.length||(d.tokens=[]),d.tokens.push($root.proto.TokenID.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TokenDissociateTransactionBody:function(){function e(e){if(this.tokens=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.account=null,e.prototype.tokens=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.account&&Object.hasOwnProperty.call(e,"account")&&$root.proto.AccountID.encode(e.account,o.uint32(10).fork()).ldelim(),null!=e.tokens&&e.tokens.length)for(var t=0;t<e.tokens.length;++t)$root.proto.TokenID.encode(e.tokens[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenDissociateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.account=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.tokens&&d.tokens.length||(d.tokens=[]),d.tokens.push($root.proto.TokenID.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TokenFeeScheduleUpdateTransactionBody:function(){function e(e){if(this.customFees=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenId=null,e.prototype.customFees=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.tokenId&&Object.hasOwnProperty.call(e,"tokenId")&&$root.proto.TokenID.encode(e.tokenId,o.uint32(10).fork()).ldelim(),null!=e.customFees&&e.customFees.length)for(var t=0;t<e.customFees.length;++t)$root.proto.CustomFee.encode(e.customFees[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenFeeScheduleUpdateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenId=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.customFees&&d.customFees.length||(d.customFees=[]),d.customFees.push($root.proto.CustomFee.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),ScheduleCreateTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.scheduledTransactionBody=null,e.prototype.memo="",e.prototype.adminKey=null,e.prototype.payerAccountID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.scheduledTransactionBody&&Object.hasOwnProperty.call(e,"scheduledTransactionBody")&&$root.proto.SchedulableTransactionBody.encode(e.scheduledTransactionBody,o.uint32(10).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(18).string(e.memo),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(26).fork()).ldelim(),null!=e.payerAccountID&&Object.hasOwnProperty.call(e,"payerAccountID")&&$root.proto.AccountID.encode(e.payerAccountID,o.uint32(34).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleCreateTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.scheduledTransactionBody=$root.proto.SchedulableTransactionBody.decode(e,e.uint32());break;case 2:d.memo=e.string();break;case 3:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 4:d.payerAccountID=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),SchedulableTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.transactionFee=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.memo="",e.prototype.contractCall=null,e.prototype.contractCreateInstance=null,e.prototype.contractUpdateInstance=null,e.prototype.contractDeleteInstance=null,e.prototype.cryptoCreateAccount=null,e.prototype.cryptoDelete=null,e.prototype.cryptoTransfer=null,e.prototype.cryptoUpdateAccount=null,e.prototype.fileAppend=null,e.prototype.fileCreate=null,e.prototype.fileDelete=null,e.prototype.fileUpdate=null,e.prototype.systemDelete=null,e.prototype.systemUndelete=null,e.prototype.freeze=null,e.prototype.consensusCreateTopic=null,e.prototype.consensusUpdateTopic=null,e.prototype.consensusDeleteTopic=null,e.prototype.consensusSubmitMessage=null,e.prototype.tokenCreation=null,e.prototype.tokenFreeze=null,e.prototype.tokenUnfreeze=null,e.prototype.tokenGrantKyc=null,e.prototype.tokenRevokeKyc=null,e.prototype.tokenDeletion=null,e.prototype.tokenUpdate=null,e.prototype.tokenMint=null,e.prototype.tokenBurn=null,e.prototype.tokenWipe=null,e.prototype.tokenAssociate=null,e.prototype.tokenDissociate=null,e.prototype.scheduleDelete=null;let o;return Object.defineProperty(e.prototype,"data",{get:$util.oneOfGetter(o=["contractCall","contractCreateInstance","contractUpdateInstance","contractDeleteInstance","cryptoCreateAccount","cryptoDelete","cryptoTransfer","cryptoUpdateAccount","fileAppend","fileCreate","fileDelete","fileUpdate","systemDelete","systemUndelete","freeze","consensusCreateTopic","consensusUpdateTopic","consensusDeleteTopic","consensusSubmitMessage","tokenCreation","tokenFreeze","tokenUnfreeze","tokenGrantKyc","tokenRevokeKyc","tokenDeletion","tokenUpdate","tokenMint","tokenBurn","tokenWipe","tokenAssociate","tokenDissociate","scheduleDelete"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.transactionFee&&Object.hasOwnProperty.call(e,"transactionFee")&&o.uint32(8).uint64(e.transactionFee),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(18).string(e.memo),null!=e.contractCall&&Object.hasOwnProperty.call(e,"contractCall")&&$root.proto.ContractCallTransactionBody.encode(e.contractCall,o.uint32(26).fork()).ldelim(),null!=e.contractCreateInstance&&Object.hasOwnProperty.call(e,"contractCreateInstance")&&$root.proto.ContractCreateTransactionBody.encode(e.contractCreateInstance,o.uint32(34).fork()).ldelim(),null!=e.contractUpdateInstance&&Object.hasOwnProperty.call(e,"contractUpdateInstance")&&$root.proto.ContractUpdateTransactionBody.encode(e.contractUpdateInstance,o.uint32(42).fork()).ldelim(),null!=e.contractDeleteInstance&&Object.hasOwnProperty.call(e,"contractDeleteInstance")&&$root.proto.ContractDeleteTransactionBody.encode(e.contractDeleteInstance,o.uint32(50).fork()).ldelim(),null!=e.cryptoCreateAccount&&Object.hasOwnProperty.call(e,"cryptoCreateAccount")&&$root.proto.CryptoCreateTransactionBody.encode(e.cryptoCreateAccount,o.uint32(58).fork()).ldelim(),null!=e.cryptoDelete&&Object.hasOwnProperty.call(e,"cryptoDelete")&&$root.proto.CryptoDeleteTransactionBody.encode(e.cryptoDelete,o.uint32(66).fork()).ldelim(),null!=e.cryptoTransfer&&Object.hasOwnProperty.call(e,"cryptoTransfer")&&$root.proto.CryptoTransferTransactionBody.encode(e.cryptoTransfer,o.uint32(74).fork()).ldelim(),null!=e.cryptoUpdateAccount&&Object.hasOwnProperty.call(e,"cryptoUpdateAccount")&&$root.proto.CryptoUpdateTransactionBody.encode(e.cryptoUpdateAccount,o.uint32(82).fork()).ldelim(),null!=e.fileAppend&&Object.hasOwnProperty.call(e,"fileAppend")&&$root.proto.FileAppendTransactionBody.encode(e.fileAppend,o.uint32(90).fork()).ldelim(),null!=e.fileCreate&&Object.hasOwnProperty.call(e,"fileCreate")&&$root.proto.FileCreateTransactionBody.encode(e.fileCreate,o.uint32(98).fork()).ldelim(),null!=e.fileDelete&&Object.hasOwnProperty.call(e,"fileDelete")&&$root.proto.FileDeleteTransactionBody.encode(e.fileDelete,o.uint32(106).fork()).ldelim(),null!=e.fileUpdate&&Object.hasOwnProperty.call(e,"fileUpdate")&&$root.proto.FileUpdateTransactionBody.encode(e.fileUpdate,o.uint32(114).fork()).ldelim(),null!=e.systemDelete&&Object.hasOwnProperty.call(e,"systemDelete")&&$root.proto.SystemDeleteTransactionBody.encode(e.systemDelete,o.uint32(122).fork()).ldelim(),null!=e.systemUndelete&&Object.hasOwnProperty.call(e,"systemUndelete")&&$root.proto.SystemUndeleteTransactionBody.encode(e.systemUndelete,o.uint32(130).fork()).ldelim(),null!=e.freeze&&Object.hasOwnProperty.call(e,"freeze")&&$root.proto.FreezeTransactionBody.encode(e.freeze,o.uint32(138).fork()).ldelim(),null!=e.consensusCreateTopic&&Object.hasOwnProperty.call(e,"consensusCreateTopic")&&$root.proto.ConsensusCreateTopicTransactionBody.encode(e.consensusCreateTopic,o.uint32(146).fork()).ldelim(),null!=e.consensusUpdateTopic&&Object.hasOwnProperty.call(e,"consensusUpdateTopic")&&$root.proto.ConsensusUpdateTopicTransactionBody.encode(e.consensusUpdateTopic,o.uint32(154).fork()).ldelim(),null!=e.consensusDeleteTopic&&Object.hasOwnProperty.call(e,"consensusDeleteTopic")&&$root.proto.ConsensusDeleteTopicTransactionBody.encode(e.consensusDeleteTopic,o.uint32(162).fork()).ldelim(),null!=e.consensusSubmitMessage&&Object.hasOwnProperty.call(e,"consensusSubmitMessage")&&$root.proto.ConsensusSubmitMessageTransactionBody.encode(e.consensusSubmitMessage,o.uint32(170).fork()).ldelim(),null!=e.tokenCreation&&Object.hasOwnProperty.call(e,"tokenCreation")&&$root.proto.TokenCreateTransactionBody.encode(e.tokenCreation,o.uint32(178).fork()).ldelim(),null!=e.tokenFreeze&&Object.hasOwnProperty.call(e,"tokenFreeze")&&$root.proto.TokenFreezeAccountTransactionBody.encode(e.tokenFreeze,o.uint32(186).fork()).ldelim(),null!=e.tokenUnfreeze&&Object.hasOwnProperty.call(e,"tokenUnfreeze")&&$root.proto.TokenUnfreezeAccountTransactionBody.encode(e.tokenUnfreeze,o.uint32(194).fork()).ldelim(),null!=e.tokenGrantKyc&&Object.hasOwnProperty.call(e,"tokenGrantKyc")&&$root.proto.TokenGrantKycTransactionBody.encode(e.tokenGrantKyc,o.uint32(202).fork()).ldelim(),null!=e.tokenRevokeKyc&&Object.hasOwnProperty.call(e,"tokenRevokeKyc")&&$root.proto.TokenRevokeKycTransactionBody.encode(e.tokenRevokeKyc,o.uint32(210).fork()).ldelim(),null!=e.tokenDeletion&&Object.hasOwnProperty.call(e,"tokenDeletion")&&$root.proto.TokenDeleteTransactionBody.encode(e.tokenDeletion,o.uint32(218).fork()).ldelim(),null!=e.tokenUpdate&&Object.hasOwnProperty.call(e,"tokenUpdate")&&$root.proto.TokenUpdateTransactionBody.encode(e.tokenUpdate,o.uint32(226).fork()).ldelim(),null!=e.tokenMint&&Object.hasOwnProperty.call(e,"tokenMint")&&$root.proto.TokenMintTransactionBody.encode(e.tokenMint,o.uint32(234).fork()).ldelim(),null!=e.tokenBurn&&Object.hasOwnProperty.call(e,"tokenBurn")&&$root.proto.TokenBurnTransactionBody.encode(e.tokenBurn,o.uint32(242).fork()).ldelim(),null!=e.tokenWipe&&Object.hasOwnProperty.call(e,"tokenWipe")&&$root.proto.TokenWipeAccountTransactionBody.encode(e.tokenWipe,o.uint32(250).fork()).ldelim(),null!=e.tokenAssociate&&Object.hasOwnProperty.call(e,"tokenAssociate")&&$root.proto.TokenAssociateTransactionBody.encode(e.tokenAssociate,o.uint32(258).fork()).ldelim(),null!=e.tokenDissociate&&Object.hasOwnProperty.call(e,"tokenDissociate")&&$root.proto.TokenDissociateTransactionBody.encode(e.tokenDissociate,o.uint32(266).fork()).ldelim(),null!=e.scheduleDelete&&Object.hasOwnProperty.call(e,"scheduleDelete")&&$root.proto.ScheduleDeleteTransactionBody.encode(e.scheduleDelete,o.uint32(274).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SchedulableTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transactionFee=e.uint64();break;case 2:d.memo=e.string();break;case 3:d.contractCall=$root.proto.ContractCallTransactionBody.decode(e,e.uint32());break;case 4:d.contractCreateInstance=$root.proto.ContractCreateTransactionBody.decode(e,e.uint32());break;case 5:d.contractUpdateInstance=$root.proto.ContractUpdateTransactionBody.decode(e,e.uint32());break;case 6:d.contractDeleteInstance=$root.proto.ContractDeleteTransactionBody.decode(e,e.uint32());break;case 7:d.cryptoCreateAccount=$root.proto.CryptoCreateTransactionBody.decode(e,e.uint32());break;case 8:d.cryptoDelete=$root.proto.CryptoDeleteTransactionBody.decode(e,e.uint32());break;case 9:d.cryptoTransfer=$root.proto.CryptoTransferTransactionBody.decode(e,e.uint32());break;case 10:d.cryptoUpdateAccount=$root.proto.CryptoUpdateTransactionBody.decode(e,e.uint32());break;case 11:d.fileAppend=$root.proto.FileAppendTransactionBody.decode(e,e.uint32());break;case 12:d.fileCreate=$root.proto.FileCreateTransactionBody.decode(e,e.uint32());break;case 13:d.fileDelete=$root.proto.FileDeleteTransactionBody.decode(e,e.uint32());break;case 14:d.fileUpdate=$root.proto.FileUpdateTransactionBody.decode(e,e.uint32());break;case 15:d.systemDelete=$root.proto.SystemDeleteTransactionBody.decode(e,e.uint32());break;case 16:d.systemUndelete=$root.proto.SystemUndeleteTransactionBody.decode(e,e.uint32());break;case 17:d.freeze=$root.proto.FreezeTransactionBody.decode(e,e.uint32());break;case 18:d.consensusCreateTopic=$root.proto.ConsensusCreateTopicTransactionBody.decode(e,e.uint32());break;case 19:d.consensusUpdateTopic=$root.proto.ConsensusUpdateTopicTransactionBody.decode(e,e.uint32());break;case 20:d.consensusDeleteTopic=$root.proto.ConsensusDeleteTopicTransactionBody.decode(e,e.uint32());break;case 21:d.consensusSubmitMessage=$root.proto.ConsensusSubmitMessageTransactionBody.decode(e,e.uint32());break;case 22:d.tokenCreation=$root.proto.TokenCreateTransactionBody.decode(e,e.uint32());break;case 23:d.tokenFreeze=$root.proto.TokenFreezeAccountTransactionBody.decode(e,e.uint32());break;case 24:d.tokenUnfreeze=$root.proto.TokenUnfreezeAccountTransactionBody.decode(e,e.uint32());break;case 25:d.tokenGrantKyc=$root.proto.TokenGrantKycTransactionBody.decode(e,e.uint32());break;case 26:d.tokenRevokeKyc=$root.proto.TokenRevokeKycTransactionBody.decode(e,e.uint32());break;case 27:d.tokenDeletion=$root.proto.TokenDeleteTransactionBody.decode(e,e.uint32());break;case 28:d.tokenUpdate=$root.proto.TokenUpdateTransactionBody.decode(e,e.uint32());break;case 29:d.tokenMint=$root.proto.TokenMintTransactionBody.decode(e,e.uint32());break;case 30:d.tokenBurn=$root.proto.TokenBurnTransactionBody.decode(e,e.uint32());break;case 31:d.tokenWipe=$root.proto.TokenWipeAccountTransactionBody.decode(e,e.uint32());break;case 32:d.tokenAssociate=$root.proto.TokenAssociateTransactionBody.decode(e,e.uint32());break;case 33:d.tokenDissociate=$root.proto.TokenDissociateTransactionBody.decode(e,e.uint32());break;case 34:d.scheduleDelete=$root.proto.ScheduleDeleteTransactionBody.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ScheduleDeleteTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.scheduleID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.scheduleID&&Object.hasOwnProperty.call(e,"scheduleID")&&$root.proto.ScheduleID.encode(e.scheduleID,o.uint32(10).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleDeleteTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.scheduleID=$root.proto.ScheduleID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ScheduleSignTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.scheduleID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.scheduleID&&Object.hasOwnProperty.call(e,"scheduleID")&&$root.proto.ScheduleID.encode(e.scheduleID,o.uint32(10).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleSignTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.scheduleID=$root.proto.ScheduleID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ResponseHeader:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.nodeTransactionPrecheckCode=0,e.prototype.responseType=0,e.prototype.cost=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.stateProof=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.nodeTransactionPrecheckCode&&Object.hasOwnProperty.call(e,"nodeTransactionPrecheckCode")&&o.uint32(8).int32(e.nodeTransactionPrecheckCode),null!=e.responseType&&Object.hasOwnProperty.call(e,"responseType")&&o.uint32(16).int32(e.responseType),null!=e.cost&&Object.hasOwnProperty.call(e,"cost")&&o.uint32(24).uint64(e.cost),null!=e.stateProof&&Object.hasOwnProperty.call(e,"stateProof")&&o.uint32(34).bytes(e.stateProof),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ResponseHeader,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.nodeTransactionPrecheckCode=e.int32();break;case 2:d.responseType=e.int32();break;case 3:d.cost=e.uint64();break;case 4:d.stateProof=e.bytes();break;default:e.skipType(7&i);}return d},e}(),TransactionResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.nodeTransactionPrecheckCode=0,e.prototype.cost=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.nodeTransactionPrecheckCode&&Object.hasOwnProperty.call(e,"nodeTransactionPrecheckCode")&&o.uint32(8).int32(e.nodeTransactionPrecheckCode),null!=e.cost&&Object.hasOwnProperty.call(e,"cost")&&o.uint32(16).uint64(e.cost),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.nodeTransactionPrecheckCode=e.int32();break;case 2:d.cost=e.uint64();break;default:e.skipType(7&i);}return d},e}(),ResponseCodeEnum:function(){const e={},o=Object.create(e);return o[e[0]="OK"]=0,o[e[1]="INVALID_TRANSACTION"]=1,o[e[2]="PAYER_ACCOUNT_NOT_FOUND"]=2,o[e[3]="INVALID_NODE_ACCOUNT"]=3,o[e[4]="TRANSACTION_EXPIRED"]=4,o[e[5]="INVALID_TRANSACTION_START"]=5,o[e[6]="INVALID_TRANSACTION_DURATION"]=6,o[e[7]="INVALID_SIGNATURE"]=7,o[e[8]="MEMO_TOO_LONG"]=8,o[e[9]="INSUFFICIENT_TX_FEE"]=9,o[e[10]="INSUFFICIENT_PAYER_BALANCE"]=10,o[e[11]="DUPLICATE_TRANSACTION"]=11,o[e[12]="BUSY"]=12,o[e[13]="NOT_SUPPORTED"]=13,o[e[14]="INVALID_FILE_ID"]=14,o[e[15]="INVALID_ACCOUNT_ID"]=15,o[e[16]="INVALID_CONTRACT_ID"]=16,o[e[17]="INVALID_TRANSACTION_ID"]=17,o[e[18]="RECEIPT_NOT_FOUND"]=18,o[e[19]="RECORD_NOT_FOUND"]=19,o[e[20]="INVALID_SOLIDITY_ID"]=20,o[e[21]="UNKNOWN"]=21,o[e[22]="SUCCESS"]=22,o[e[23]="FAIL_INVALID"]=23,o[e[24]="FAIL_FEE"]=24,o[e[25]="FAIL_BALANCE"]=25,o[e[26]="KEY_REQUIRED"]=26,o[e[27]="BAD_ENCODING"]=27,o[e[28]="INSUFFICIENT_ACCOUNT_BALANCE"]=28,o[e[29]="INVALID_SOLIDITY_ADDRESS"]=29,o[e[30]="INSUFFICIENT_GAS"]=30,o[e[31]="CONTRACT_SIZE_LIMIT_EXCEEDED"]=31,o[e[32]="LOCAL_CALL_MODIFICATION_EXCEPTION"]=32,o[e[33]="CONTRACT_REVERT_EXECUTED"]=33,o[e[34]="CONTRACT_EXECUTION_EXCEPTION"]=34,o[e[35]="INVALID_RECEIVING_NODE_ACCOUNT"]=35,o[e[36]="MISSING_QUERY_HEADER"]=36,o[e[37]="ACCOUNT_UPDATE_FAILED"]=37,o[e[38]="INVALID_KEY_ENCODING"]=38,o[e[39]="NULL_SOLIDITY_ADDRESS"]=39,o[e[40]="CONTRACT_UPDATE_FAILED"]=40,o[e[41]="INVALID_QUERY_HEADER"]=41,o[e[42]="INVALID_FEE_SUBMITTED"]=42,o[e[43]="INVALID_PAYER_SIGNATURE"]=43,o[e[44]="KEY_NOT_PROVIDED"]=44,o[e[45]="INVALID_EXPIRATION_TIME"]=45,o[e[46]="NO_WACL_KEY"]=46,o[e[47]="FILE_CONTENT_EMPTY"]=47,o[e[48]="INVALID_ACCOUNT_AMOUNTS"]=48,o[e[49]="EMPTY_TRANSACTION_BODY"]=49,o[e[50]="INVALID_TRANSACTION_BODY"]=50,o[e[51]="INVALID_SIGNATURE_TYPE_MISMATCHING_KEY"]=51,o[e[52]="INVALID_SIGNATURE_COUNT_MISMATCHING_KEY"]=52,o[e[53]="EMPTY_LIVE_HASH_BODY"]=53,o[e[54]="EMPTY_LIVE_HASH"]=54,o[e[55]="EMPTY_LIVE_HASH_KEYS"]=55,o[e[56]="INVALID_LIVE_HASH_SIZE"]=56,o[e[57]="EMPTY_QUERY_BODY"]=57,o[e[58]="EMPTY_LIVE_HASH_QUERY"]=58,o[e[59]="LIVE_HASH_NOT_FOUND"]=59,o[e[60]="ACCOUNT_ID_DOES_NOT_EXIST"]=60,o[e[61]="LIVE_HASH_ALREADY_EXISTS"]=61,o[e[62]="INVALID_FILE_WACL"]=62,o[e[63]="SERIALIZATION_FAILED"]=63,o[e[64]="TRANSACTION_OVERSIZE"]=64,o[e[65]="TRANSACTION_TOO_MANY_LAYERS"]=65,o[e[66]="CONTRACT_DELETED"]=66,o[e[67]="PLATFORM_NOT_ACTIVE"]=67,o[e[68]="KEY_PREFIX_MISMATCH"]=68,o[e[69]="PLATFORM_TRANSACTION_NOT_CREATED"]=69,o[e[70]="INVALID_RENEWAL_PERIOD"]=70,o[e[71]="INVALID_PAYER_ACCOUNT_ID"]=71,o[e[72]="ACCOUNT_DELETED"]=72,o[e[73]="FILE_DELETED"]=73,o[e[74]="ACCOUNT_REPEATED_IN_ACCOUNT_AMOUNTS"]=74,o[e[75]="SETTING_NEGATIVE_ACCOUNT_BALANCE"]=75,o[e[76]="OBTAINER_REQUIRED"]=76,o[e[77]="OBTAINER_SAME_CONTRACT_ID"]=77,o[e[78]="OBTAINER_DOES_NOT_EXIST"]=78,o[e[79]="MODIFYING_IMMUTABLE_CONTRACT"]=79,o[e[80]="FILE_SYSTEM_EXCEPTION"]=80,o[e[81]="AUTORENEW_DURATION_NOT_IN_RANGE"]=81,o[e[82]="ERROR_DECODING_BYTESTRING"]=82,o[e[83]="CONTRACT_FILE_EMPTY"]=83,o[e[84]="CONTRACT_BYTECODE_EMPTY"]=84,o[e[85]="INVALID_INITIAL_BALANCE"]=85,o[e[86]="INVALID_RECEIVE_RECORD_THRESHOLD"]=86,o[e[87]="INVALID_SEND_RECORD_THRESHOLD"]=87,o[e[88]="ACCOUNT_IS_NOT_GENESIS_ACCOUNT"]=88,o[e[89]="PAYER_ACCOUNT_UNAUTHORIZED"]=89,o[e[90]="INVALID_FREEZE_TRANSACTION_BODY"]=90,o[e[91]="FREEZE_TRANSACTION_BODY_NOT_FOUND"]=91,o[e[92]="TRANSFER_LIST_SIZE_LIMIT_EXCEEDED"]=92,o[e[93]="RESULT_SIZE_LIMIT_EXCEEDED"]=93,o[e[94]="NOT_SPECIAL_ACCOUNT"]=94,o[e[95]="CONTRACT_NEGATIVE_GAS"]=95,o[e[96]="CONTRACT_NEGATIVE_VALUE"]=96,o[e[97]="INVALID_FEE_FILE"]=97,o[e[98]="INVALID_EXCHANGE_RATE_FILE"]=98,o[e[99]="INSUFFICIENT_LOCAL_CALL_GAS"]=99,o[e[100]="ENTITY_NOT_ALLOWED_TO_DELETE"]=100,o[e[101]="AUTHORIZATION_FAILED"]=101,o[e[102]="FILE_UPLOADED_PROTO_INVALID"]=102,o[e[103]="FILE_UPLOADED_PROTO_NOT_SAVED_TO_DISK"]=103,o[e[104]="FEE_SCHEDULE_FILE_PART_UPLOADED"]=104,o[e[105]="EXCHANGE_RATE_CHANGE_LIMIT_EXCEEDED"]=105,o[e[106]="MAX_CONTRACT_STORAGE_EXCEEDED"]=106,o[e[107]="TRANSFER_ACCOUNT_SAME_AS_DELETE_ACCOUNT"]=107,o[e[108]="TOTAL_LEDGER_BALANCE_INVALID"]=108,o[e[110]="EXPIRATION_REDUCTION_NOT_ALLOWED"]=110,o[e[111]="MAX_GAS_LIMIT_EXCEEDED"]=111,o[e[112]="MAX_FILE_SIZE_EXCEEDED"]=112,o[e[113]="RECEIVER_SIG_REQUIRED"]=113,o[e[150]="INVALID_TOPIC_ID"]=150,o[e[155]="INVALID_ADMIN_KEY"]=155,o[e[156]="INVALID_SUBMIT_KEY"]=156,o[e[157]="UNAUTHORIZED"]=157,o[e[158]="INVALID_TOPIC_MESSAGE"]=158,o[e[159]="INVALID_AUTORENEW_ACCOUNT"]=159,o[e[160]="AUTORENEW_ACCOUNT_NOT_ALLOWED"]=160,o[e[162]="TOPIC_EXPIRED"]=162,o[e[163]="INVALID_CHUNK_NUMBER"]=163,o[e[164]="INVALID_CHUNK_TRANSACTION_ID"]=164,o[e[165]="ACCOUNT_FROZEN_FOR_TOKEN"]=165,o[e[166]="TOKENS_PER_ACCOUNT_LIMIT_EXCEEDED"]=166,o[e[167]="INVALID_TOKEN_ID"]=167,o[e[168]="INVALID_TOKEN_DECIMALS"]=168,o[e[169]="INVALID_TOKEN_INITIAL_SUPPLY"]=169,o[e[170]="INVALID_TREASURY_ACCOUNT_FOR_TOKEN"]=170,o[e[171]="INVALID_TOKEN_SYMBOL"]=171,o[e[172]="TOKEN_HAS_NO_FREEZE_KEY"]=172,o[e[173]="TRANSFERS_NOT_ZERO_SUM_FOR_TOKEN"]=173,o[e[174]="MISSING_TOKEN_SYMBOL"]=174,o[e[175]="TOKEN_SYMBOL_TOO_LONG"]=175,o[e[176]="ACCOUNT_KYC_NOT_GRANTED_FOR_TOKEN"]=176,o[e[177]="TOKEN_HAS_NO_KYC_KEY"]=177,o[e[178]="INSUFFICIENT_TOKEN_BALANCE"]=178,o[e[179]="TOKEN_WAS_DELETED"]=179,o[e[180]="TOKEN_HAS_NO_SUPPLY_KEY"]=180,o[e[181]="TOKEN_HAS_NO_WIPE_KEY"]=181,o[e[182]="INVALID_TOKEN_MINT_AMOUNT"]=182,o[e[183]="INVALID_TOKEN_BURN_AMOUNT"]=183,o[e[184]="TOKEN_NOT_ASSOCIATED_TO_ACCOUNT"]=184,o[e[185]="CANNOT_WIPE_TOKEN_TREASURY_ACCOUNT"]=185,o[e[186]="INVALID_KYC_KEY"]=186,o[e[187]="INVALID_WIPE_KEY"]=187,o[e[188]="INVALID_FREEZE_KEY"]=188,o[e[189]="INVALID_SUPPLY_KEY"]=189,o[e[190]="MISSING_TOKEN_NAME"]=190,o[e[191]="TOKEN_NAME_TOO_LONG"]=191,o[e[192]="INVALID_WIPING_AMOUNT"]=192,o[e[193]="TOKEN_IS_IMMUTABLE"]=193,o[e[194]="TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT"]=194,o[e[195]="TRANSACTION_REQUIRES_ZERO_TOKEN_BALANCES"]=195,o[e[196]="ACCOUNT_IS_TREASURY"]=196,o[e[197]="TOKEN_ID_REPEATED_IN_TOKEN_LIST"]=197,o[e[198]="TOKEN_TRANSFER_LIST_SIZE_LIMIT_EXCEEDED"]=198,o[e[199]="EMPTY_TOKEN_TRANSFER_BODY"]=199,o[e[200]="EMPTY_TOKEN_TRANSFER_ACCOUNT_AMOUNTS"]=200,o[e[201]="INVALID_SCHEDULE_ID"]=201,o[e[202]="SCHEDULE_IS_IMMUTABLE"]=202,o[e[203]="INVALID_SCHEDULE_PAYER_ID"]=203,o[e[204]="INVALID_SCHEDULE_ACCOUNT_ID"]=204,o[e[205]="NO_NEW_VALID_SIGNATURES"]=205,o[e[206]="UNRESOLVABLE_REQUIRED_SIGNERS"]=206,o[e[207]="SCHEDULED_TRANSACTION_NOT_IN_WHITELIST"]=207,o[e[208]="SOME_SIGNATURES_WERE_INVALID"]=208,o[e[209]="TRANSACTION_ID_FIELD_NOT_ALLOWED"]=209,o[e[210]="IDENTICAL_SCHEDULE_ALREADY_CREATED"]=210,o[e[211]="INVALID_ZERO_BYTE_IN_STRING"]=211,o[e[212]="SCHEDULE_ALREADY_DELETED"]=212,o[e[213]="SCHEDULE_ALREADY_EXECUTED"]=213,o[e[214]="MESSAGE_SIZE_TOO_LARGE"]=214,o[e[215]="OPERATION_REPEATED_IN_BUCKET_GROUPS"]=215,o[e[216]="BUCKET_CAPACITY_OVERFLOW"]=216,o[e[217]="NODE_CAPACITY_NOT_SUFFICIENT_FOR_OPERATION"]=217,o[e[218]="BUCKET_HAS_NO_THROTTLE_GROUPS"]=218,o[e[219]="THROTTLE_GROUP_HAS_ZERO_OPS_PER_SEC"]=219,o[e[220]="SUCCESS_BUT_MISSING_EXPECTED_OPERATION"]=220,o[e[221]="UNPARSEABLE_THROTTLE_DEFINITIONS"]=221,o[e[222]="INVALID_THROTTLE_DEFINITIONS"]=222,o[e[223]="ACCOUNT_EXPIRED_AND_PENDING_REMOVAL"]=223,o[e[224]="INVALID_TOKEN_MAX_SUPPLY"]=224,o[e[225]="INVALID_TOKEN_NFT_SERIAL_NUMBER"]=225,o[e[226]="INVALID_NFT_ID"]=226,o[e[227]="METADATA_TOO_LONG"]=227,o[e[228]="BATCH_SIZE_LIMIT_EXCEEDED"]=228,o[e[229]="INVALID_QUERY_RANGE"]=229,o[e[230]="FRACTION_DIVIDES_BY_ZERO"]=230,o[e[231]="INSUFFICIENT_PAYER_BALANCE_FOR_CUSTOM_FEE"]=231,o[e[232]="CUSTOM_FEES_LIST_TOO_LONG"]=232,o[e[233]="INVALID_CUSTOM_FEE_COLLECTOR"]=233,o[e[234]="INVALID_TOKEN_ID_IN_CUSTOM_FEES"]=234,o[e[235]="TOKEN_NOT_ASSOCIATED_TO_FEE_COLLECTOR"]=235,o[e[236]="TOKEN_MAX_SUPPLY_REACHED"]=236,o[e[237]="SENDER_DOES_NOT_OWN_NFT_SERIAL_NO"]=237,o[e[238]="CUSTOM_FEE_NOT_FULLY_SPECIFIED"]=238,o[e[239]="CUSTOM_FEE_MUST_BE_POSITIVE"]=239,o[e[240]="TOKEN_HAS_NO_FEE_SCHEDULE_KEY"]=240,o[e[241]="CUSTOM_FEE_OUTSIDE_NUMERIC_RANGE"]=241,o[e[242]="INVALID_CUSTOM_FRACTIONAL_FEES_SUM"]=242,o[e[243]="FRACTIONAL_FEE_MAX_AMOUNT_LESS_THAN_MIN_AMOUNT"]=243,o[e[244]="CUSTOM_SCHEDULE_ALREADY_HAS_NO_FEES"]=244,o[e[245]="CUSTOM_FEE_DENOMINATION_MUST_BE_FUNGIBLE_COMMON"]=245,o[e[246]="CUSTOM_FRACTIONAL_FEE_ONLY_ALLOWED_FOR_FUNGIBLE_COMMON"]=246,o[e[247]="INVALID_CUSTOM_FEE_SCHEDULE_KEY"]=247,o[e[248]="INVALID_TOKEN_MINT_METADATA"]=248,o[e[249]="INVALID_TOKEN_BURN_METADATA"]=249,o[e[250]="CURRENT_TREASURY_STILL_OWNS_NFTS"]=250,o[e[251]="ACCOUNT_STILL_OWNS_NFTS"]=251,o[e[252]="TREASURY_MUST_OWN_BURNED_NFT"]=252,o[e[253]="ACCOUNT_DOES_NOT_OWN_WIPED_NFT"]=253,o[e[254]="ACCOUNT_AMOUNT_TRANSFERS_ONLY_ALLOWED_FOR_FUNGIBLE_COMMON"]=254,o[e[255]="MAX_NFTS_IN_PRICE_REGIME_HAVE_BEEN_MINTED"]=255,o[e[256]="PAYER_ACCOUNT_DELETED"]=256,o[e[257]="CUSTOM_FEE_CHARGING_EXCEEDED_MAX_RECURSION_DEPTH"]=257,o[e[258]="CUSTOM_FEE_CHARGING_EXCEEDED_MAX_ACCOUNT_AMOUNTS"]=258,o}(),ConsensusTopicInfo:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.memo="",e.prototype.runningHash=$util.newBuffer([]),e.prototype.sequenceNumber=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.expirationTime=null,e.prototype.adminKey=null,e.prototype.submitKey=null,e.prototype.autoRenewPeriod=null,e.prototype.autoRenewAccount=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(10).string(e.memo),null!=e.runningHash&&Object.hasOwnProperty.call(e,"runningHash")&&o.uint32(18).bytes(e.runningHash),null!=e.sequenceNumber&&Object.hasOwnProperty.call(e,"sequenceNumber")&&o.uint32(24).uint64(e.sequenceNumber),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(34).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(42).fork()).ldelim(),null!=e.submitKey&&Object.hasOwnProperty.call(e,"submitKey")&&$root.proto.Key.encode(e.submitKey,o.uint32(50).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(58).fork()).ldelim(),null!=e.autoRenewAccount&&Object.hasOwnProperty.call(e,"autoRenewAccount")&&$root.proto.AccountID.encode(e.autoRenewAccount,o.uint32(66).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusTopicInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.memo=e.string();break;case 2:d.runningHash=e.bytes();break;case 3:d.sequenceNumber=e.uint64();break;case 4:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 5:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 6:d.submitKey=$root.proto.Key.decode(e,e.uint32());break;case 7:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 8:d.autoRenewAccount=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ConsensusService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.createTopic=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"createTopic"}),Object.defineProperty(e.prototype.updateTopic=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"updateTopic"}),Object.defineProperty(e.prototype.deleteTopic=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"deleteTopic"}),Object.defineProperty(e.prototype.getTopicInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getTopicInfo"}),Object.defineProperty(e.prototype.submitMessage=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"submitMessage"}),e}(),Query:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.getByKey=null,e.prototype.getBySolidityID=null,e.prototype.contractCallLocal=null,e.prototype.contractGetInfo=null,e.prototype.contractGetBytecode=null,e.prototype.ContractGetRecords=null,e.prototype.cryptogetAccountBalance=null,e.prototype.cryptoGetAccountRecords=null,e.prototype.cryptoGetInfo=null,e.prototype.cryptoGetLiveHash=null,e.prototype.cryptoGetProxyStakers=null,e.prototype.fileGetContents=null,e.prototype.fileGetInfo=null,e.prototype.transactionGetReceipt=null,e.prototype.transactionGetRecord=null,e.prototype.transactionGetFastRecord=null,e.prototype.consensusGetTopicInfo=null,e.prototype.networkGetVersionInfo=null,e.prototype.tokenGetInfo=null,e.prototype.scheduleGetInfo=null,e.prototype.tokenGetAccountNftInfos=null,e.prototype.tokenGetNftInfo=null,e.prototype.tokenGetNftInfos=null;let o;return Object.defineProperty(e.prototype,"query",{get:$util.oneOfGetter(o=["getByKey","getBySolidityID","contractCallLocal","contractGetInfo","contractGetBytecode","ContractGetRecords","cryptogetAccountBalance","cryptoGetAccountRecords","cryptoGetInfo","cryptoGetLiveHash","cryptoGetProxyStakers","fileGetContents","fileGetInfo","transactionGetReceipt","transactionGetRecord","transactionGetFastRecord","consensusGetTopicInfo","networkGetVersionInfo","tokenGetInfo","scheduleGetInfo","tokenGetAccountNftInfos","tokenGetNftInfo","tokenGetNftInfos"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.getByKey&&Object.hasOwnProperty.call(e,"getByKey")&&$root.proto.GetByKeyQuery.encode(e.getByKey,o.uint32(10).fork()).ldelim(),null!=e.getBySolidityID&&Object.hasOwnProperty.call(e,"getBySolidityID")&&$root.proto.GetBySolidityIDQuery.encode(e.getBySolidityID,o.uint32(18).fork()).ldelim(),null!=e.contractCallLocal&&Object.hasOwnProperty.call(e,"contractCallLocal")&&$root.proto.ContractCallLocalQuery.encode(e.contractCallLocal,o.uint32(26).fork()).ldelim(),null!=e.contractGetInfo&&Object.hasOwnProperty.call(e,"contractGetInfo")&&$root.proto.ContractGetInfoQuery.encode(e.contractGetInfo,o.uint32(34).fork()).ldelim(),null!=e.contractGetBytecode&&Object.hasOwnProperty.call(e,"contractGetBytecode")&&$root.proto.ContractGetBytecodeQuery.encode(e.contractGetBytecode,o.uint32(42).fork()).ldelim(),null!=e.ContractGetRecords&&Object.hasOwnProperty.call(e,"ContractGetRecords")&&$root.proto.ContractGetRecordsQuery.encode(e.ContractGetRecords,o.uint32(50).fork()).ldelim(),null!=e.cryptogetAccountBalance&&Object.hasOwnProperty.call(e,"cryptogetAccountBalance")&&$root.proto.CryptoGetAccountBalanceQuery.encode(e.cryptogetAccountBalance,o.uint32(58).fork()).ldelim(),null!=e.cryptoGetAccountRecords&&Object.hasOwnProperty.call(e,"cryptoGetAccountRecords")&&$root.proto.CryptoGetAccountRecordsQuery.encode(e.cryptoGetAccountRecords,o.uint32(66).fork()).ldelim(),null!=e.cryptoGetInfo&&Object.hasOwnProperty.call(e,"cryptoGetInfo")&&$root.proto.CryptoGetInfoQuery.encode(e.cryptoGetInfo,o.uint32(74).fork()).ldelim(),null!=e.cryptoGetLiveHash&&Object.hasOwnProperty.call(e,"cryptoGetLiveHash")&&$root.proto.CryptoGetLiveHashQuery.encode(e.cryptoGetLiveHash,o.uint32(82).fork()).ldelim(),null!=e.cryptoGetProxyStakers&&Object.hasOwnProperty.call(e,"cryptoGetProxyStakers")&&$root.proto.CryptoGetStakersQuery.encode(e.cryptoGetProxyStakers,o.uint32(90).fork()).ldelim(),null!=e.fileGetContents&&Object.hasOwnProperty.call(e,"fileGetContents")&&$root.proto.FileGetContentsQuery.encode(e.fileGetContents,o.uint32(98).fork()).ldelim(),null!=e.fileGetInfo&&Object.hasOwnProperty.call(e,"fileGetInfo")&&$root.proto.FileGetInfoQuery.encode(e.fileGetInfo,o.uint32(106).fork()).ldelim(),null!=e.transactionGetReceipt&&Object.hasOwnProperty.call(e,"transactionGetReceipt")&&$root.proto.TransactionGetReceiptQuery.encode(e.transactionGetReceipt,o.uint32(114).fork()).ldelim(),null!=e.transactionGetRecord&&Object.hasOwnProperty.call(e,"transactionGetRecord")&&$root.proto.TransactionGetRecordQuery.encode(e.transactionGetRecord,o.uint32(122).fork()).ldelim(),null!=e.transactionGetFastRecord&&Object.hasOwnProperty.call(e,"transactionGetFastRecord")&&$root.proto.TransactionGetFastRecordQuery.encode(e.transactionGetFastRecord,o.uint32(130).fork()).ldelim(),null!=e.consensusGetTopicInfo&&Object.hasOwnProperty.call(e,"consensusGetTopicInfo")&&$root.proto.ConsensusGetTopicInfoQuery.encode(e.consensusGetTopicInfo,o.uint32(402).fork()).ldelim(),null!=e.networkGetVersionInfo&&Object.hasOwnProperty.call(e,"networkGetVersionInfo")&&$root.proto.NetworkGetVersionInfoQuery.encode(e.networkGetVersionInfo,o.uint32(410).fork()).ldelim(),null!=e.tokenGetInfo&&Object.hasOwnProperty.call(e,"tokenGetInfo")&&$root.proto.TokenGetInfoQuery.encode(e.tokenGetInfo,o.uint32(418).fork()).ldelim(),null!=e.scheduleGetInfo&&Object.hasOwnProperty.call(e,"scheduleGetInfo")&&$root.proto.ScheduleGetInfoQuery.encode(e.scheduleGetInfo,o.uint32(426).fork()).ldelim(),null!=e.tokenGetAccountNftInfos&&Object.hasOwnProperty.call(e,"tokenGetAccountNftInfos")&&$root.proto.TokenGetAccountNftInfosQuery.encode(e.tokenGetAccountNftInfos,o.uint32(434).fork()).ldelim(),null!=e.tokenGetNftInfo&&Object.hasOwnProperty.call(e,"tokenGetNftInfo")&&$root.proto.TokenGetNftInfoQuery.encode(e.tokenGetNftInfo,o.uint32(442).fork()).ldelim(),null!=e.tokenGetNftInfos&&Object.hasOwnProperty.call(e,"tokenGetNftInfos")&&$root.proto.TokenGetNftInfosQuery.encode(e.tokenGetNftInfos,o.uint32(450).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Query,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.getByKey=$root.proto.GetByKeyQuery.decode(e,e.uint32());break;case 2:d.getBySolidityID=$root.proto.GetBySolidityIDQuery.decode(e,e.uint32());break;case 3:d.contractCallLocal=$root.proto.ContractCallLocalQuery.decode(e,e.uint32());break;case 4:d.contractGetInfo=$root.proto.ContractGetInfoQuery.decode(e,e.uint32());break;case 5:d.contractGetBytecode=$root.proto.ContractGetBytecodeQuery.decode(e,e.uint32());break;case 6:d.ContractGetRecords=$root.proto.ContractGetRecordsQuery.decode(e,e.uint32());break;case 7:d.cryptogetAccountBalance=$root.proto.CryptoGetAccountBalanceQuery.decode(e,e.uint32());break;case 8:d.cryptoGetAccountRecords=$root.proto.CryptoGetAccountRecordsQuery.decode(e,e.uint32());break;case 9:d.cryptoGetInfo=$root.proto.CryptoGetInfoQuery.decode(e,e.uint32());break;case 10:d.cryptoGetLiveHash=$root.proto.CryptoGetLiveHashQuery.decode(e,e.uint32());break;case 11:d.cryptoGetProxyStakers=$root.proto.CryptoGetStakersQuery.decode(e,e.uint32());break;case 12:d.fileGetContents=$root.proto.FileGetContentsQuery.decode(e,e.uint32());break;case 13:d.fileGetInfo=$root.proto.FileGetInfoQuery.decode(e,e.uint32());break;case 14:d.transactionGetReceipt=$root.proto.TransactionGetReceiptQuery.decode(e,e.uint32());break;case 15:d.transactionGetRecord=$root.proto.TransactionGetRecordQuery.decode(e,e.uint32());break;case 16:d.transactionGetFastRecord=$root.proto.TransactionGetFastRecordQuery.decode(e,e.uint32());break;case 50:d.consensusGetTopicInfo=$root.proto.ConsensusGetTopicInfoQuery.decode(e,e.uint32());break;case 51:d.networkGetVersionInfo=$root.proto.NetworkGetVersionInfoQuery.decode(e,e.uint32());break;case 52:d.tokenGetInfo=$root.proto.TokenGetInfoQuery.decode(e,e.uint32());break;case 53:d.scheduleGetInfo=$root.proto.ScheduleGetInfoQuery.decode(e,e.uint32());break;case 54:d.tokenGetAccountNftInfos=$root.proto.TokenGetAccountNftInfosQuery.decode(e,e.uint32());break;case 55:d.tokenGetNftInfo=$root.proto.TokenGetNftInfoQuery.decode(e,e.uint32());break;case 56:d.tokenGetNftInfos=$root.proto.TokenGetNftInfosQuery.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),GetByKeyQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.key=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.key&&Object.hasOwnProperty.call(e,"key")&&$root.proto.Key.encode(e.key,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.GetByKeyQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.key=$root.proto.Key.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),EntityID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.accountID=null,e.prototype.liveHash=null,e.prototype.fileID=null,e.prototype.contractID=null;let o;return Object.defineProperty(e.prototype,"entity",{get:$util.oneOfGetter(o=["accountID","liveHash","fileID","contractID"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.liveHash&&Object.hasOwnProperty.call(e,"liveHash")&&$root.proto.LiveHash.encode(e.liveHash,o.uint32(18).fork()).ldelim(),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(26).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(34).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.EntityID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.liveHash=$root.proto.LiveHash.decode(e,e.uint32());break;case 3:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 4:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),GetByKeyResponse:function(){function e(e){if(this.entities=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.entities=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.entities&&e.entities.length)for(var t=0;t<e.entities.length;++t)$root.proto.EntityID.encode(e.entities[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.GetByKeyResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.entities&&d.entities.length||(d.entities=[]),d.entities.push($root.proto.EntityID.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),GetBySolidityIDQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.solidityID="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.solidityID&&Object.hasOwnProperty.call(e,"solidityID")&&o.uint32(18).string(e.solidityID),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.GetBySolidityIDQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.solidityID=e.string();break;default:e.skipType(7&i);}return d},e}(),GetBySolidityIDResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.prototype.fileID=null,e.prototype.contractID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(26).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(34).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.GetBySolidityIDResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 4:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ContractLoginfo:function(){function e(e){if(this.topic=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.contractID=null,e.prototype.bloom=$util.newBuffer([]),e.prototype.topic=$util.emptyArray,e.prototype.data=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.bloom&&Object.hasOwnProperty.call(e,"bloom")&&o.uint32(18).bytes(e.bloom),null!=e.topic&&e.topic.length)for(var t=0;t<e.topic.length;++t)o.uint32(26).bytes(e.topic[t]);return null!=e.data&&Object.hasOwnProperty.call(e,"data")&&o.uint32(34).bytes(e.data),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractLoginfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.bloom=e.bytes();break;case 3:d.topic&&d.topic.length||(d.topic=[]),d.topic.push(e.bytes());break;case 4:d.data=e.bytes();break;default:e.skipType(7&i);}return d},e}(),ContractFunctionResult:function(){function e(e){if(this.logInfo=[],this.createdContractIDs=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.contractID=null,e.prototype.contractCallResult=$util.newBuffer([]),e.prototype.errorMessage="",e.prototype.bloom=$util.newBuffer([]),e.prototype.gasUsed=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.logInfo=$util.emptyArray,e.prototype.createdContractIDs=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.contractCallResult&&Object.hasOwnProperty.call(e,"contractCallResult")&&o.uint32(18).bytes(e.contractCallResult),null!=e.errorMessage&&Object.hasOwnProperty.call(e,"errorMessage")&&o.uint32(26).string(e.errorMessage),null!=e.bloom&&Object.hasOwnProperty.call(e,"bloom")&&o.uint32(34).bytes(e.bloom),null!=e.gasUsed&&Object.hasOwnProperty.call(e,"gasUsed")&&o.uint32(40).uint64(e.gasUsed),null!=e.logInfo&&e.logInfo.length)for(var t=0;t<e.logInfo.length;++t)$root.proto.ContractLoginfo.encode(e.logInfo[t],o.uint32(50).fork()).ldelim();if(null!=e.createdContractIDs&&e.createdContractIDs.length)for(var t=0;t<e.createdContractIDs.length;++t)$root.proto.ContractID.encode(e.createdContractIDs[t],o.uint32(58).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractFunctionResult,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.contractCallResult=e.bytes();break;case 3:d.errorMessage=e.string();break;case 4:d.bloom=e.bytes();break;case 5:d.gasUsed=e.uint64();break;case 6:d.logInfo&&d.logInfo.length||(d.logInfo=[]),d.logInfo.push($root.proto.ContractLoginfo.decode(e,e.uint32()));break;case 7:d.createdContractIDs&&d.createdContractIDs.length||(d.createdContractIDs=[]),d.createdContractIDs.push($root.proto.ContractID.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),ContractCallLocalQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.contractID=null,e.prototype.gas=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.functionParameters=$util.newBuffer([]),e.prototype.maxResultSize=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),null!=e.gas&&Object.hasOwnProperty.call(e,"gas")&&o.uint32(24).int64(e.gas),null!=e.functionParameters&&Object.hasOwnProperty.call(e,"functionParameters")&&o.uint32(34).bytes(e.functionParameters),null!=e.maxResultSize&&Object.hasOwnProperty.call(e,"maxResultSize")&&o.uint32(40).int64(e.maxResultSize),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractCallLocalQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 3:d.gas=e.int64();break;case 4:d.functionParameters=e.bytes();break;case 5:d.maxResultSize=e.int64();break;default:e.skipType(7&i);}return d},e}(),ContractCallLocalResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.functionResult=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.functionResult&&Object.hasOwnProperty.call(e,"functionResult")&&$root.proto.ContractFunctionResult.encode(e.functionResult,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractCallLocalResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.functionResult=$root.proto.ContractFunctionResult.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ContractGetInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.contractID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ContractGetInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.contractInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.contractInfo&&Object.hasOwnProperty.call(e,"contractInfo")&&$root.proto.ContractGetInfoResponse.ContractInfo.encode(e.contractInfo,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.contractInfo=$root.proto.ContractGetInfoResponse.ContractInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e.ContractInfo=function(){function e(e){if(this.tokenRelationships=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.contractID=null,e.prototype.accountID=null,e.prototype.contractAccountID="",e.prototype.adminKey=null,e.prototype.expirationTime=null,e.prototype.autoRenewPeriod=null,e.prototype.storage=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.memo="",e.prototype.balance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.deleted=!1,e.prototype.tokenRelationships=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.contractAccountID&&Object.hasOwnProperty.call(e,"contractAccountID")&&o.uint32(26).string(e.contractAccountID),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(34).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(42).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(50).fork()).ldelim(),null!=e.storage&&Object.hasOwnProperty.call(e,"storage")&&o.uint32(56).int64(e.storage),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(66).string(e.memo),null!=e.balance&&Object.hasOwnProperty.call(e,"balance")&&o.uint32(72).uint64(e.balance),null!=e.deleted&&Object.hasOwnProperty.call(e,"deleted")&&o.uint32(80).bool(e.deleted),null!=e.tokenRelationships&&e.tokenRelationships.length)for(var t=0;t<e.tokenRelationships.length;++t)$root.proto.TokenRelationship.encode(e.tokenRelationships[t],o.uint32(90).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetInfoResponse.ContractInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.contractAccountID=e.string();break;case 4:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 5:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 6:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 7:d.storage=e.int64();break;case 8:d.memo=e.string();break;case 9:d.balance=e.uint64();break;case 10:d.deleted=e.bool();break;case 11:d.tokenRelationships&&d.tokenRelationships.length||(d.tokenRelationships=[]),d.tokenRelationships.push($root.proto.TokenRelationship.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),e}(),ContractGetBytecodeQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.contractID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetBytecodeQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ContractGetBytecodeResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.bytecode=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.bytecode&&Object.hasOwnProperty.call(e,"bytecode")&&o.uint32(50).bytes(e.bytecode),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetBytecodeResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 6:d.bytecode=e.bytes();break;default:e.skipType(7&i);}return d},e}(),ContractGetRecordsQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.contractID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetRecordsQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ContractGetRecordsResponse:function(){function e(e){if(this.records=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.contractID=null,e.prototype.records=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(18).fork()).ldelim(),null!=e.records&&e.records.length)for(var t=0;t<e.records.length;++t)$root.proto.TransactionRecord.encode(e.records[t],o.uint32(26).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ContractGetRecordsResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 3:d.records&&d.records.length||(d.records=[]),d.records.push($root.proto.TransactionRecord.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TransactionRecord:function(){function e(e){if(this.tokenTransferLists=[],this.assessedCustomFees=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.receipt=null,e.prototype.transactionHash=$util.newBuffer([]),e.prototype.consensusTimestamp=null,e.prototype.transactionID=null,e.prototype.memo="",e.prototype.transactionFee=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.contractCallResult=null,e.prototype.contractCreateResult=null,e.prototype.transferList=null,e.prototype.tokenTransferLists=$util.emptyArray,e.prototype.scheduleRef=null,e.prototype.assessedCustomFees=$util.emptyArray;let o;return Object.defineProperty(e.prototype,"body",{get:$util.oneOfGetter(o=["contractCallResult","contractCreateResult"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.receipt&&Object.hasOwnProperty.call(e,"receipt")&&$root.proto.TransactionReceipt.encode(e.receipt,o.uint32(10).fork()).ldelim(),null!=e.transactionHash&&Object.hasOwnProperty.call(e,"transactionHash")&&o.uint32(18).bytes(e.transactionHash),null!=e.consensusTimestamp&&Object.hasOwnProperty.call(e,"consensusTimestamp")&&$root.proto.Timestamp.encode(e.consensusTimestamp,o.uint32(26).fork()).ldelim(),null!=e.transactionID&&Object.hasOwnProperty.call(e,"transactionID")&&$root.proto.TransactionID.encode(e.transactionID,o.uint32(34).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(42).string(e.memo),null!=e.transactionFee&&Object.hasOwnProperty.call(e,"transactionFee")&&o.uint32(48).uint64(e.transactionFee),null!=e.contractCallResult&&Object.hasOwnProperty.call(e,"contractCallResult")&&$root.proto.ContractFunctionResult.encode(e.contractCallResult,o.uint32(58).fork()).ldelim(),null!=e.contractCreateResult&&Object.hasOwnProperty.call(e,"contractCreateResult")&&$root.proto.ContractFunctionResult.encode(e.contractCreateResult,o.uint32(66).fork()).ldelim(),null!=e.transferList&&Object.hasOwnProperty.call(e,"transferList")&&$root.proto.TransferList.encode(e.transferList,o.uint32(82).fork()).ldelim(),null!=e.tokenTransferLists&&e.tokenTransferLists.length)for(var t=0;t<e.tokenTransferLists.length;++t)$root.proto.TokenTransferList.encode(e.tokenTransferLists[t],o.uint32(90).fork()).ldelim();if(null!=e.scheduleRef&&Object.hasOwnProperty.call(e,"scheduleRef")&&$root.proto.ScheduleID.encode(e.scheduleRef,o.uint32(98).fork()).ldelim(),null!=e.assessedCustomFees&&e.assessedCustomFees.length)for(var t=0;t<e.assessedCustomFees.length;++t)$root.proto.AssessedCustomFee.encode(e.assessedCustomFees[t],o.uint32(106).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionRecord,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.receipt=$root.proto.TransactionReceipt.decode(e,e.uint32());break;case 2:d.transactionHash=e.bytes();break;case 3:d.consensusTimestamp=$root.proto.Timestamp.decode(e,e.uint32());break;case 4:d.transactionID=$root.proto.TransactionID.decode(e,e.uint32());break;case 5:d.memo=e.string();break;case 6:d.transactionFee=e.uint64();break;case 7:d.contractCallResult=$root.proto.ContractFunctionResult.decode(e,e.uint32());break;case 8:d.contractCreateResult=$root.proto.ContractFunctionResult.decode(e,e.uint32());break;case 10:d.transferList=$root.proto.TransferList.decode(e,e.uint32());break;case 11:d.tokenTransferLists&&d.tokenTransferLists.length||(d.tokenTransferLists=[]),d.tokenTransferLists.push($root.proto.TokenTransferList.decode(e,e.uint32()));break;case 12:d.scheduleRef=$root.proto.ScheduleID.decode(e,e.uint32());break;case 13:d.assessedCustomFees&&d.assessedCustomFees.length||(d.assessedCustomFees=[]),d.assessedCustomFees.push($root.proto.AssessedCustomFee.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TransactionReceipt:function(){function e(e){if(this.serialNumbers=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.status=0,e.prototype.accountID=null,e.prototype.fileID=null,e.prototype.contractID=null,e.prototype.exchangeRate=null,e.prototype.topicID=null,e.prototype.topicSequenceNumber=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.topicRunningHash=$util.newBuffer([]),e.prototype.topicRunningHashVersion=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.tokenID=null,e.prototype.newTotalSupply=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.scheduleID=null,e.prototype.scheduledTransactionID=null,e.prototype.serialNumbers=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.status&&Object.hasOwnProperty.call(e,"status")&&o.uint32(8).int32(e.status),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(26).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(34).fork()).ldelim(),null!=e.exchangeRate&&Object.hasOwnProperty.call(e,"exchangeRate")&&$root.proto.ExchangeRateSet.encode(e.exchangeRate,o.uint32(42).fork()).ldelim(),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(50).fork()).ldelim(),null!=e.topicSequenceNumber&&Object.hasOwnProperty.call(e,"topicSequenceNumber")&&o.uint32(56).uint64(e.topicSequenceNumber),null!=e.topicRunningHash&&Object.hasOwnProperty.call(e,"topicRunningHash")&&o.uint32(66).bytes(e.topicRunningHash),null!=e.topicRunningHashVersion&&Object.hasOwnProperty.call(e,"topicRunningHashVersion")&&o.uint32(72).uint64(e.topicRunningHashVersion),null!=e.tokenID&&Object.hasOwnProperty.call(e,"tokenID")&&$root.proto.TokenID.encode(e.tokenID,o.uint32(82).fork()).ldelim(),null!=e.newTotalSupply&&Object.hasOwnProperty.call(e,"newTotalSupply")&&o.uint32(88).uint64(e.newTotalSupply),null!=e.scheduleID&&Object.hasOwnProperty.call(e,"scheduleID")&&$root.proto.ScheduleID.encode(e.scheduleID,o.uint32(98).fork()).ldelim(),null!=e.scheduledTransactionID&&Object.hasOwnProperty.call(e,"scheduledTransactionID")&&$root.proto.TransactionID.encode(e.scheduledTransactionID,o.uint32(106).fork()).ldelim(),null!=e.serialNumbers&&e.serialNumbers.length){o.uint32(114).fork();for(var t=0;t<e.serialNumbers.length;++t)o.int64(e.serialNumbers[t]);o.ldelim()}return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionReceipt,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.status=e.int32();break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 4:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;case 5:d.exchangeRate=$root.proto.ExchangeRateSet.decode(e,e.uint32());break;case 6:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;case 7:d.topicSequenceNumber=e.uint64();break;case 8:d.topicRunningHash=e.bytes();break;case 9:d.topicRunningHashVersion=e.uint64();break;case 10:d.tokenID=$root.proto.TokenID.decode(e,e.uint32());break;case 11:d.newTotalSupply=e.uint64();break;case 12:d.scheduleID=$root.proto.ScheduleID.decode(e,e.uint32());break;case 13:d.scheduledTransactionID=$root.proto.TransactionID.decode(e,e.uint32());break;case 14:if(d.serialNumbers&&d.serialNumbers.length||(d.serialNumbers=[]),2==(7&i))for(var a=e.uint32()+e.pos;e.pos<a;)d.serialNumbers.push(e.int64());else d.serialNumbers.push(e.int64());break;default:e.skipType(7&i);}return d},e}(),ExchangeRate:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.hbarEquiv=0,e.prototype.centEquiv=0,e.prototype.expirationTime=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.hbarEquiv&&Object.hasOwnProperty.call(e,"hbarEquiv")&&o.uint32(8).int32(e.hbarEquiv),null!=e.centEquiv&&Object.hasOwnProperty.call(e,"centEquiv")&&o.uint32(16).int32(e.centEquiv),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.TimestampSeconds.encode(e.expirationTime,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ExchangeRate,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.hbarEquiv=e.int32();break;case 2:d.centEquiv=e.int32();break;case 3:d.expirationTime=$root.proto.TimestampSeconds.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ExchangeRateSet:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.currentRate=null,e.prototype.nextRate=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.currentRate&&Object.hasOwnProperty.call(e,"currentRate")&&$root.proto.ExchangeRate.encode(e.currentRate,o.uint32(10).fork()).ldelim(),null!=e.nextRate&&Object.hasOwnProperty.call(e,"nextRate")&&$root.proto.ExchangeRate.encode(e.nextRate,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ExchangeRateSet,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.currentRate=$root.proto.ExchangeRate.decode(e,e.uint32());break;case 2:d.nextRate=$root.proto.ExchangeRate.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoGetAccountBalanceQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.header=null,e.prototype.accountID=null,e.prototype.contractID=null;let o;return Object.defineProperty(e.prototype,"balanceSource",{get:$util.oneOfGetter(o=["accountID","contractID"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.contractID&&Object.hasOwnProperty.call(e,"contractID")&&$root.proto.ContractID.encode(e.contractID,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetAccountBalanceQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.contractID=$root.proto.ContractID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoGetAccountBalanceResponse:function(){function e(e){if(this.tokenBalances=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.prototype.balance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.tokenBalances=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.balance&&Object.hasOwnProperty.call(e,"balance")&&o.uint32(24).uint64(e.balance),null!=e.tokenBalances&&e.tokenBalances.length)for(var t=0;t<e.tokenBalances.length;++t)$root.proto.TokenBalance.encode(e.tokenBalances[t],o.uint32(34).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetAccountBalanceResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.balance=e.uint64();break;case 4:d.tokenBalances&&d.tokenBalances.length||(d.tokenBalances=[]),d.tokenBalances.push($root.proto.TokenBalance.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),CryptoGetAccountRecordsQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetAccountRecordsQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoGetAccountRecordsResponse:function(){function e(e){if(this.records=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.prototype.records=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.records&&e.records.length)for(var t=0;t<e.records.length;++t)$root.proto.TransactionRecord.encode(e.records[t],o.uint32(26).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetAccountRecordsResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.records&&d.records.length||(d.records=[]),d.records.push($root.proto.TransactionRecord.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),CryptoGetInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoGetInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountInfo&&Object.hasOwnProperty.call(e,"accountInfo")&&$root.proto.CryptoGetInfoResponse.AccountInfo.encode(e.accountInfo,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.accountInfo=$root.proto.CryptoGetInfoResponse.AccountInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e.AccountInfo=function(){function e(e){if(this.liveHashes=[],this.tokenRelationships=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountID=null,e.prototype.contractAccountID="",e.prototype.deleted=!1,e.prototype.proxyAccountID=null,e.prototype.proxyReceived=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.key=null,e.prototype.balance=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.generateSendRecordThreshold=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.generateReceiveRecordThreshold=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.receiverSigRequired=!1,e.prototype.expirationTime=null,e.prototype.autoRenewPeriod=null,e.prototype.liveHashes=$util.emptyArray,e.prototype.tokenRelationships=$util.emptyArray,e.prototype.memo="",e.prototype.ownedNfts=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.contractAccountID&&Object.hasOwnProperty.call(e,"contractAccountID")&&o.uint32(18).string(e.contractAccountID),null!=e.deleted&&Object.hasOwnProperty.call(e,"deleted")&&o.uint32(24).bool(e.deleted),null!=e.proxyAccountID&&Object.hasOwnProperty.call(e,"proxyAccountID")&&$root.proto.AccountID.encode(e.proxyAccountID,o.uint32(34).fork()).ldelim(),null!=e.proxyReceived&&Object.hasOwnProperty.call(e,"proxyReceived")&&o.uint32(48).int64(e.proxyReceived),null!=e.key&&Object.hasOwnProperty.call(e,"key")&&$root.proto.Key.encode(e.key,o.uint32(58).fork()).ldelim(),null!=e.balance&&Object.hasOwnProperty.call(e,"balance")&&o.uint32(64).uint64(e.balance),null!=e.generateSendRecordThreshold&&Object.hasOwnProperty.call(e,"generateSendRecordThreshold")&&o.uint32(72).uint64(e.generateSendRecordThreshold),null!=e.generateReceiveRecordThreshold&&Object.hasOwnProperty.call(e,"generateReceiveRecordThreshold")&&o.uint32(80).uint64(e.generateReceiveRecordThreshold),null!=e.receiverSigRequired&&Object.hasOwnProperty.call(e,"receiverSigRequired")&&o.uint32(88).bool(e.receiverSigRequired),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(98).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(106).fork()).ldelim(),null!=e.liveHashes&&e.liveHashes.length)for(var t=0;t<e.liveHashes.length;++t)$root.proto.LiveHash.encode(e.liveHashes[t],o.uint32(114).fork()).ldelim();if(null!=e.tokenRelationships&&e.tokenRelationships.length)for(var t=0;t<e.tokenRelationships.length;++t)$root.proto.TokenRelationship.encode(e.tokenRelationships[t],o.uint32(122).fork()).ldelim();return null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(130).string(e.memo),null!=e.ownedNfts&&Object.hasOwnProperty.call(e,"ownedNfts")&&o.uint32(136).int64(e.ownedNfts),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetInfoResponse.AccountInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.contractAccountID=e.string();break;case 3:d.deleted=e.bool();break;case 4:d.proxyAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 6:d.proxyReceived=e.int64();break;case 7:d.key=$root.proto.Key.decode(e,e.uint32());break;case 8:d.balance=e.uint64();break;case 9:d.generateSendRecordThreshold=e.uint64();break;case 10:d.generateReceiveRecordThreshold=e.uint64();break;case 11:d.receiverSigRequired=e.bool();break;case 12:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 13:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 14:d.liveHashes&&d.liveHashes.length||(d.liveHashes=[]),d.liveHashes.push($root.proto.LiveHash.decode(e,e.uint32()));break;case 15:d.tokenRelationships&&d.tokenRelationships.length||(d.tokenRelationships=[]),d.tokenRelationships.push($root.proto.TokenRelationship.decode(e,e.uint32()));break;case 16:d.memo=e.string();break;case 17:d.ownedNfts=e.int64();break;default:e.skipType(7&i);}return d},e}(),e}(),CryptoGetLiveHashQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.prototype.hash=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.hash&&Object.hasOwnProperty.call(e,"hash")&&o.uint32(26).bytes(e.hash),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetLiveHashQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.hash=e.bytes();break;default:e.skipType(7&i);}return d},e}(),CryptoGetLiveHashResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.liveHash=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.liveHash&&Object.hasOwnProperty.call(e,"liveHash")&&$root.proto.LiveHash.encode(e.liveHash,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetLiveHashResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.liveHash=$root.proto.LiveHash.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoGetStakersQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetStakersQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ProxyStaker:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountID=null,e.prototype.amount=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.amount&&Object.hasOwnProperty.call(e,"amount")&&o.uint32(16).int64(e.amount),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ProxyStaker,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.amount=e.int64();break;default:e.skipType(7&i);}return d},e}(),AllProxyStakers:function(){function e(e){if(this.proxyStaker=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountID=null,e.prototype.proxyStaker=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.proxyStaker&&e.proxyStaker.length)for(var t=0;t<e.proxyStaker.length;++t)$root.proto.ProxyStaker.encode(e.proxyStaker[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.AllProxyStakers,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.proxyStaker&&d.proxyStaker.length||(d.proxyStaker=[]),d.proxyStaker.push($root.proto.ProxyStaker.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),CryptoGetStakersResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.stakers=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.stakers&&Object.hasOwnProperty.call(e,"stakers")&&$root.proto.AllProxyStakers.encode(e.stakers,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetStakersResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 3:d.stakers=$root.proto.AllProxyStakers.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FileGetContentsQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.fileID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileGetContentsQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FileGetContentsResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.fileContents=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.fileContents&&Object.hasOwnProperty.call(e,"fileContents")&&$root.proto.FileGetContentsResponse.FileContents.encode(e.fileContents,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileGetContentsResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.fileContents=$root.proto.FileGetContentsResponse.FileContents.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e.FileContents=function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.fileID=null,e.prototype.contents=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(10).fork()).ldelim(),null!=e.contents&&Object.hasOwnProperty.call(e,"contents")&&o.uint32(18).bytes(e.contents),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileGetContentsResponse.FileContents,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 2:d.contents=e.bytes();break;default:e.skipType(7&i);}return d},e}(),e}(),FileGetInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.fileID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileGetInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),FileGetInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.fileInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.fileInfo&&Object.hasOwnProperty.call(e,"fileInfo")&&$root.proto.FileGetInfoResponse.FileInfo.encode(e.fileInfo,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileGetInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.fileInfo=$root.proto.FileGetInfoResponse.FileInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e.FileInfo=function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.fileID=null,e.prototype.size=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.expirationTime=null,e.prototype.deleted=!1,e.prototype.keys=null,e.prototype.memo="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.fileID&&Object.hasOwnProperty.call(e,"fileID")&&$root.proto.FileID.encode(e.fileID,o.uint32(10).fork()).ldelim(),null!=e.size&&Object.hasOwnProperty.call(e,"size")&&o.uint32(16).int64(e.size),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(26).fork()).ldelim(),null!=e.deleted&&Object.hasOwnProperty.call(e,"deleted")&&o.uint32(32).bool(e.deleted),null!=e.keys&&Object.hasOwnProperty.call(e,"keys")&&$root.proto.KeyList.encode(e.keys,o.uint32(42).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(50).string(e.memo),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FileGetInfoResponse.FileInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.fileID=$root.proto.FileID.decode(e,e.uint32());break;case 2:d.size=e.int64();break;case 3:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 4:d.deleted=e.bool();break;case 5:d.keys=$root.proto.KeyList.decode(e,e.uint32());break;case 6:d.memo=e.string();break;default:e.skipType(7&i);}return d},e}(),e}(),TransactionGetReceiptQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.transactionID=null,e.prototype.includeDuplicates=!1,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.transactionID&&Object.hasOwnProperty.call(e,"transactionID")&&$root.proto.TransactionID.encode(e.transactionID,o.uint32(18).fork()).ldelim(),null!=e.includeDuplicates&&Object.hasOwnProperty.call(e,"includeDuplicates")&&o.uint32(24).bool(e.includeDuplicates),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionGetReceiptQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.transactionID=$root.proto.TransactionID.decode(e,e.uint32());break;case 3:d.includeDuplicates=e.bool();break;default:e.skipType(7&i);}return d},e}(),TransactionGetReceiptResponse:function(){function e(e){if(this.duplicateTransactionReceipts=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.receipt=null,e.prototype.duplicateTransactionReceipts=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.receipt&&Object.hasOwnProperty.call(e,"receipt")&&$root.proto.TransactionReceipt.encode(e.receipt,o.uint32(18).fork()).ldelim(),null!=e.duplicateTransactionReceipts&&e.duplicateTransactionReceipts.length)for(var t=0;t<e.duplicateTransactionReceipts.length;++t)$root.proto.TransactionReceipt.encode(e.duplicateTransactionReceipts[t],o.uint32(34).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionGetReceiptResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.receipt=$root.proto.TransactionReceipt.decode(e,e.uint32());break;case 4:d.duplicateTransactionReceipts&&d.duplicateTransactionReceipts.length||(d.duplicateTransactionReceipts=[]),d.duplicateTransactionReceipts.push($root.proto.TransactionReceipt.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TransactionGetRecordQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.transactionID=null,e.prototype.includeDuplicates=!1,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.transactionID&&Object.hasOwnProperty.call(e,"transactionID")&&$root.proto.TransactionID.encode(e.transactionID,o.uint32(18).fork()).ldelim(),null!=e.includeDuplicates&&Object.hasOwnProperty.call(e,"includeDuplicates")&&o.uint32(24).bool(e.includeDuplicates),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionGetRecordQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.transactionID=$root.proto.TransactionID.decode(e,e.uint32());break;case 3:d.includeDuplicates=e.bool();break;default:e.skipType(7&i);}return d},e}(),TransactionGetRecordResponse:function(){function e(e){if(this.duplicateTransactionRecords=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.transactionRecord=null,e.prototype.duplicateTransactionRecords=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.transactionRecord&&Object.hasOwnProperty.call(e,"transactionRecord")&&$root.proto.TransactionRecord.encode(e.transactionRecord,o.uint32(26).fork()).ldelim(),null!=e.duplicateTransactionRecords&&e.duplicateTransactionRecords.length)for(var t=0;t<e.duplicateTransactionRecords.length;++t)$root.proto.TransactionRecord.encode(e.duplicateTransactionRecords[t],o.uint32(34).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionGetRecordResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 3:d.transactionRecord=$root.proto.TransactionRecord.decode(e,e.uint32());break;case 4:d.duplicateTransactionRecords&&d.duplicateTransactionRecords.length||(d.duplicateTransactionRecords=[]),d.duplicateTransactionRecords.push($root.proto.TransactionRecord.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TransactionGetFastRecordQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.transactionID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.transactionID&&Object.hasOwnProperty.call(e,"transactionID")&&$root.proto.TransactionID.encode(e.transactionID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionGetFastRecordQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.transactionID=$root.proto.TransactionID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TransactionGetFastRecordResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.transactionRecord=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.transactionRecord&&Object.hasOwnProperty.call(e,"transactionRecord")&&$root.proto.TransactionRecord.encode(e.transactionRecord,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionGetFastRecordResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.transactionRecord=$root.proto.TransactionRecord.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),NetworkGetVersionInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.NetworkGetVersionInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),NetworkGetVersionInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.hapiProtoVersion=null,e.prototype.hederaServicesVersion=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.hapiProtoVersion&&Object.hasOwnProperty.call(e,"hapiProtoVersion")&&$root.proto.SemanticVersion.encode(e.hapiProtoVersion,o.uint32(18).fork()).ldelim(),null!=e.hederaServicesVersion&&Object.hasOwnProperty.call(e,"hederaServicesVersion")&&$root.proto.SemanticVersion.encode(e.hederaServicesVersion,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.NetworkGetVersionInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.hapiProtoVersion=$root.proto.SemanticVersion.decode(e,e.uint32());break;case 3:d.hederaServicesVersion=$root.proto.SemanticVersion.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenGetInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.token=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.token&&Object.hasOwnProperty.call(e,"token")&&$root.proto.TokenID.encode(e.token,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGetInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.token=$root.proto.TokenID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenInfo:function(){function e(e){if(this.customFees=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenId=null,e.prototype.name="",e.prototype.symbol="",e.prototype.decimals=0,e.prototype.totalSupply=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.treasury=null,e.prototype.adminKey=null,e.prototype.kycKey=null,e.prototype.freezeKey=null,e.prototype.wipeKey=null,e.prototype.supplyKey=null,e.prototype.defaultFreezeStatus=0,e.prototype.defaultKycStatus=0,e.prototype.deleted=!1,e.prototype.autoRenewAccount=null,e.prototype.autoRenewPeriod=null,e.prototype.expiry=null,e.prototype.memo="",e.prototype.tokenType=0,e.prototype.supplyType=0,e.prototype.maxSupply=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.feeScheduleKey=null,e.prototype.customFees=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.tokenId&&Object.hasOwnProperty.call(e,"tokenId")&&$root.proto.TokenID.encode(e.tokenId,o.uint32(10).fork()).ldelim(),null!=e.name&&Object.hasOwnProperty.call(e,"name")&&o.uint32(18).string(e.name),null!=e.symbol&&Object.hasOwnProperty.call(e,"symbol")&&o.uint32(26).string(e.symbol),null!=e.decimals&&Object.hasOwnProperty.call(e,"decimals")&&o.uint32(32).uint32(e.decimals),null!=e.totalSupply&&Object.hasOwnProperty.call(e,"totalSupply")&&o.uint32(40).uint64(e.totalSupply),null!=e.treasury&&Object.hasOwnProperty.call(e,"treasury")&&$root.proto.AccountID.encode(e.treasury,o.uint32(50).fork()).ldelim(),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(58).fork()).ldelim(),null!=e.kycKey&&Object.hasOwnProperty.call(e,"kycKey")&&$root.proto.Key.encode(e.kycKey,o.uint32(66).fork()).ldelim(),null!=e.freezeKey&&Object.hasOwnProperty.call(e,"freezeKey")&&$root.proto.Key.encode(e.freezeKey,o.uint32(74).fork()).ldelim(),null!=e.wipeKey&&Object.hasOwnProperty.call(e,"wipeKey")&&$root.proto.Key.encode(e.wipeKey,o.uint32(82).fork()).ldelim(),null!=e.supplyKey&&Object.hasOwnProperty.call(e,"supplyKey")&&$root.proto.Key.encode(e.supplyKey,o.uint32(90).fork()).ldelim(),null!=e.defaultFreezeStatus&&Object.hasOwnProperty.call(e,"defaultFreezeStatus")&&o.uint32(96).int32(e.defaultFreezeStatus),null!=e.defaultKycStatus&&Object.hasOwnProperty.call(e,"defaultKycStatus")&&o.uint32(104).int32(e.defaultKycStatus),null!=e.deleted&&Object.hasOwnProperty.call(e,"deleted")&&o.uint32(112).bool(e.deleted),null!=e.autoRenewAccount&&Object.hasOwnProperty.call(e,"autoRenewAccount")&&$root.proto.AccountID.encode(e.autoRenewAccount,o.uint32(122).fork()).ldelim(),null!=e.autoRenewPeriod&&Object.hasOwnProperty.call(e,"autoRenewPeriod")&&$root.proto.Duration.encode(e.autoRenewPeriod,o.uint32(130).fork()).ldelim(),null!=e.expiry&&Object.hasOwnProperty.call(e,"expiry")&&$root.proto.Timestamp.encode(e.expiry,o.uint32(138).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(146).string(e.memo),null!=e.tokenType&&Object.hasOwnProperty.call(e,"tokenType")&&o.uint32(152).int32(e.tokenType),null!=e.supplyType&&Object.hasOwnProperty.call(e,"supplyType")&&o.uint32(160).int32(e.supplyType),null!=e.maxSupply&&Object.hasOwnProperty.call(e,"maxSupply")&&o.uint32(168).int64(e.maxSupply),null!=e.feeScheduleKey&&Object.hasOwnProperty.call(e,"feeScheduleKey")&&$root.proto.Key.encode(e.feeScheduleKey,o.uint32(178).fork()).ldelim(),null!=e.customFees&&e.customFees.length)for(var t=0;t<e.customFees.length;++t)$root.proto.CustomFee.encode(e.customFees[t],o.uint32(186).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenId=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.name=e.string();break;case 3:d.symbol=e.string();break;case 4:d.decimals=e.uint32();break;case 5:d.totalSupply=e.uint64();break;case 6:d.treasury=$root.proto.AccountID.decode(e,e.uint32());break;case 7:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 8:d.kycKey=$root.proto.Key.decode(e,e.uint32());break;case 9:d.freezeKey=$root.proto.Key.decode(e,e.uint32());break;case 10:d.wipeKey=$root.proto.Key.decode(e,e.uint32());break;case 11:d.supplyKey=$root.proto.Key.decode(e,e.uint32());break;case 12:d.defaultFreezeStatus=e.int32();break;case 13:d.defaultKycStatus=e.int32();break;case 14:d.deleted=e.bool();break;case 15:d.autoRenewAccount=$root.proto.AccountID.decode(e,e.uint32());break;case 16:d.autoRenewPeriod=$root.proto.Duration.decode(e,e.uint32());break;case 17:d.expiry=$root.proto.Timestamp.decode(e,e.uint32());break;case 18:d.memo=e.string();break;case 19:d.tokenType=e.int32();break;case 20:d.supplyType=e.int32();break;case 21:d.maxSupply=e.int64();break;case 22:d.feeScheduleKey=$root.proto.Key.decode(e,e.uint32());break;case 23:d.customFees&&d.customFees.length||(d.customFees=[]),d.customFees.push($root.proto.CustomFee.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TokenGetInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.tokenInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.tokenInfo&&Object.hasOwnProperty.call(e,"tokenInfo")&&$root.proto.TokenInfo.encode(e.tokenInfo,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGetInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.tokenInfo=$root.proto.TokenInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ScheduleGetInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.scheduleID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.scheduleID&&Object.hasOwnProperty.call(e,"scheduleID")&&$root.proto.ScheduleID.encode(e.scheduleID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleGetInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.scheduleID=$root.proto.ScheduleID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ScheduleInfo:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.scheduleID=null,e.prototype.deletionTime=null,e.prototype.executionTime=null,e.prototype.expirationTime=null,e.prototype.scheduledTransactionBody=null,e.prototype.memo="",e.prototype.adminKey=null,e.prototype.signers=null,e.prototype.creatorAccountID=null,e.prototype.payerAccountID=null,e.prototype.scheduledTransactionID=null;let o;return Object.defineProperty(e.prototype,"data",{get:$util.oneOfGetter(o=["deletionTime","executionTime"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.scheduleID&&Object.hasOwnProperty.call(e,"scheduleID")&&$root.proto.ScheduleID.encode(e.scheduleID,o.uint32(10).fork()).ldelim(),null!=e.deletionTime&&Object.hasOwnProperty.call(e,"deletionTime")&&$root.proto.Timestamp.encode(e.deletionTime,o.uint32(18).fork()).ldelim(),null!=e.executionTime&&Object.hasOwnProperty.call(e,"executionTime")&&$root.proto.Timestamp.encode(e.executionTime,o.uint32(26).fork()).ldelim(),null!=e.expirationTime&&Object.hasOwnProperty.call(e,"expirationTime")&&$root.proto.Timestamp.encode(e.expirationTime,o.uint32(34).fork()).ldelim(),null!=e.scheduledTransactionBody&&Object.hasOwnProperty.call(e,"scheduledTransactionBody")&&$root.proto.SchedulableTransactionBody.encode(e.scheduledTransactionBody,o.uint32(42).fork()).ldelim(),null!=e.memo&&Object.hasOwnProperty.call(e,"memo")&&o.uint32(50).string(e.memo),null!=e.adminKey&&Object.hasOwnProperty.call(e,"adminKey")&&$root.proto.Key.encode(e.adminKey,o.uint32(58).fork()).ldelim(),null!=e.signers&&Object.hasOwnProperty.call(e,"signers")&&$root.proto.KeyList.encode(e.signers,o.uint32(66).fork()).ldelim(),null!=e.creatorAccountID&&Object.hasOwnProperty.call(e,"creatorAccountID")&&$root.proto.AccountID.encode(e.creatorAccountID,o.uint32(74).fork()).ldelim(),null!=e.payerAccountID&&Object.hasOwnProperty.call(e,"payerAccountID")&&$root.proto.AccountID.encode(e.payerAccountID,o.uint32(82).fork()).ldelim(),null!=e.scheduledTransactionID&&Object.hasOwnProperty.call(e,"scheduledTransactionID")&&$root.proto.TransactionID.encode(e.scheduledTransactionID,o.uint32(90).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.scheduleID=$root.proto.ScheduleID.decode(e,e.uint32());break;case 2:d.deletionTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 3:d.executionTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 4:d.expirationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 5:d.scheduledTransactionBody=$root.proto.SchedulableTransactionBody.decode(e,e.uint32());break;case 6:d.memo=e.string();break;case 7:d.adminKey=$root.proto.Key.decode(e,e.uint32());break;case 8:d.signers=$root.proto.KeyList.decode(e,e.uint32());break;case 9:d.creatorAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 10:d.payerAccountID=$root.proto.AccountID.decode(e,e.uint32());break;case 11:d.scheduledTransactionID=$root.proto.TransactionID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),ScheduleGetInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.scheduleInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.scheduleInfo&&Object.hasOwnProperty.call(e,"scheduleInfo")&&$root.proto.ScheduleInfo.encode(e.scheduleInfo,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ScheduleGetInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.scheduleInfo=$root.proto.ScheduleInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenGetAccountNftInfosQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.prototype.start=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.end=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.start&&Object.hasOwnProperty.call(e,"start")&&o.uint32(24).int64(e.start),null!=e.end&&Object.hasOwnProperty.call(e,"end")&&o.uint32(32).int64(e.end),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGetAccountNftInfosQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.start=e.int64();break;case 4:d.end=e.int64();break;default:e.skipType(7&i);}return d},e}(),TokenGetAccountNftInfosResponse:function(){function e(e){if(this.nfts=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.nfts=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.nfts&&e.nfts.length)for(var t=0;t<e.nfts.length;++t)$root.proto.TokenNftInfo.encode(e.nfts[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGetAccountNftInfosResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.nfts&&d.nfts.length||(d.nfts=[]),d.nfts.push($root.proto.TokenNftInfo.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),NftID:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenID=null,e.prototype.serialNumber=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.tokenID&&Object.hasOwnProperty.call(e,"tokenID")&&$root.proto.TokenID.encode(e.tokenID,o.uint32(10).fork()).ldelim(),null!=e.serialNumber&&Object.hasOwnProperty.call(e,"serialNumber")&&o.uint32(16).int64(e.serialNumber),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.NftID,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenID=$root.proto.TokenID.decode(e,e.uint32());break;case 2:d.serialNumber=e.int64();break;default:e.skipType(7&i);}return d},e}(),TokenGetNftInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.nftID=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.nftID&&Object.hasOwnProperty.call(e,"nftID")&&$root.proto.NftID.encode(e.nftID,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGetNftInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.nftID=$root.proto.NftID.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenNftInfo:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.nftID=null,e.prototype.accountID=null,e.prototype.creationTime=null,e.prototype.metadata=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.nftID&&Object.hasOwnProperty.call(e,"nftID")&&$root.proto.NftID.encode(e.nftID,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.creationTime&&Object.hasOwnProperty.call(e,"creationTime")&&$root.proto.Timestamp.encode(e.creationTime,o.uint32(26).fork()).ldelim(),null!=e.metadata&&Object.hasOwnProperty.call(e,"metadata")&&o.uint32(34).bytes(e.metadata),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenNftInfo,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.nftID=$root.proto.NftID.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.creationTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 4:d.metadata=e.bytes();break;default:e.skipType(7&i);}return d},e}(),TokenGetNftInfoResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.nft=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.nft&&Object.hasOwnProperty.call(e,"nft")&&$root.proto.TokenNftInfo.encode(e.nft,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGetNftInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.nft=$root.proto.TokenNftInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TokenGetNftInfosQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.tokenID=null,e.prototype.start=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.end=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.tokenID&&Object.hasOwnProperty.call(e,"tokenID")&&$root.proto.TokenID.encode(e.tokenID,o.uint32(18).fork()).ldelim(),null!=e.start&&Object.hasOwnProperty.call(e,"start")&&o.uint32(24).int64(e.start),null!=e.end&&Object.hasOwnProperty.call(e,"end")&&o.uint32(32).int64(e.end),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGetNftInfosQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.tokenID=$root.proto.TokenID.decode(e,e.uint32());break;case 3:d.start=e.int64();break;case 4:d.end=e.int64();break;default:e.skipType(7&i);}return d},e}(),TokenGetNftInfosResponse:function(){function e(e){if(this.nfts=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.tokenID=null,e.prototype.nfts=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.tokenID&&Object.hasOwnProperty.call(e,"tokenID")&&$root.proto.TokenID.encode(e.tokenID,o.uint32(18).fork()).ldelim(),null!=e.nfts&&e.nfts.length)for(var t=0;t<e.nfts.length;++t)$root.proto.TokenNftInfo.encode(e.nfts[t],o.uint32(26).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGetNftInfosResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.tokenID=$root.proto.TokenID.decode(e,e.uint32());break;case 3:d.nfts&&d.nfts.length||(d.nfts=[]),d.nfts.push($root.proto.TokenNftInfo.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),Response:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}e.prototype.getByKey=null,e.prototype.getBySolidityID=null,e.prototype.contractCallLocal=null,e.prototype.contractGetBytecodeResponse=null,e.prototype.contractGetInfo=null,e.prototype.contractGetRecordsResponse=null,e.prototype.cryptogetAccountBalance=null,e.prototype.cryptoGetAccountRecords=null,e.prototype.cryptoGetInfo=null,e.prototype.cryptoGetLiveHash=null,e.prototype.cryptoGetProxyStakers=null,e.prototype.fileGetContents=null,e.prototype.fileGetInfo=null,e.prototype.transactionGetReceipt=null,e.prototype.transactionGetRecord=null,e.prototype.transactionGetFastRecord=null,e.prototype.consensusGetTopicInfo=null,e.prototype.networkGetVersionInfo=null,e.prototype.tokenGetInfo=null,e.prototype.scheduleGetInfo=null,e.prototype.tokenGetAccountNftInfos=null,e.prototype.tokenGetNftInfo=null,e.prototype.tokenGetNftInfos=null;let o;return Object.defineProperty(e.prototype,"response",{get:$util.oneOfGetter(o=["getByKey","getBySolidityID","contractCallLocal","contractGetBytecodeResponse","contractGetInfo","contractGetRecordsResponse","cryptogetAccountBalance","cryptoGetAccountRecords","cryptoGetInfo","cryptoGetLiveHash","cryptoGetProxyStakers","fileGetContents","fileGetInfo","transactionGetReceipt","transactionGetRecord","transactionGetFastRecord","consensusGetTopicInfo","networkGetVersionInfo","tokenGetInfo","scheduleGetInfo","tokenGetAccountNftInfos","tokenGetNftInfo","tokenGetNftInfos"]),set:$util.oneOfSetter(o)}),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.getByKey&&Object.hasOwnProperty.call(e,"getByKey")&&$root.proto.GetByKeyResponse.encode(e.getByKey,o.uint32(10).fork()).ldelim(),null!=e.getBySolidityID&&Object.hasOwnProperty.call(e,"getBySolidityID")&&$root.proto.GetBySolidityIDResponse.encode(e.getBySolidityID,o.uint32(18).fork()).ldelim(),null!=e.contractCallLocal&&Object.hasOwnProperty.call(e,"contractCallLocal")&&$root.proto.ContractCallLocalResponse.encode(e.contractCallLocal,o.uint32(26).fork()).ldelim(),null!=e.contractGetInfo&&Object.hasOwnProperty.call(e,"contractGetInfo")&&$root.proto.ContractGetInfoResponse.encode(e.contractGetInfo,o.uint32(34).fork()).ldelim(),null!=e.contractGetBytecodeResponse&&Object.hasOwnProperty.call(e,"contractGetBytecodeResponse")&&$root.proto.ContractGetBytecodeResponse.encode(e.contractGetBytecodeResponse,o.uint32(42).fork()).ldelim(),null!=e.contractGetRecordsResponse&&Object.hasOwnProperty.call(e,"contractGetRecordsResponse")&&$root.proto.ContractGetRecordsResponse.encode(e.contractGetRecordsResponse,o.uint32(50).fork()).ldelim(),null!=e.cryptogetAccountBalance&&Object.hasOwnProperty.call(e,"cryptogetAccountBalance")&&$root.proto.CryptoGetAccountBalanceResponse.encode(e.cryptogetAccountBalance,o.uint32(58).fork()).ldelim(),null!=e.cryptoGetAccountRecords&&Object.hasOwnProperty.call(e,"cryptoGetAccountRecords")&&$root.proto.CryptoGetAccountRecordsResponse.encode(e.cryptoGetAccountRecords,o.uint32(66).fork()).ldelim(),null!=e.cryptoGetInfo&&Object.hasOwnProperty.call(e,"cryptoGetInfo")&&$root.proto.CryptoGetInfoResponse.encode(e.cryptoGetInfo,o.uint32(74).fork()).ldelim(),null!=e.cryptoGetLiveHash&&Object.hasOwnProperty.call(e,"cryptoGetLiveHash")&&$root.proto.CryptoGetLiveHashResponse.encode(e.cryptoGetLiveHash,o.uint32(82).fork()).ldelim(),null!=e.cryptoGetProxyStakers&&Object.hasOwnProperty.call(e,"cryptoGetProxyStakers")&&$root.proto.CryptoGetStakersResponse.encode(e.cryptoGetProxyStakers,o.uint32(90).fork()).ldelim(),null!=e.fileGetContents&&Object.hasOwnProperty.call(e,"fileGetContents")&&$root.proto.FileGetContentsResponse.encode(e.fileGetContents,o.uint32(98).fork()).ldelim(),null!=e.fileGetInfo&&Object.hasOwnProperty.call(e,"fileGetInfo")&&$root.proto.FileGetInfoResponse.encode(e.fileGetInfo,o.uint32(106).fork()).ldelim(),null!=e.transactionGetReceipt&&Object.hasOwnProperty.call(e,"transactionGetReceipt")&&$root.proto.TransactionGetReceiptResponse.encode(e.transactionGetReceipt,o.uint32(114).fork()).ldelim(),null!=e.transactionGetRecord&&Object.hasOwnProperty.call(e,"transactionGetRecord")&&$root.proto.TransactionGetRecordResponse.encode(e.transactionGetRecord,o.uint32(122).fork()).ldelim(),null!=e.transactionGetFastRecord&&Object.hasOwnProperty.call(e,"transactionGetFastRecord")&&$root.proto.TransactionGetFastRecordResponse.encode(e.transactionGetFastRecord,o.uint32(130).fork()).ldelim(),null!=e.consensusGetTopicInfo&&Object.hasOwnProperty.call(e,"consensusGetTopicInfo")&&$root.proto.ConsensusGetTopicInfoResponse.encode(e.consensusGetTopicInfo,o.uint32(1202).fork()).ldelim(),null!=e.networkGetVersionInfo&&Object.hasOwnProperty.call(e,"networkGetVersionInfo")&&$root.proto.NetworkGetVersionInfoResponse.encode(e.networkGetVersionInfo,o.uint32(1210).fork()).ldelim(),null!=e.tokenGetInfo&&Object.hasOwnProperty.call(e,"tokenGetInfo")&&$root.proto.TokenGetInfoResponse.encode(e.tokenGetInfo,o.uint32(1218).fork()).ldelim(),null!=e.scheduleGetInfo&&Object.hasOwnProperty.call(e,"scheduleGetInfo")&&$root.proto.ScheduleGetInfoResponse.encode(e.scheduleGetInfo,o.uint32(1226).fork()).ldelim(),null!=e.tokenGetAccountNftInfos&&Object.hasOwnProperty.call(e,"tokenGetAccountNftInfos")&&$root.proto.TokenGetAccountNftInfosResponse.encode(e.tokenGetAccountNftInfos,o.uint32(1234).fork()).ldelim(),null!=e.tokenGetNftInfo&&Object.hasOwnProperty.call(e,"tokenGetNftInfo")&&$root.proto.TokenGetNftInfoResponse.encode(e.tokenGetNftInfo,o.uint32(1242).fork()).ldelim(),null!=e.tokenGetNftInfos&&Object.hasOwnProperty.call(e,"tokenGetNftInfos")&&$root.proto.TokenGetNftInfosResponse.encode(e.tokenGetNftInfos,o.uint32(1250).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Response,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.getByKey=$root.proto.GetByKeyResponse.decode(e,e.uint32());break;case 2:d.getBySolidityID=$root.proto.GetBySolidityIDResponse.decode(e,e.uint32());break;case 3:d.contractCallLocal=$root.proto.ContractCallLocalResponse.decode(e,e.uint32());break;case 5:d.contractGetBytecodeResponse=$root.proto.ContractGetBytecodeResponse.decode(e,e.uint32());break;case 4:d.contractGetInfo=$root.proto.ContractGetInfoResponse.decode(e,e.uint32());break;case 6:d.contractGetRecordsResponse=$root.proto.ContractGetRecordsResponse.decode(e,e.uint32());break;case 7:d.cryptogetAccountBalance=$root.proto.CryptoGetAccountBalanceResponse.decode(e,e.uint32());break;case 8:d.cryptoGetAccountRecords=$root.proto.CryptoGetAccountRecordsResponse.decode(e,e.uint32());break;case 9:d.cryptoGetInfo=$root.proto.CryptoGetInfoResponse.decode(e,e.uint32());break;case 10:d.cryptoGetLiveHash=$root.proto.CryptoGetLiveHashResponse.decode(e,e.uint32());break;case 11:d.cryptoGetProxyStakers=$root.proto.CryptoGetStakersResponse.decode(e,e.uint32());break;case 12:d.fileGetContents=$root.proto.FileGetContentsResponse.decode(e,e.uint32());break;case 13:d.fileGetInfo=$root.proto.FileGetInfoResponse.decode(e,e.uint32());break;case 14:d.transactionGetReceipt=$root.proto.TransactionGetReceiptResponse.decode(e,e.uint32());break;case 15:d.transactionGetRecord=$root.proto.TransactionGetRecordResponse.decode(e,e.uint32());break;case 16:d.transactionGetFastRecord=$root.proto.TransactionGetFastRecordResponse.decode(e,e.uint32());break;case 150:d.consensusGetTopicInfo=$root.proto.ConsensusGetTopicInfoResponse.decode(e,e.uint32());break;case 151:d.networkGetVersionInfo=$root.proto.NetworkGetVersionInfoResponse.decode(e,e.uint32());break;case 152:d.tokenGetInfo=$root.proto.TokenGetInfoResponse.decode(e,e.uint32());break;case 153:d.scheduleGetInfo=$root.proto.ScheduleGetInfoResponse.decode(e,e.uint32());break;case 154:d.tokenGetAccountNftInfos=$root.proto.TokenGetAccountNftInfosResponse.decode(e,e.uint32());break;case 155:d.tokenGetNftInfo=$root.proto.TokenGetNftInfoResponse.decode(e,e.uint32());break;case 156:d.tokenGetNftInfos=$root.proto.TokenGetNftInfosResponse.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),Claim:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountID=null,e.prototype.hash=$util.newBuffer([]),e.prototype.keys=null,e.prototype.claimDuration=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(10).fork()).ldelim(),null!=e.hash&&Object.hasOwnProperty.call(e,"hash")&&o.uint32(18).bytes(e.hash),null!=e.keys&&Object.hasOwnProperty.call(e,"keys")&&$root.proto.KeyList.encode(e.keys,o.uint32(26).fork()).ldelim(),null!=e.claimDuration&&Object.hasOwnProperty.call(e,"claimDuration")&&$root.proto.Duration.encode(e.claimDuration,o.uint32(42).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Claim,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.hash=e.bytes();break;case 3:d.keys=$root.proto.KeyList.decode(e,e.uint32());break;case 5:d.claimDuration=$root.proto.Duration.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoAddClaimTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.claim=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.claim&&Object.hasOwnProperty.call(e,"claim")&&$root.proto.Claim.encode(e.claim,o.uint32(26).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoAddClaimTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 3:d.claim=$root.proto.Claim.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoDeleteClaimTransactionBody:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.accountIDToDeleteFrom=null,e.prototype.hashToDelete=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.accountIDToDeleteFrom&&Object.hasOwnProperty.call(e,"accountIDToDeleteFrom")&&$root.proto.AccountID.encode(e.accountIDToDeleteFrom,o.uint32(10).fork()).ldelim(),null!=e.hashToDelete&&Object.hasOwnProperty.call(e,"hashToDelete")&&o.uint32(18).bytes(e.hashToDelete),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoDeleteClaimTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.accountIDToDeleteFrom=$root.proto.AccountID.decode(e,e.uint32());break;case 2:d.hashToDelete=e.bytes();break;default:e.skipType(7&i);}return d},e}(),CryptoGetClaimQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.prototype.hash=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.hash&&Object.hasOwnProperty.call(e,"hash")&&o.uint32(26).bytes(e.hash),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetClaimQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.hash=e.bytes();break;default:e.skipType(7&i);}return d},e}(),CryptoGetClaimResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.claim=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.claim&&Object.hasOwnProperty.call(e,"claim")&&$root.proto.Claim.encode(e.claim,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.CryptoGetClaimResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.claim=$root.proto.Claim.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),CryptoService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.createAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"createAccount"}),Object.defineProperty(e.prototype.updateAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"updateAccount"}),Object.defineProperty(e.prototype.cryptoTransfer=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"cryptoTransfer"}),Object.defineProperty(e.prototype.cryptoDelete=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"cryptoDelete"}),Object.defineProperty(e.prototype.addLiveHash=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"addLiveHash"}),Object.defineProperty(e.prototype.deleteLiveHash=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"deleteLiveHash"}),Object.defineProperty(e.prototype.getLiveHash=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getLiveHash"}),Object.defineProperty(e.prototype.getAccountRecords=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getAccountRecords"}),Object.defineProperty(e.prototype.cryptoGetBalance=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"cryptoGetBalance"}),Object.defineProperty(e.prototype.getAccountInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getAccountInfo"}),Object.defineProperty(e.prototype.getTransactionReceipts=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getTransactionReceipts"}),Object.defineProperty(e.prototype.getFastTransactionRecord=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getFastTransactionRecord"}),Object.defineProperty(e.prototype.getTxRecordByTxID=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getTxRecordByTxID"}),Object.defineProperty(e.prototype.getStakersByAccountID=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getStakersByAccountID"}),e}(),FileService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.createFile=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"createFile"}),Object.defineProperty(e.prototype.updateFile=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"updateFile"}),Object.defineProperty(e.prototype.deleteFile=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"deleteFile"}),Object.defineProperty(e.prototype.appendContent=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"appendContent"}),Object.defineProperty(e.prototype.getFileContent=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getFileContent"}),Object.defineProperty(e.prototype.getFileInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getFileInfo"}),Object.defineProperty(e.prototype.systemDelete=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"systemDelete"}),Object.defineProperty(e.prototype.systemUndelete=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"systemUndelete"}),e}(),FreezeService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.freeze=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"freeze"}),e}(),ConsensusTopicQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.topicID=null,e.prototype.consensusStartTime=null,e.prototype.consensusEndTime=null,e.prototype.limit=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.topicID&&Object.hasOwnProperty.call(e,"topicID")&&$root.proto.TopicID.encode(e.topicID,o.uint32(10).fork()).ldelim(),null!=e.consensusStartTime&&Object.hasOwnProperty.call(e,"consensusStartTime")&&$root.proto.Timestamp.encode(e.consensusStartTime,o.uint32(18).fork()).ldelim(),null!=e.consensusEndTime&&Object.hasOwnProperty.call(e,"consensusEndTime")&&$root.proto.Timestamp.encode(e.consensusEndTime,o.uint32(26).fork()).ldelim(),null!=e.limit&&Object.hasOwnProperty.call(e,"limit")&&o.uint32(32).uint64(e.limit),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusTopicQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.topicID=$root.proto.TopicID.decode(e,e.uint32());break;case 2:d.consensusStartTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 3:d.consensusEndTime=$root.proto.Timestamp.decode(e,e.uint32());break;case 4:d.limit=e.uint64();break;default:e.skipType(7&i);}return d},e}(),ConsensusTopicResponse:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.consensusTimestamp=null,e.prototype.message=$util.newBuffer([]),e.prototype.runningHash=$util.newBuffer([]),e.prototype.sequenceNumber=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.runningHashVersion=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.chunkInfo=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.consensusTimestamp&&Object.hasOwnProperty.call(e,"consensusTimestamp")&&$root.proto.Timestamp.encode(e.consensusTimestamp,o.uint32(10).fork()).ldelim(),null!=e.message&&Object.hasOwnProperty.call(e,"message")&&o.uint32(18).bytes(e.message),null!=e.runningHash&&Object.hasOwnProperty.call(e,"runningHash")&&o.uint32(26).bytes(e.runningHash),null!=e.sequenceNumber&&Object.hasOwnProperty.call(e,"sequenceNumber")&&o.uint32(32).uint64(e.sequenceNumber),null!=e.runningHashVersion&&Object.hasOwnProperty.call(e,"runningHashVersion")&&o.uint32(40).uint64(e.runningHashVersion),null!=e.chunkInfo&&Object.hasOwnProperty.call(e,"chunkInfo")&&$root.proto.ConsensusMessageChunkInfo.encode(e.chunkInfo,o.uint32(50).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ConsensusTopicResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.consensusTimestamp=$root.proto.Timestamp.decode(e,e.uint32());break;case 2:d.message=e.bytes();break;case 3:d.runningHash=e.bytes();break;case 4:d.sequenceNumber=e.uint64();break;case 5:d.runningHashVersion=e.uint64();break;case 6:d.chunkInfo=$root.proto.ConsensusMessageChunkInfo.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),MirrorConsensusService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.subscribeTopic=function e(o,t){return this.rpcCall(e,$root.proto.ConsensusTopicQuery,$root.proto.ConsensusTopicResponse,o,t)},"name",{value:"subscribeTopic"}),e}(),NetworkService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.getVersionInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getVersionInfo"}),Object.defineProperty(e.prototype.uncheckedSubmit=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"uncheckedSubmit"}),e}(),ScheduleService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.createSchedule=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"createSchedule"}),Object.defineProperty(e.prototype.signSchedule=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"signSchedule"}),Object.defineProperty(e.prototype.deleteSchedule=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"deleteSchedule"}),Object.defineProperty(e.prototype.getScheduleInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getScheduleInfo"}),e}(),SmartContractService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.createContract=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"createContract"}),Object.defineProperty(e.prototype.updateContract=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"updateContract"}),Object.defineProperty(e.prototype.contractCallMethod=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"contractCallMethod"}),Object.defineProperty(e.prototype.getContractInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getContractInfo"}),Object.defineProperty(e.prototype.contractCallLocalMethod=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"contractCallLocalMethod"}),Object.defineProperty(e.prototype.contractGetBytecode=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"ContractGetBytecode"}),Object.defineProperty(e.prototype.getBySolidityID=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getBySolidityID"}),Object.defineProperty(e.prototype.getTxRecordByContractID=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getTxRecordByContractID"}),Object.defineProperty(e.prototype.deleteContract=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"deleteContract"}),Object.defineProperty(e.prototype.systemDelete=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"systemDelete"}),Object.defineProperty(e.prototype.systemUndelete=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"systemUndelete"}),e}(),ThrottleGroup:function(){function e(e){if(this.operations=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.operations=$util.emptyArray,e.prototype.milliOpsPerSec=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.operations&&e.operations.length){o.uint32(10).fork();for(var t=0;t<e.operations.length;++t)o.int32(e.operations[t]);o.ldelim()}return null!=e.milliOpsPerSec&&Object.hasOwnProperty.call(e,"milliOpsPerSec")&&o.uint32(16).uint64(e.milliOpsPerSec),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ThrottleGroup,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:if(d.operations&&d.operations.length||(d.operations=[]),2==(7&i))for(var a=e.uint32()+e.pos;e.pos<a;)d.operations.push(e.int32());else d.operations.push(e.int32());break;case 2:d.milliOpsPerSec=e.uint64();break;default:e.skipType(7&i);}return d},e}(),ThrottleBucket:function(){function e(e){if(this.throttleGroups=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.name="",e.prototype.burstPeriodMs=$util.Long?$util.Long.fromBits(0,0,!0):0,e.prototype.throttleGroups=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.name&&Object.hasOwnProperty.call(e,"name")&&o.uint32(10).string(e.name),null!=e.burstPeriodMs&&Object.hasOwnProperty.call(e,"burstPeriodMs")&&o.uint32(16).uint64(e.burstPeriodMs),null!=e.throttleGroups&&e.throttleGroups.length)for(var t=0;t<e.throttleGroups.length;++t)$root.proto.ThrottleGroup.encode(e.throttleGroups[t],o.uint32(26).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ThrottleBucket,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.name=e.string();break;case 2:d.burstPeriodMs=e.uint64();break;case 3:d.throttleGroups&&d.throttleGroups.length||(d.throttleGroups=[]),d.throttleGroups.push($root.proto.ThrottleGroup.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),ThrottleDefinitions:function(){function e(e){if(this.throttleBuckets=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.throttleBuckets=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.throttleBuckets&&e.throttleBuckets.length)for(var t=0;t<e.throttleBuckets.length;++t)$root.proto.ThrottleBucket.encode(e.throttleBuckets[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.ThrottleDefinitions,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.throttleBuckets&&d.throttleBuckets.length||(d.throttleBuckets=[]),d.throttleBuckets.push($root.proto.ThrottleBucket.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TokenGetAccountNftInfoQuery:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.accountID=null,e.prototype.start=$util.Long?$util.Long.fromBits(0,0,!1):0,e.prototype.end=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.QueryHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.accountID&&Object.hasOwnProperty.call(e,"accountID")&&$root.proto.AccountID.encode(e.accountID,o.uint32(18).fork()).ldelim(),null!=e.start&&Object.hasOwnProperty.call(e,"start")&&o.uint32(24).int64(e.start),null!=e.end&&Object.hasOwnProperty.call(e,"end")&&o.uint32(32).int64(e.end),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGetAccountNftInfoQuery,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.QueryHeader.decode(e,e.uint32());break;case 2:d.accountID=$root.proto.AccountID.decode(e,e.uint32());break;case 3:d.start=e.int64();break;case 4:d.end=e.int64();break;default:e.skipType(7&i);}return d},e}(),TokenGetAccountNftInfoResponse:function(){function e(e){if(this.nfts=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.header=null,e.prototype.nfts=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.header&&Object.hasOwnProperty.call(e,"header")&&$root.proto.ResponseHeader.encode(e.header,o.uint32(10).fork()).ldelim(),null!=e.nfts&&e.nfts.length)for(var t=0;t<e.nfts.length;++t)$root.proto.TokenNftInfo.encode(e.nfts[t],o.uint32(18).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenGetAccountNftInfoResponse,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.header=$root.proto.ResponseHeader.decode(e,e.uint32());break;case 2:d.nfts&&d.nfts.length||(d.nfts=[]),d.nfts.push($root.proto.TokenNftInfo.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),TokenService:function(){function e(e,o,t){$protobuf.rpc.Service.call(this,e,o,t)}return(e.prototype=Object.create($protobuf.rpc.Service.prototype)).constructor=e,e.create=function(e,o,t){return new this(e,o,t)},Object.defineProperty(e.prototype.createToken=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"createToken"}),Object.defineProperty(e.prototype.updateToken=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"updateToken"}),Object.defineProperty(e.prototype.mintToken=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"mintToken"}),Object.defineProperty(e.prototype.burnToken=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"burnToken"}),Object.defineProperty(e.prototype.deleteToken=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"deleteToken"}),Object.defineProperty(e.prototype.wipeTokenAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"wipeTokenAccount"}),Object.defineProperty(e.prototype.freezeTokenAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"freezeTokenAccount"}),Object.defineProperty(e.prototype.unfreezeTokenAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"unfreezeTokenAccount"}),Object.defineProperty(e.prototype.grantKycToTokenAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"grantKycToTokenAccount"}),Object.defineProperty(e.prototype.revokeKycFromTokenAccount=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"revokeKycFromTokenAccount"}),Object.defineProperty(e.prototype.associateTokens=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"associateTokens"}),Object.defineProperty(e.prototype.dissociateTokens=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"dissociateTokens"}),Object.defineProperty(e.prototype.updateTokenFeeSchedule=function e(o,t){return this.rpcCall(e,$root.proto.Transaction,$root.proto.TransactionResponse,o,t)},"name",{value:"updateTokenFeeSchedule"}),Object.defineProperty(e.prototype.getTokenInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getTokenInfo"}),Object.defineProperty(e.prototype.getAccountNftInfos=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getAccountNftInfos"}),Object.defineProperty(e.prototype.getTokenNftInfo=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getTokenNftInfo"}),Object.defineProperty(e.prototype.getTokenNftInfos=function e(o,t){return this.rpcCall(e,$root.proto.Query,$root.proto.Response,o,t)},"name",{value:"getTokenNftInfos"}),e}(),TokenTransfersTransactionBody:function(){function e(e){if(this.tokenTransfers=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.tokenTransfers=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.tokenTransfers&&e.tokenTransfers.length)for(var t=0;t<e.tokenTransfers.length;++t)$root.proto.TokenTransferList.encode(e.tokenTransfers[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TokenTransfersTransactionBody,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.tokenTransfers&&d.tokenTransfers.length||(d.tokenTransfers=[]),d.tokenTransfers.push($root.proto.TokenTransferList.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),SignedTransaction:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.bodyBytes=$util.newBuffer([]),e.prototype.sigMap=null,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.bodyBytes&&Object.hasOwnProperty.call(e,"bodyBytes")&&o.uint32(10).bytes(e.bodyBytes),null!=e.sigMap&&Object.hasOwnProperty.call(e,"sigMap")&&$root.proto.SignatureMap.encode(e.sigMap,o.uint32(18).fork()).ldelim(),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.SignedTransaction,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.bodyBytes=e.bytes();break;case 2:d.sigMap=$root.proto.SignatureMap.decode(e,e.uint32());break;default:e.skipType(7&i);}return d},e}(),TransactionList:function(){function e(e){if(this.transactionList=[],e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.transactionList=$util.emptyArray,e.create=function(o){return new e(o)},e.encode=function(e,o){if(o||(o=$Writer.create()),null!=e.transactionList&&e.transactionList.length)for(var t=0;t<e.transactionList.length;++t)$root.proto.Transaction.encode(e.transactionList[t],o.uint32(10).fork()).ldelim();return o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.TransactionList,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.transactionList&&d.transactionList.length||(d.transactionList=[]),d.transactionList.push($root.proto.Transaction.decode(e,e.uint32()));break;default:e.skipType(7&i);}return d},e}(),DoubleValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(9).double(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.DoubleValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.double();break;default:e.skipType(7&i);}return d},e}(),FloatValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(13).float(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.FloatValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.float();break;default:e.skipType(7&i);}return d},e}(),Int64Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).int64(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Int64Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.int64();break;default:e.skipType(7&i);}return d},e}(),UInt64Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).uint64(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.UInt64Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.uint64();break;default:e.skipType(7&i);}return d},e}(),Int32Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).int32(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.Int32Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.int32();break;default:e.skipType(7&i);}return d},e}(),UInt32Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).uint32(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.UInt32Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.uint32();break;default:e.skipType(7&i);}return d},e}(),BoolValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=!1,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).bool(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.BoolValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.bool();break;default:e.skipType(7&i);}return d},e}(),StringValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(10).string(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.StringValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.string();break;default:e.skipType(7&i);}return d},e}(),BytesValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(10).bytes(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.proto.BytesValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.bytes();break;default:e.skipType(7&i);}return d},e}()};return e})();exports.proto=proto;const google=$root.google=(()=>{const e={protobuf:function(){const e={DoubleValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(9).double(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.DoubleValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.double();break;default:e.skipType(7&i);}return d},e}(),FloatValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(13).float(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.FloatValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.float();break;default:e.skipType(7&i);}return d},e}(),Int64Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=$util.Long?$util.Long.fromBits(0,0,!1):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).int64(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.Int64Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.int64();break;default:e.skipType(7&i);}return d},e}(),UInt64Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=$util.Long?$util.Long.fromBits(0,0,!0):0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).uint64(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.UInt64Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.uint64();break;default:e.skipType(7&i);}return d},e}(),Int32Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).int32(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.Int32Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.int32();break;default:e.skipType(7&i);}return d},e}(),UInt32Value:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=0,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).uint32(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.UInt32Value,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.uint32();break;default:e.skipType(7&i);}return d},e}(),BoolValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=!1,e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(8).bool(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.BoolValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.bool();break;default:e.skipType(7&i);}return d},e}(),StringValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value="",e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(10).string(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.StringValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.string();break;default:e.skipType(7&i);}return d},e}(),BytesValue:function(){function e(e){if(e)for(var o=Object.keys(e),t=0;t<o.length;++t)null!=e[o[t]]&&(this[o[t]]=e[o[t]])}return e.prototype.value=$util.newBuffer([]),e.create=function(o){return new e(o)},e.encode=function(e,o){return o||(o=$Writer.create()),null!=e.value&&Object.hasOwnProperty.call(e,"value")&&o.uint32(10).bytes(e.value),o},e.decode=function(e,o){e instanceof $Reader||(e=$Reader.create(e));for(var n=void 0===o?e.len:e.pos+o,d=new $root.google.protobuf.BytesValue,i;e.pos<n;)switch(i=e.uint32(),i>>>3){case 1:d.value=e.bytes();break;default:e.skipType(7&i);}return d},e}()};return e}()};return e})();exports.google=google;
 
 /***/ }),
 
@@ -18482,9 +18499,9 @@ var entropy = _interopRequireWildcard(__nccwpck_require__(2771));
 
 var random = _interopRequireWildcard(__nccwpck_require__(5935));
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18802,9 +18819,9 @@ var random = _interopRequireWildcard(__nccwpck_require__(5935));
 
 var derive = _interopRequireWildcard(__nccwpck_require__(9833));
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18958,7 +18975,7 @@ class PrivateKey extends _Key.default {
 
 
   static async fromKeystore(data, passphrase = "") {
-    return new PrivateKey(await (0, _keystore.loadKeystore)(data, passphrase), null);
+    return PrivateKey.fromBytes(await (0, _keystore.loadKeystore)(data, passphrase));
   }
   /**
    * Recover a private key from a pem string; the private key may be encrypted.
@@ -19164,9 +19181,9 @@ var _BadKeyError = _interopRequireDefault(__nccwpck_require__(9413));
 
 var hex = _interopRequireWildcard(__nccwpck_require__(7346));
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19207,7 +19224,6 @@ class PublicKey extends _Key.default {
         return new PublicKey(data);
 
       case 44:
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         if ((0, _array.arrayStartsWith)(data, derPrefixBytes)) {
           return new PublicKey(data.subarray(12));
         }
@@ -19603,9 +19619,9 @@ var base64 = _interopRequireWildcard(__nccwpck_require__(5604));
 
 var _tweetnacl = _interopRequireDefault(__nccwpck_require__(6703));
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19840,9 +19856,9 @@ var _crypto = _interopRequireDefault(__nccwpck_require__(6417));
 
 var utf8 = _interopRequireWildcard(__nccwpck_require__(1557));
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19896,8 +19912,6 @@ Object.defineProperty(exports, "__esModule", ({
 exports.createKeystore = createKeystore;
 exports.loadKeystore = loadKeystore;
 
-var _tweetnacl = _interopRequireDefault(__nccwpck_require__(6703));
-
 var _BadKeyError = _interopRequireDefault(__nccwpck_require__(9413));
 
 var crypto = _interopRequireWildcard(__nccwpck_require__(8552));
@@ -19912,9 +19926,9 @@ var pbkdf2 = _interopRequireWildcard(__nccwpck_require__(3223));
 
 var random = _interopRequireWildcard(__nccwpck_require__(5935));
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19992,7 +20006,7 @@ async function createKeystore(privateKey, passphrase) {
 /**
  * @param {Uint8Array} keystoreBytes
  * @param {string} passphrase
- * @returns {Promise<nacl.SignKeyPair>}
+ * @returns {Promise<Uint8Array>}
  */
 
 
@@ -20042,8 +20056,7 @@ async function loadKeystore(keystoreBytes, passphrase) {
     throw new _BadKeyError.default("HMAC mismatch; passphrase is incorrect");
   }
 
-  const bytes = await crypto.createDecipheriv(cipher, key.slice(0, 16), ivBytes, cipherBytes);
-  return _tweetnacl.default.sign.keyPair.fromSeed(Uint8Array.from(bytes));
+  return crypto.createDecipheriv(cipher, key.slice(0, 16), ivBytes, cipherBytes);
 }
 
 /***/ }),
@@ -20069,9 +20082,9 @@ var _crypto = _interopRequireDefault(__nccwpck_require__(6417));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 /**
  * @param {HashAlgorithm} algorithm
@@ -20125,9 +20138,9 @@ var pbkdf2 = _interopRequireWildcard(__nccwpck_require__(3223));
 
 var hmac = _interopRequireWildcard(__nccwpck_require__(5886));
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 class AlgorithmIdentifier {
   /**
@@ -20429,9 +20442,9 @@ exports.derive = derive;
 
 var hmac = _interopRequireWildcard(__nccwpck_require__(5886));
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 /**
  * @param {Uint8Array} parentKey
@@ -20534,9 +20547,9 @@ var pbkdf2 = _interopRequireWildcard(__nccwpck_require__(3223));
 
 var hmac = _interopRequireWildcard(__nccwpck_require__(5886));
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 /**
  * @param {Uint8Array} seed
@@ -20547,8 +20560,15 @@ function legacy(seed, index) {
   const password = new Uint8Array(seed.length + 8);
   password.set(seed, 0);
   const view = new DataView(password.buffer, password.byteOffset + seed.length, 8);
-  view.setInt32(0, index);
-  view.setInt32(4, index);
+
+  if (index === 0xffffffffff) {
+    view.setInt32(0, 0xff);
+    view.setInt32(4, index >>> 32);
+  } else {
+    view.setInt32(0, index < 0 ? -1 : 0);
+    view.setInt32(4, index);
+  }
+
   const salt = Uint8Array.from([0xff]);
   return pbkdf2.deriveKey(hmac.HashAlgorithm.Sha512, password, salt, 2048, 32);
 }
@@ -20574,9 +20594,9 @@ var _bignumber = _interopRequireDefault(__nccwpck_require__(2639));
 
 var sha256 = _interopRequireWildcard(__nccwpck_require__(213));
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21628,7 +21648,6 @@ class Hbar {
     return Hbar.fromTinybars(this._valueInTinybar.negated());
   }
   /**
-   * @override
    * @param {HbarUnit=} unit
    * @returns {string}
    */
@@ -22391,6 +22410,9 @@ class Status {
       case Status.InvalidReceivingNodeAccount:
         return "INVALID_RECEIVING_NODE_ACCOUNT";
 
+      case Status.MissingQueryHeader:
+        return "MISSING_QUERY_HEADER";
+
       case Status.AccountUpdateFailed:
         return "ACCOUNT_UPDATE_FAILED";
 
@@ -22616,6 +22638,9 @@ class Status {
       case Status.MaxFileSizeExceeded:
         return "MAX_FILE_SIZE_EXCEEDED";
 
+      case Status.ReceiverSigRequired:
+        return "RECEIVER_SIG_REQUIRED";
+
       case Status.InvalidTopicId:
         return "INVALID_TOPIC_ID";
 
@@ -22772,17 +22797,161 @@ class Status {
       case Status.UnresolvableRequiredSigners:
         return "UNRESOLVABLE_REQUIRED_SIGNERS";
 
-      case Status.UnparseableScheduledTransaction:
-        return "UNPARSEABLE_SCHEDULED_TRANSACTION";
-
-      case Status.UnschedulableTransaction:
-        return "UNSCHEDULABLE_TRANSACTION";
+      case Status.ScheduledTransactionNotInWhitelist:
+        return "SCHEDULED_TRANSACTION_NOT_IN_WHITELIST";
 
       case Status.SomeSignaturesWereInvalid:
         return "SOME_SIGNATURES_WERE_INVALID";
 
       case Status.TransactionIdFieldNotAllowed:
         return "TRANSACTION_ID_FIELD_NOT_ALLOWED";
+
+      case Status.IdenticalScheduleAlreadyCreated:
+        return "IDENTICAL_SCHEDULE_ALREADY_CREATED";
+
+      case Status.InvalidZeroByteInString:
+        return "INVALID_ZERO_BYTE_IN_STRING";
+
+      case Status.ScheduleAlreadyDeleted:
+        return "SCHEDULE_ALREADY_DELETED";
+
+      case Status.ScheduleAlreadyExecuted:
+        return "SCHEDULE_ALREADY_EXECUTED";
+
+      case Status.MessageSizeTooLarge:
+        return "MESSAGE_SIZE_TOO_LARGE";
+
+      case Status.OperationRepeatedInBucketGroups:
+        return "OPERATION_REPEATED_IN_BUCKET_GROUPS";
+
+      case Status.BucketCapacityOverflow:
+        return "BUCKET_CAPACITY_OVERFLOW";
+
+      case Status.NodeCapacityNotSufficientForOperation:
+        return "NODE_CAPACITY_NOT_SUFFICIENT_FOR_OPERATION";
+
+      case Status.BucketHasNoThrottleGroups:
+        return "BUCKET_HAS_NO_THROTTLE_GROUPS";
+
+      case Status.ThrottleGroupHasZeroOpsPerSec:
+        return "THROTTLE_GROUP_HAS_ZERO_OPS_PER_SEC";
+
+      case Status.SuccessButMissingExpectedOperation:
+        return "SUCCESS_BUT_MISSING_EXPECTED_OPERATION";
+
+      case Status.UnparseableThrottleDefinitions:
+        return "UNPARSEABLE_THROTTLE_DEFINITIONS";
+
+      case Status.InvalidThrottleDefinitions:
+        return "INVALID_THROTTLE_DEFINITIONS";
+
+      case Status.AccountExpiredAndPendingRemoval:
+        return "ACCOUNT_EXPIRED_AND_PENDING_REMOVAL";
+
+      case Status.InvalidTokenMaxSupply:
+        return "INVALID_TOKEN_MAX_SUPPLY";
+
+      case Status.InvalidTokenNftSerialNumber:
+        return "INVALID_TOKEN_NFT_SERIAL_NUMBER";
+
+      case Status.InvalidNftId:
+        return "INVALID_NFT_ID";
+
+      case Status.MetadataTooLong:
+        return "METADATA_TOO_LONG";
+
+      case Status.BatchSizeLimitExceeded:
+        return "BATCH_SIZE_LIMIT_EXCEEDED";
+
+      case Status.InvalidQueryRange:
+        return "INVALID_QUERY_RANGE";
+
+      case Status.FractionDividesByZero:
+        return "FRACTION_DIVIDES_BY_ZERO";
+
+      case Status.InsufficientPayerBalanceForCustomFee:
+        return "INSUFFICIENT_PAYER_BALANCE_FOR_CUSTOM_FEE";
+
+      case Status.CustomFeesListTooLong:
+        return "CUSTOM_FEES_LIST_TOO_LONG";
+
+      case Status.InvalidCustomFeeCollector:
+        return "INVALID_CUSTOM_FEE_COLLECTOR";
+
+      case Status.InvalidTokenIdInCustomFees:
+        return "INVALID_TOKEN_ID_IN_CUSTOM_FEES";
+
+      case Status.TokenNotAssociatedToFeeCollector:
+        return "TOKEN_NOT_ASSOCIATED_TO_FEE_COLLECTOR";
+
+      case Status.TokenMaxSupplyReached:
+        return "TOKEN_MAX_SUPPLY_REACHED";
+
+      case Status.SenderDoesNotOwnNftSerialNo:
+        return "SENDER_DOES_NOT_OWN_NFT_SERIAL_NO";
+
+      case Status.CustomFeeNotFullySpecified:
+        return "CUSTOM_FEE_NOT_FULLY_SPECIFIED";
+
+      case Status.CustomFeeMustBePositive:
+        return "CUSTOM_FEE_MUST_BE_POSITIVE";
+
+      case Status.TokenHasNoFeeScheduleKey:
+        return "TOKEN_HAS_NO_FEE_SCHEDULE_KEY";
+
+      case Status.CustomFeeOutsideNumericRange:
+        return "CUSTOM_FEE_OUTSIDE_NUMERIC_RANGE";
+
+      case Status.InvalidCustomFractionalFeesSum:
+        return "INVALID_CUSTOM_FRACTIONAL_FEES_SUM";
+
+      case Status.FractionalFeeMaxAmountLessThanMinAmount:
+        return "FRACTIONAL_FEE_MAX_AMOUNT_LESS_THAN_MIN_AMOUNT";
+
+      case Status.CustomScheduleAlreadyHasNoFees:
+        return "CUSTOM_SCHEDULE_ALREADY_HAS_NO_FEES";
+
+      case Status.CustomFeeDenominationMustBeFungibleCommon:
+        return "CUSTOM_FEE_DENOMINATION_MUST_BE_FUNGIBLE_COMMON";
+
+      case Status.CustomFractionalFeeOnlyAllowedForFungibleCommon:
+        return "CUSTOM_FRACTIONAL_FEE_ONLY_ALLOWED_FOR_FUNGIBLE_COMMON";
+
+      case Status.InvalidCustomFeeScheduleKey:
+        return "INVALID_CUSTOM_FEE_SCHEDULE_KEY";
+
+      case Status.InvalidTokenMintMetadata:
+        return "INVALID_TOKEN_MINT_METADATA";
+
+      case Status.InvalidTokenBurnMetadata:
+        return "INVALID_TOKEN_BURN_METADATA";
+
+      case Status.CurrentTreasuryStillOwnsNfts:
+        return "CURRENT_TREASURY_STILL_OWNS_NFTS";
+
+      case Status.AccountStillOwnsNfts:
+        return "ACCOUNT_STILL_OWNS_NFTS";
+
+      case Status.TreasuryMustOwnBurnedNft:
+        return "TREASURY_MUST_OWN_BURNED_NFT";
+
+      case Status.AccountDoesNotOwnWipedNft:
+        return "ACCOUNT_DOES_NOT_OWN_WIPED_NFT";
+
+      case Status.AccountAmountTransfersOnlyAllowedForFungibleCommon:
+        return "ACCOUNT_AMOUNT_TRANSFERS_ONLY_ALLOWED_FOR_FUNGIBLE_COMMON";
+
+      case Status.MaxNftsInPriceRegimeHaveBeenMinted:
+        return "MAX_NFTS_IN_PRICE_REGIME_HAVE_BEEN_MINTED";
+
+      case Status.PayerAccountDeleted:
+        return "PAYER_ACCOUNT_DELETED";
+
+      case Status.CustomFeeChargingExceededMaxRecursionDepth:
+        return "CUSTOM_FEE_CHARGING_EXCEEDED_MAX_RECURSION_DEPTH";
+
+      case Status.CustomFeeChargingExceededMaxAccountAmounts:
+        return "CUSTOM_FEE_CHARGING_EXCEEDED_MAX_ACCOUNT_AMOUNTS";
 
       default:
         return `UNKNOWN (${this._code})`;
@@ -22904,6 +23073,9 @@ class Status {
 
       case 35:
         return Status.InvalidReceivingNodeAccount;
+
+      case 36:
+        return Status.MissingQueryHeader;
 
       case 37:
         return Status.AccountUpdateFailed;
@@ -23130,6 +23302,9 @@ class Status {
       case 112:
         return Status.MaxFileSizeExceeded;
 
+      case 113:
+        return Status.ReceiverSigRequired;
+
       case 150:
         return Status.InvalidTopicId;
 
@@ -23287,16 +23462,160 @@ class Status {
         return Status.UnresolvableRequiredSigners;
 
       case 207:
-        return Status.UnparseableScheduledTransaction;
+        return Status.ScheduledTransactionNotInWhitelist;
 
       case 208:
-        return Status.UnschedulableTransaction;
-
-      case 209:
         return Status.SomeSignaturesWereInvalid;
 
-      case 210:
+      case 209:
         return Status.TransactionIdFieldNotAllowed;
+
+      case 210:
+        return Status.IdenticalScheduleAlreadyCreated;
+
+      case 211:
+        return Status.InvalidZeroByteInString;
+
+      case 212:
+        return Status.ScheduleAlreadyDeleted;
+
+      case 213:
+        return Status.ScheduleAlreadyExecuted;
+
+      case 214:
+        return Status.MessageSizeTooLarge;
+
+      case 215:
+        return Status.OperationRepeatedInBucketGroups;
+
+      case 216:
+        return Status.BucketCapacityOverflow;
+
+      case 217:
+        return Status.NodeCapacityNotSufficientForOperation;
+
+      case 218:
+        return Status.BucketHasNoThrottleGroups;
+
+      case 219:
+        return Status.ThrottleGroupHasZeroOpsPerSec;
+
+      case 220:
+        return Status.SuccessButMissingExpectedOperation;
+
+      case 221:
+        return Status.UnparseableThrottleDefinitions;
+
+      case 222:
+        return Status.InvalidThrottleDefinitions;
+
+      case 223:
+        return Status.AccountExpiredAndPendingRemoval;
+
+      case 224:
+        return Status.InvalidTokenMaxSupply;
+
+      case 225:
+        return Status.InvalidTokenNftSerialNumber;
+
+      case 226:
+        return Status.InvalidNftId;
+
+      case 227:
+        return Status.MetadataTooLong;
+
+      case 228:
+        return Status.BatchSizeLimitExceeded;
+
+      case 229:
+        return Status.InvalidQueryRange;
+
+      case 230:
+        return Status.FractionDividesByZero;
+
+      case 231:
+        return Status.InsufficientPayerBalanceForCustomFee;
+
+      case 232:
+        return Status.CustomFeesListTooLong;
+
+      case 233:
+        return Status.InvalidCustomFeeCollector;
+
+      case 234:
+        return Status.InvalidTokenIdInCustomFees;
+
+      case 235:
+        return Status.TokenNotAssociatedToFeeCollector;
+
+      case 236:
+        return Status.TokenMaxSupplyReached;
+
+      case 237:
+        return Status.SenderDoesNotOwnNftSerialNo;
+
+      case 238:
+        return Status.CustomFeeNotFullySpecified;
+
+      case 239:
+        return Status.CustomFeeMustBePositive;
+
+      case 240:
+        return Status.TokenHasNoFeeScheduleKey;
+
+      case 241:
+        return Status.CustomFeeOutsideNumericRange;
+
+      case 242:
+        return Status.InvalidCustomFractionalFeesSum;
+
+      case 243:
+        return Status.FractionalFeeMaxAmountLessThanMinAmount;
+
+      case 244:
+        return Status.CustomScheduleAlreadyHasNoFees;
+
+      case 245:
+        return Status.CustomFeeDenominationMustBeFungibleCommon;
+
+      case 246:
+        return Status.CustomFractionalFeeOnlyAllowedForFungibleCommon;
+
+      case 247:
+        return Status.InvalidCustomFeeScheduleKey;
+
+      case 248:
+        return Status.InvalidTokenMintMetadata;
+
+      case 249:
+        return Status.InvalidTokenBurnMetadata;
+
+      case 250:
+        return Status.CurrentTreasuryStillOwnsNfts;
+
+      case 251:
+        return Status.AccountStillOwnsNfts;
+
+      case 252:
+        return Status.TreasuryMustOwnBurnedNft;
+
+      case 253:
+        return Status.AccountDoesNotOwnWipedNft;
+
+      case 254:
+        return Status.AccountAmountTransfersOnlyAllowedForFungibleCommon;
+
+      case 255:
+        return Status.MaxNftsInPriceRegimeHaveBeenMinted;
+
+      case 256:
+        return Status.PayerAccountDeleted;
+
+      case 257:
+        return Status.CustomFeeChargingExceededMaxRecursionDepth;
+
+      case 258:
+        return Status.CustomFeeChargingExceededMaxAccountAmounts;
     }
 
     throw new Error(`(BUG) Status.fromCode() does not handle code: ${code}`);
@@ -23311,907 +23630,1093 @@ class Status {
   }
 
 }
-/*
+/**
  * The transaction passed the precheck validations.
  */
 
 
 exports.default = Status;
 Status.Ok = new Status(0);
-/*
+/**
  * For any error not handled by specific error codes listed below.
  */
 
 Status.InvalidTransaction = new Status(1);
-/*
+/**
  * Payer account does not exist.
  */
 
 Status.PayerAccountNotFound = new Status(2);
-/*
- * Node Account provided does not match the node account of the node the
- * transaction was submitted to.
+/**
+ * Node Account provided does not match the node account of the node the transaction was submitted to.
  */
 
 Status.InvalidNodeAccount = new Status(3);
-/*
- * Pre-Check error when TransactionValidStart + transactionValidDuration is
- * less than current consensus time.
+/**
+ * Pre-Check error when TransactionValidStart + transactionValidDuration is less than current consensus time.
  */
 
 Status.TransactionExpired = new Status(4);
-/*
+/**
  * Transaction start time is greater than current consensus time
  */
 
 Status.InvalidTransactionStart = new Status(5);
-/*
- * Valid transaction duration is a positive non zero number that does not
- * exceed 120 seconds
+/**
+ * valid transaction duration is a positive non zero number that does not exceed 120 seconds
  */
 
 Status.InvalidTransactionDuration = new Status(6);
-/*
+/**
  * The transaction signature is not valid
  */
 
 Status.InvalidSignature = new Status(7);
-/*
+/**
  * Transaction memo size exceeded 100 bytes
  */
 
 Status.MemoTooLong = new Status(8);
-/*
- * The fee provided in the transaction is insufficient for this
- * type of transaction
+/**
+ * The fee provided in the transaction is insufficient for this type of transaction
  */
 
 Status.InsufficientTxFee = new Status(9);
-/*
- * The payer account has insufficient cryptocurrency to pay the
- * transaction fee
+/**
+ * The payer account has insufficient cryptocurrency to pay the transaction fee
  */
 
 Status.InsufficientPayerBalance = new Status(10);
-/*
- * This transaction ID is a duplicate of one that was submitted to this node
- * Or reached consensus in the last 180 seconds (receipt period)
+/**
+ * This transaction ID is a duplicate of one that was submitted to this node or reached consensus in the last 180 seconds (receipt period)
  */
 
 Status.DuplicateTransaction = new Status(11);
-/*
+/**
  * If API is throttled out
  */
 
 Status.Busy = new Status(12);
-/*
+/**
  * The API is not currently supported
  */
 
 Status.NotSupported = new Status(13);
-/*
+/**
  * The file id is invalid or does not exist
  */
 
 Status.InvalidFileId = new Status(14);
-/*
+/**
  * The account id is invalid or does not exist
  */
 
 Status.InvalidAccountId = new Status(15);
-/*
+/**
  * The contract id is invalid or does not exist
  */
 
 Status.InvalidContractId = new Status(16);
-/*
+/**
  * Transaction id is not valid
  */
 
 Status.InvalidTransactionId = new Status(17);
-/*
+/**
  * Receipt for given transaction id does not exist
  */
 
 Status.ReceiptNotFound = new Status(18);
-/*
+/**
  * Record for given transaction id does not exist
  */
 
 Status.RecordNotFound = new Status(19);
-/*
+/**
  * The solidity id is invalid or entity with this solidity id does not exist
  */
 
 Status.InvalidSolidityId = new Status(20);
-/*
- * The responding node has submitted the transaction to the network.
- * its final status is still unknown.
+/**
+ * The responding node has submitted the transaction to the network. Its final status is still unknown.
  */
 
 Status.Unknown = new Status(21);
-/*
+/**
  * The transaction succeeded
  */
 
 Status.Success = new Status(22);
-/*
- * There was a system error and the transaction failed because of invalid
- * request parameters.
+/**
+ * There was a system error and the transaction failed because of invalid request parameters.
  */
 
 Status.FailInvalid = new Status(23);
-/*
- * There was a system error while performing fee calculation,
- * reserved for future.
+/**
+ * There was a system error while performing fee calculation, reserved for future.
  */
 
 Status.FailFee = new Status(24);
-/*
- * There was a system error while performing balance checks,
- * reserved for future.
+/**
+ * There was a system error while performing balance checks, reserved for future.
  */
 
 Status.FailBalance = new Status(25);
-/*
+/**
  * Key not provided in the transaction body
  */
 
 Status.KeyRequired = new Status(26);
-/*
+/**
  * Unsupported algorithm/encoding used for keys in the transaction
  */
 
 Status.BadEncoding = new Status(27);
-/*
+/**
  * When the account balance is not sufficient for the transfer
  */
 
 Status.InsufficientAccountBalance = new Status(28);
-/*
- * During an update transaction when the system is not able to find the
- * users Solidity address
+/**
+ * During an update transaction when the system is not able to find the Users Solidity address
  */
 
 Status.InvalidSolidityAddress = new Status(29);
-/*
+/**
  * Not enough gas was supplied to execute transaction
  */
 
 Status.InsufficientGas = new Status(30);
-/*
- * Contract byte code size is over the limit
+/**
+ * contract byte code size is over the limit
  */
 
 Status.ContractSizeLimitExceeded = new Status(31);
-/*
- * Local execution (query) is requested for a function which changes state
+/**
+ * local execution (query) is requested for a function which changes state
  */
 
 Status.LocalCallModificationException = new Status(32);
-/*
+/**
  * Contract REVERT OPCODE executed
  */
 
 Status.ContractRevertExecuted = new Status(33);
-/*
- * For any contract execution related error not handled by specific error
- * Codes listed above.
+/**
+ * For any contract execution related error not handled by specific error codes listed above.
  */
 
 Status.ContractExecutionException = new Status(34);
-/*
- * In Query validation, account with +ve(amount) value should be receiving
- * node account, the receiver account should be only one account in the list
+/**
+ * In Query validation, account with +ve(amount) value should be Receiving node account, the receiver account should be only one account in the list
  */
 
 Status.InvalidReceivingNodeAccount = new Status(35);
-/*
+/**
  * Header is missing in Query request
  */
 
 Status.MissingQueryHeader = new Status(36);
-/*
+/**
  * The update of the account failed
  */
 
 Status.AccountUpdateFailed = new Status(37);
-/*
+/**
  * Provided key encoding was not supported by the system
  */
 
 Status.InvalidKeyEncoding = new Status(38);
-/*
- * Null solidity address
+/**
+ * null solidity address
  */
 
 Status.NullSolidityAddress = new Status(39);
-/*
- * Update of the contract failed
+/**
+ * update of the contract failed
  */
 
 Status.ContractUpdateFailed = new Status(40);
-/*
- * The query header is invalid
+/**
+ * the query header is invalid
  */
 
 Status.InvalidQueryHeader = new Status(41);
-/*
+/**
  * Invalid fee submitted
  */
 
 Status.InvalidFeeSubmitted = new Status(42);
-/*
+/**
  * Payer signature is invalid
  */
 
 Status.InvalidPayerSignature = new Status(43);
-/*
+/**
  * The keys were not provided in the request.
  */
 
 Status.KeyNotProvided = new Status(44);
-/*
+/**
  * Expiration time provided in the transaction was invalid.
  */
 
 Status.InvalidExpirationTime = new Status(45);
-/*
+/**
  * WriteAccess Control Keys are not provided for the file
  */
 
 Status.NoWaclKey = new Status(46);
-/*
+/**
  * The contents of file are provided as empty.
  */
 
 Status.FileContentEmpty = new Status(47);
-/*
+/**
  * The crypto transfer credit and debit do not sum equal to 0
  */
 
 Status.InvalidAccountAmounts = new Status(48);
-/*
+/**
  * Transaction body provided is empty
  */
 
 Status.EmptyTransactionBody = new Status(49);
-/*
+/**
  * Invalid transaction body provided
  */
 
 Status.InvalidTransactionBody = new Status(50);
-/*
- * The type of key (base ed25519 key, KeyList, or ThresholdKey) does not
- * match the type of signature (base ed25519 signature, SignatureList, or
- * ThresholdKeySignature)
+/**
+ * the type of key (base ed25519 key, KeyList, or ThresholdKey) does not match the type of signature (base ed25519 signature, SignatureList, or ThresholdKeySignature)
  */
 
 Status.InvalidSignatureTypeMismatchingKey = new Status(51);
-/*
- * The number of key (KeyList, or ThresholdKey) does not match that of
- * signature (SignatureList, or ThresholdKeySignature). e.g. if a keyList
- * has 3 base keys, then the corresponding signatureList should also have 3
- * base signatures.
+/**
+ * the number of key (KeyList, or ThresholdKey) does not match that of signature (SignatureList, or ThresholdKeySignature). e.g. if a keyList has 3 base keys, then the corresponding signatureList should also have 3 base signatures.
  */
 
 Status.InvalidSignatureCountMismatchingKey = new Status(52);
-/*
- * The livehash body is empty
+/**
+ * the livehash body is empty
  */
 
 Status.EmptyLiveHashBody = new Status(53);
-/*
- * The livehash data is missing
+/**
+ * the livehash data is missing
  */
 
 Status.EmptyLiveHash = new Status(54);
-/*
- * The keys for a livehash are missing
+/**
+ * the keys for a livehash are missing
  */
 
 Status.EmptyLiveHashKeys = new Status(55);
-/*
- * The livehash data is not the output of a SHA-384 digest
+/**
+ * the livehash data is not the output of a SHA-384 digest
  */
 
 Status.InvalidLiveHashSize = new Status(56);
-/*
- * The query body is empty
+/**
+ * the query body is empty
  */
 
 Status.EmptyQueryBody = new Status(57);
-/*
- * The crypto livehash query is empty
+/**
+ * the crypto livehash query is empty
  */
 
 Status.EmptyLiveHashQuery = new Status(58);
-/*
- * The livehash is not present
+/**
+ * the livehash is not present
  */
 
 Status.LiveHashNotFound = new Status(59);
-/*
- * The account id passed has not yet been created.
+/**
+ * the account id passed has not yet been created.
  */
 
 Status.AccountIdDoesNotExist = new Status(60);
-/*
- * The livehash already exists for a given account
+/**
+ * the livehash already exists for a given account
  */
 
 Status.LiveHashAlreadyExists = new Status(61);
-/*
+/**
  * File WACL keys are invalid
  */
 
 Status.InvalidFileWacl = new Status(62);
-/*
+/**
  * Serialization failure
  */
 
 Status.SerializationFailed = new Status(63);
-/*
+/**
  * The size of the Transaction is greater than transactionMaxBytes
  */
 
 Status.TransactionOversize = new Status(64);
-/*
+/**
  * The Transaction has more than 50 levels
  */
 
 Status.TransactionTooManyLayers = new Status(65);
-/*
+/**
  * Contract is marked as deleted
  */
 
 Status.ContractDeleted = new Status(66);
-/*
- * The platform node is either disconnected or lagging behind.
+/**
+ * the platform node is either disconnected or lagging behind.
  */
 
 Status.PlatformNotActive = new Status(67);
-/*
- * One public key matches more than one prefixes on the signature map
+/**
+ * one public key matches more than one prefixes on the signature map
  */
 
 Status.KeyPrefixMismatch = new Status(68);
-/*
- * Transaction not created by platform due to large backlog
+/**
+ * transaction not created by platform due to large backlog
  */
 
 Status.PlatformTransactionNotCreated = new Status(69);
-/*
- * Auto renewal period is not a positive number of seconds
+/**
+ * auto renewal period is not a positive number of seconds
  */
 
 Status.InvalidRenewalPeriod = new Status(70);
-/*
- * The response code when a smart contract id is passed for a
- * crypto API request
+/**
+ * the response code when a smart contract id is passed for a crypto API request
  */
 
 Status.InvalidPayerAccountId = new Status(71);
-/*
- * The account has been marked as deleted
+/**
+ * the account has been marked as deleted
  */
 
 Status.AccountDeleted = new Status(72);
-/*
- * The file has been marked as deleted
+/**
+ * the file has been marked as deleted
  */
 
 Status.FileDeleted = new Status(73);
-/*
- * Same accounts repeated in the transfer account list
+/**
+ * same accounts repeated in the transfer account list
  */
 
 Status.AccountRepeatedInAccountAmounts = new Status(74);
-/*
- * Attempting to set negative balance value for crypto account
+/**
+ * attempting to set negative balance value for crypto account
  */
 
 Status.SettingNegativeAccountBalance = new Status(75);
-/*
- * When deleting smart contract that has crypto balance either transfer
- * account or transfer smart contract is required
+/**
+ * when deleting smart contract that has crypto balance either transfer account or transfer smart contract is required
  */
 
 Status.ObtainerRequired = new Status(76);
-/*
- * When deleting smart contract that has crypto balance you can not use the
- * same contract id as transferContractId as the one being deleted
+/**
+ * when deleting smart contract that has crypto balance you can not use the same contract id as transferContractId as the one being deleted
  */
 
 Status.ObtainerSameContractId = new Status(77);
-/*
- * TransferAccountId or transferContractId specified for contract delete
- * does not exist
+/**
+ * transferAccountId or transferContractId specified for contract delete does not exist
  */
 
 Status.ObtainerDoesNotExist = new Status(78);
-/*
- * Attempting to modify (update or delete a immutable smart contract, i.e.
- * one created without a admin key)
+/**
+ * attempting to modify (update or delete a immutable smart contract, i.e. one created without a admin key)
  */
 
 Status.ModifyingImmutableContract = new Status(79);
-/*
+/**
  * Unexpected exception thrown by file system functions
  */
 
 Status.FileSystemException = new Status(80);
-/*
- * The duration is not a subset of
- * [MINIMUM_AUTORENEW_DURATION,MAXIMUM_AUTORENEW_DURATION]
+/**
+ * the duration is not a subset of [MINIMUM_AUTORENEW_DURATION,MAXIMUM_AUTORENEW_DURATION]
  */
 
 Status.AutorenewDurationNotInRange = new Status(81);
-/*
- * Decoding the smart contract binary to a byte array failed.
- * Check that the input is a valid hex string.
+/**
+ * Decoding the smart contract binary to a byte array failed. Check that the input is a valid hex string.
  */
 
 Status.ErrorDecodingBytestring = new Status(82);
-/*
+/**
  * File to create a smart contract was of length zero
  */
 
 Status.ContractFileEmpty = new Status(83);
-/*
+/**
  * Bytecode for smart contract is of length zero
  */
 
 Status.ContractBytecodeEmpty = new Status(84);
-/*
+/**
  * Attempt to set negative initial balance
  */
 
 Status.InvalidInitialBalance = new Status(85);
-/*
+/**
  * [Deprecated]. attempt to set negative receive record threshold
  */
 
 Status.InvalidReceiveRecordThreshold = new Status(86);
-/*
+/**
  * [Deprecated]. attempt to set negative send record threshold
  */
 
 Status.InvalidSendRecordThreshold = new Status(87);
-/*
- * Special Account Operations should be performed by only Genesis account,
- * return this code if it is not Genesis Account
+/**
+ * Special Account Operations should be performed by only Genesis account, return this code if it is not Genesis Account
  */
 
 Status.AccountIsNotGenesisAccount = new Status(88);
-/*
+/**
  * The fee payer account doesn't have permission to submit such Transaction
  */
 
 Status.PayerAccountUnauthorized = new Status(89);
-/*
+/**
  * FreezeTransactionBody is invalid
  */
 
 Status.InvalidFreezeTransactionBody = new Status(90);
-/*
+/**
  * FreezeTransactionBody does not exist
  */
 
 Status.FreezeTransactionBodyNotFound = new Status(91);
-/*
- * Exceeded the number of accounts (both from and to) allowed for
- * crypto transfer list
+/**
+ * Exceeded the number of accounts (both from and to) allowed for crypto transfer list
  */
 
 Status.TransferListSizeLimitExceeded = new Status(92);
-/*
+/**
  * Smart contract result size greater than specified maxResultSize
  */
 
 Status.ResultSizeLimitExceeded = new Status(93);
-/*
+/**
  * The payer account is not a special account(account 0.0.55)
  */
 
 Status.NotSpecialAccount = new Status(94);
-/*
+/**
  * Negative gas was offered in smart contract call
  */
 
 Status.ContractNegativeGas = new Status(95);
-/*
- * Negative value / initial balance was specified in a
- * smart contract call / create
+/**
+ * Negative value / initial balance was specified in a smart contract call / create
  */
 
 Status.ContractNegativeValue = new Status(96);
-/*
+/**
  * Failed to update fee file
  */
 
 Status.InvalidFeeFile = new Status(97);
-/*
+/**
  * Failed to update exchange rate file
  */
 
 Status.InvalidExchangeRateFile = new Status(98);
-/*
- * Payment tendered for contract local call cannot cover both the
- * fee and the gas
+/**
+ * Payment tendered for contract local call cannot cover both the fee and the gas
  */
 
 Status.InsufficientLocalCallGas = new Status(99);
-/*
+/**
  * Entities with Entity ID below 1000 are not allowed to be deleted
  */
 
 Status.EntityNotAllowedToDelete = new Status(100);
-/*
- * Violating one of these rules:
- * 1) treasury account can update all entities below 0.0.1000,
- * 2) account 0.0.50 can update all entities from 0.0.51 - 0.0.80,
- * 3) Network Function Master Account A/c 0.0.50
- *    - Update all Network Function accounts & perform all the Network
- *      Functions listed below,
- * 4) Network Function Accounts:
- *   i) A/c 0.0.55
- *     - Update Address Book files (0.0.101/102),
- *   ii) A/c 0.0.56
- *     - Update Fee schedule (0.0.111),
- *   iii) A/c 0.0.57
- *     - Update Exchange Rate (0.0.112).
+/**
+ * Violating one of these rules: 1) treasury account can update all entities below 0.0.1000, 2) account 0.0.50 can update all entities from 0.0.51 - 0.0.80, 3) Network Function Master Account A/c 0.0.50 - Update all Network Function accounts & perform all the Network Functions listed below, 4) Network Function Accounts: i) A/c 0.0.55 - Update Address Book files (0.0.101/102), ii) A/c 0.0.56 - Update Fee schedule (0.0.111), iii) A/c 0.0.57 - Update Exchange Rate (0.0.112).
  */
 
 Status.AuthorizationFailed = new Status(101);
-/*
+/**
  * Fee Schedule Proto uploaded but not valid (append or update is required)
  */
 
 Status.FileUploadedProtoInvalid = new Status(102);
-/*
+/**
  * Fee Schedule Proto uploaded but not valid (append or update is required)
  */
 
 Status.FileUploadedProtoNotSavedToDisk = new Status(103);
-/*
+/**
  * Fee Schedule Proto File Part uploaded
  */
 
 Status.FeeScheduleFilePartUploaded = new Status(104);
-/*
+/**
  * The change on Exchange Rate exceeds Exchange_Rate_Allowed_Percentage
  */
 
 Status.ExchangeRateChangeLimitExceeded = new Status(105);
-/*
+/**
  * Contract permanent storage exceeded the currently allowable limit
  */
 
 Status.MaxContractStorageExceeded = new Status(106);
-/*
+/**
  * Transfer Account should not be same as Account to be deleted
  */
 
 Status.TransferAccountSameAsDeleteAccount = new Status(107);
+/**
+ *
+ */
+
 Status.TotalLedgerBalanceInvalid = new Status(108);
-/*
+/**
  * The expiration date/time on a smart contract may not be reduced
  */
 
 Status.ExpirationReductionNotAllowed = new Status(110);
-/*
+/**
  * Gas exceeded currently allowable gas limit per transaction
  */
 
 Status.MaxGasLimitExceeded = new Status(111);
-/*
+/**
  * File size exceeded the currently allowable limit
  */
 
 Status.MaxFileSizeExceeded = new Status(112);
-/*
+/**
+ * When a valid signature is not provided for operations on account with receiverSigRequired=true
+ */
+
+Status.ReceiverSigRequired = new Status(113);
+/**
  * The Topic ID specified is not in the system.
  */
 
 Status.InvalidTopicId = new Status(150);
-/*
+/**
  * A provided admin key was invalid.
  */
 
 Status.InvalidAdminKey = new Status(155);
-/*
+/**
  * A provided submit key was invalid.
  */
 
 Status.InvalidSubmitKey = new Status(156);
-/*
- * An attempted operation was not authorized (ie - a deleteTopic for a topic
- * with no adminKey).
+/**
+ * An attempted operation was not authorized (ie - a deleteTopic for a topic with no adminKey).
  */
 
 Status.Unauthorized = new Status(157);
-/*
+/**
  * A ConsensusService message is empty.
  */
 
 Status.InvalidTopicMessage = new Status(158);
-/*
+/**
  * The autoRenewAccount specified is not a valid, active account.
  */
 
 Status.InvalidAutorenewAccount = new Status(159);
-/*
- * An adminKey was not specified on the topic, so there must not be an
- * autoRenewAccount.
+/**
+ * An adminKey was not specified on the topic, so there must not be an autoRenewAccount.
  */
 
 Status.AutorenewAccountNotAllowed = new Status(160);
-/*
- * The topic has expired, was not automatically renewed, and is in a 7 day
- * grace period before the topic will be Deleted unrecoverably. This error
- * response code will not be returned until autoRenew functionality is
- * supported By HAPI.
+/**
+ * The topic has expired, was not automatically renewed, and is in a 7 day grace period before the topic will be deleted unrecoverably. This error response code will not be returned until autoRenew functionality is supported by HAPI.
  */
 
 Status.TopicExpired = new Status(162);
-/*
- * Chunk number must be from 1 to total (chunks) inclusive.
+/**
+ * chunk number must be from 1 to total (chunks) inclusive.
  */
 
 Status.InvalidChunkNumber = new Status(163);
-/*
- * For every chunk, the payer account that is part of initialTransactionID
- * must match the Payer Account of this transaction. The entire
- * initialTransactionID should match the transactionID of the first chunk,
- * but this is not checked or enforced by Hedera except when the chunk
- * number is 1.
+/**
+ * For every chunk, the payer account that is part of initialTransactionID must match the Payer Account of this transaction. The entire initialTransactionID should match the transactionID of the first chunk, but this is not checked or enforced by Hedera except when the chunk number is 1.
  */
 
 Status.InvalidChunkTransactionId = new Status(164);
-/*
+/**
  * Account is frozen and cannot transact with the token
  */
 
 Status.AccountFrozenForToken = new Status(165);
-/*
- * An involved account already has more than <tt>tokens.maxPerAccount</tt>
- * associations with non-deleted tokens.
+/**
+ * An involved account already has more than <tt>tokens.maxPerAccount</tt> associations with non-deleted tokens.
  */
 
 Status.TokensPerAccountLimitExceeded = new Status(166);
-/*
+/**
  * The token is invalid or does not exist
  */
 
 Status.InvalidTokenId = new Status(167);
-/*
+/**
  * Invalid token decimals
  */
 
 Status.InvalidTokenDecimals = new Status(168);
-/*
+/**
  * Invalid token initial supply
  */
 
 Status.InvalidTokenInitialSupply = new Status(169);
-/*
+/**
  * Treasury Account does not exist or is deleted
  */
 
 Status.InvalidTreasuryAccountForToken = new Status(170);
-/*
+/**
  * Token Symbol is not UTF-8 capitalized alphabetical string
  */
 
 Status.InvalidTokenSymbol = new Status(171);
-/*
+/**
  * Freeze key is not set on token
  */
 
 Status.TokenHasNoFreezeKey = new Status(172);
-/*
+/**
  * Amounts in transfer list are not net zero
  */
 
 Status.TransfersNotZeroSumForToken = new Status(173);
-/*
+/**
  * A token symbol was not provided
  */
 
 Status.MissingTokenSymbol = new Status(174);
-/*
+/**
  * The provided token symbol was too long
  */
 
 Status.TokenSymbolTooLong = new Status(175);
-/*
+/**
  * KYC must be granted and account does not have KYC granted
  */
 
 Status.AccountKycNotGrantedForToken = new Status(176);
-/*
+/**
  * KYC key is not set on token
  */
 
 Status.TokenHasNoKycKey = new Status(177);
-/*
+/**
  * Token balance is not sufficient for the transaction
  */
 
 Status.InsufficientTokenBalance = new Status(178);
-/*
+/**
  * Token transactions cannot be executed on deleted token
  */
 
 Status.TokenWasDeleted = new Status(179);
-/*
+/**
  * Supply key is not set on token
  */
 
 Status.TokenHasNoSupplyKey = new Status(180);
-/*
+/**
  * Wipe key is not set on token
  */
 
 Status.TokenHasNoWipeKey = new Status(181);
-/*
+/**
  * The requested token mint amount would cause an invalid total supply
  */
 
 Status.InvalidTokenMintAmount = new Status(182);
-/*
+/**
  * The requested token burn amount would cause an invalid total supply
  */
 
 Status.InvalidTokenBurnAmount = new Status(183);
-/*
+/**
  * A required token-account relationship is missing
  */
 
 Status.TokenNotAssociatedToAccount = new Status(184);
-/*
+/**
  * The target of a wipe operation was the token treasury account
  */
 
 Status.CannotWipeTokenTreasuryAccount = new Status(185);
-/*
+/**
  * The provided KYC key was invalid.
  */
 
 Status.InvalidKycKey = new Status(186);
-/*
+/**
  * The provided wipe key was invalid.
  */
 
 Status.InvalidWipeKey = new Status(187);
-/*
+/**
  * The provided freeze key was invalid.
  */
 
 Status.InvalidFreezeKey = new Status(188);
-/*
+/**
  * The provided supply key was invalid.
  */
 
 Status.InvalidSupplyKey = new Status(189);
-/*
+/**
  * Token Name is not provided
  */
 
 Status.MissingTokenName = new Status(190);
-/*
+/**
  * Token Name is too long
  */
 
 Status.TokenNameTooLong = new Status(191);
-/*
- * The provided wipe amount must not be negative, zero or bigger than the
- * token holder balance
+/**
+ * The provided wipe amount must not be negative, zero or bigger than the token holder balance
  */
 
 Status.InvalidWipingAmount = new Status(192);
-/*
- * Token does not have Admin key set, thus update/delete transactions cannot
- * be performed
+/**
+ * Token does not have Admin key set, thus update/delete transactions cannot be performed
  */
 
 Status.TokenIsImmutable = new Status(193);
-/*
- * An <tt>associateToken</tt> operation specified a token already associated
- * to the account
+/**
+ * An <tt>associateToken</tt> operation specified a token already associated to the account
  */
 
 Status.TokenAlreadyAssociatedToAccount = new Status(194);
-/*
- * An attempted operation is invalid until all token balances for the target
- * account are zero
+/**
+ * An attempted operation is invalid until all token balances for the target account are zero
  */
 
 Status.TransactionRequiresZeroTokenBalances = new Status(195);
-/*
+/**
  * An attempted operation is invalid because the account is a treasury
  */
 
 Status.AccountIsTreasury = new Status(196);
-/*
+/**
  * Same TokenIDs present in the token list
  */
 
 Status.TokenIdRepeatedInTokenList = new Status(197);
-/*
- * Exceeded the number of token transfers (both from and to) allowed for
- * token transfer list
+/**
+ * Exceeded the number of token transfers (both from and to) allowed for token transfer list
  */
 
 Status.TokenTransferListSizeLimitExceeded = new Status(198);
-/*
+/**
  * TokenTransfersTransactionBody has no TokenTransferList
  */
 
 Status.EmptyTokenTransferBody = new Status(199);
-/*
- * TokenTransfersTransactionBody has a TokenTransferList with
- * no AccountAmounts
+/**
+ * TokenTransfersTransactionBody has a TokenTransferList with no AccountAmounts
  */
 
 Status.EmptyTokenTransferAccountAmounts = new Status(200);
-/*
- * The Scheduled entity does not exist; or has now expired, been deleted, or
- * been executed
+/**
+ * The Scheduled entity does not exist; or has now expired, been deleted, or been executed
  */
 
 Status.InvalidScheduleId = new Status(201);
-/*
+/**
  * The Scheduled entity cannot be modified. Admin key not set
  */
 
 Status.ScheduleIsImmutable = new Status(202);
-/*
+/**
  * The provided Scheduled Payer does not exist
  */
 
 Status.InvalidSchedulePayerId = new Status(203);
-/*
+/**
  * The Schedule Create Transaction TransactionID account does not exist
  */
 
 Status.InvalidScheduleAccountId = new Status(204);
-/*
- * The provided sig map did not contain any new valid signatures from
- * required signers of the scheduled transaction
+/**
+ * The provided sig map did not contain any new valid signatures from required signers of the scheduled transaction
  */
 
 Status.NoNewValidSignatures = new Status(205);
-/*
- * The required signers for a scheduled transaction cannot be resolved, for
- * example because they do not exist or have been deleted
+/**
+ * The required signers for a scheduled transaction cannot be resolved, for example because they do not exist or have been deleted
  */
 
 Status.UnresolvableRequiredSigners = new Status(206);
-/*
- * The bytes allegedly representing a transaction to be scheduled could not
- * be parsed
+/**
+ * Only whitelisted transaction types may be scheduled
  */
 
-Status.UnparseableScheduledTransaction = new Status(207);
-/*
- * ScheduleCreate and ScheduleSign transactions cannot be scheduled
+Status.ScheduledTransactionNotInWhitelist = new Status(207);
+/**
+ * At least one of the signatures in the provided sig map did not represent a valid signature for any required signer
  */
 
-Status.UnschedulableTransaction = new Status(208);
-/*
- * At least one of the signatures in the provided sig map did not represent
- * a valid signature for any required signer
+Status.SomeSignaturesWereInvalid = new Status(208);
+/**
+ * The scheduled field in the TransactionID may not be set to true
  */
 
-Status.SomeSignaturesWereInvalid = new Status(209);
-/*
- * The <tt>scheduled</tt> and <tt>nonce</tt> fields in the
- * <tt>TransactionID</tt> may not be set in a top-level transaction
+Status.TransactionIdFieldNotAllowed = new Status(209);
+/**
+ * A schedule already exists with the same identifying fields of an attempted ScheduleCreate (that is, all fields other than scheduledPayerAccountID)
  */
 
-Status.TransactionIdFieldNotAllowed = new Status(210);
+Status.IdenticalScheduleAlreadyCreated = new Status(210);
+/**
+ * A string field in the transaction has a UTF-8 encoding with the prohibited zero byte
+ */
+
+Status.InvalidZeroByteInString = new Status(211);
+/**
+ * A schedule being signed or deleted has already been deleted
+ */
+
+Status.ScheduleAlreadyDeleted = new Status(212);
+/**
+ * A schedule being signed or deleted has already been executed
+ */
+
+Status.ScheduleAlreadyExecuted = new Status(213);
+/**
+ * ConsensusSubmitMessage request's message size is larger than allowed.
+ */
+
+Status.MessageSizeTooLarge = new Status(214);
+/**
+ * An operation was assigned to more than one throttle group in a given bucket
+ */
+
+Status.OperationRepeatedInBucketGroups = new Status(215);
+/**
+ * The capacity needed to satisfy all opsPerSec groups in a bucket overflowed a signed 8-byte integral type
+ */
+
+Status.BucketCapacityOverflow = new Status(216);
+/**
+ * Given the network size in the address book, the node-level capacity for an operation would never be enough to accept a single request; usually means a bucket burstPeriod should be increased
+ */
+
+Status.NodeCapacityNotSufficientForOperation = new Status(217);
+/**
+ * A bucket was defined without any throttle groups
+ */
+
+Status.BucketHasNoThrottleGroups = new Status(218);
+/**
+ * A throttle group was granted zero opsPerSec
+ */
+
+Status.ThrottleGroupHasZeroOpsPerSec = new Status(219);
+/**
+ * The throttle definitions file was updated, but some supported operations were not assigned a bucket
+ */
+
+Status.SuccessButMissingExpectedOperation = new Status(220);
+/**
+ * The new contents for the throttle definitions system file were not valid protobuf
+ */
+
+Status.UnparseableThrottleDefinitions = new Status(221);
+/**
+ * The new throttle definitions system file were invalid, and no more specific error could be divined
+ */
+
+Status.InvalidThrottleDefinitions = new Status(222);
+/**
+ * The transaction references an account which has passed its expiration without renewal funds available, and currently remains in the ledger only because of the grace period given to expired entities
+ */
+
+Status.AccountExpiredAndPendingRemoval = new Status(223);
+/**
+ * Invalid token max supply
+ */
+
+Status.InvalidTokenMaxSupply = new Status(224);
+/**
+ * Invalid token nft serial number
+ */
+
+Status.InvalidTokenNftSerialNumber = new Status(225);
+/**
+ * Invalid nft id
+ */
+
+Status.InvalidNftId = new Status(226);
+/**
+ * Nft metadata is too long
+ */
+
+Status.MetadataTooLong = new Status(227);
+/**
+ * Repeated operations count exceeds the limit
+ */
+
+Status.BatchSizeLimitExceeded = new Status(228);
+/**
+ * The range of data to be gathered is out of the set boundaries
+ */
+
+Status.InvalidQueryRange = new Status(229);
+/**
+ * A custom fractional fee set a denominator of zero
+ */
+
+Status.FractionDividesByZero = new Status(230);
+/**
+ * The transaction payer could not afford a custom fee
+ */
+
+Status.InsufficientPayerBalanceForCustomFee = new Status(231);
+/**
+ * More than 10 custom fees were specified
+ */
+
+Status.CustomFeesListTooLong = new Status(232);
+/**
+ * Any of the feeCollector accounts for customFees is invalid
+ */
+
+Status.InvalidCustomFeeCollector = new Status(233);
+/**
+ * Any of the token Ids in customFees is invalid
+ */
+
+Status.InvalidTokenIdInCustomFees = new Status(234);
+/**
+ * Any of the token Ids in customFees are not associated to feeCollector
+ */
+
+Status.TokenNotAssociatedToFeeCollector = new Status(235);
+/**
+ * A token cannot have more units minted due to its configured supply ceiling
+ */
+
+Status.TokenMaxSupplyReached = new Status(236);
+/**
+ * The transaction attempted to move an NFT serial number from an account other than its owner
+ */
+
+Status.SenderDoesNotOwnNftSerialNo = new Status(237);
+/**
+ * A custom fee schedule entry did not specify either a fixed or fractional fee
+ */
+
+Status.CustomFeeNotFullySpecified = new Status(238);
+/**
+ * Only positive fees may be assessed at this time
+ */
+
+Status.CustomFeeMustBePositive = new Status(239);
+/**
+ * Fee schedule key is not set on token
+ */
+
+Status.TokenHasNoFeeScheduleKey = new Status(240);
+/**
+ * A fractional custom fee exceeded the range of a 64-bit signed integer
+ */
+
+Status.CustomFeeOutsideNumericRange = new Status(241);
+/**
+ * The sum of all custom fractional fees must be strictly less than 1
+ */
+
+Status.InvalidCustomFractionalFeesSum = new Status(242);
+/**
+ * Each fractional custom fee must have its maximum_amount, if specified, at least its minimum_amount
+ */
+
+Status.FractionalFeeMaxAmountLessThanMinAmount = new Status(243);
+/**
+ * A fee schedule update tried to clear the custom fees from a token whose fee schedule was already empty
+ */
+
+Status.CustomScheduleAlreadyHasNoFees = new Status(244);
+/**
+ * Only tokens of type FUNGIBLE_COMMON can be used to as fee schedule denominations
+ */
+
+Status.CustomFeeDenominationMustBeFungibleCommon = new Status(245);
+/**
+ * Only tokens of type FUNGIBLE_COMMON can have fractional fees
+ */
+
+Status.CustomFractionalFeeOnlyAllowedForFungibleCommon = new Status(246);
+/**
+ * The provided custom fee schedule key was invalid
+ */
+
+Status.InvalidCustomFeeScheduleKey = new Status(247);
+/**
+ * The requested token mint metadata was invalid
+ */
+
+Status.InvalidTokenMintMetadata = new Status(248);
+/**
+ * The requested token burn metadata was invalid
+ */
+
+Status.InvalidTokenBurnMetadata = new Status(249);
+/**
+ * The treasury for a unique token cannot be changed until it owns no NFTs
+ */
+
+Status.CurrentTreasuryStillOwnsNfts = new Status(250);
+/**
+ * An account cannot be dissociated from a unique token if it owns NFTs for the token
+ */
+
+Status.AccountStillOwnsNfts = new Status(251);
+/**
+ * A NFT can only be burned when owned by the unique token's treasury
+ */
+
+Status.TreasuryMustOwnBurnedNft = new Status(252);
+/**
+ * An account did not own the NFT to be wiped
+ */
+
+Status.AccountDoesNotOwnWipedNft = new Status(253);
+/**
+ * An AccountAmount token transfers list referenced a token type other than FUNGIBLE_COMMON
+ */
+
+Status.AccountAmountTransfersOnlyAllowedForFungibleCommon = new Status(254);
+/**
+ * All the NFTs allowed in the current price regime have already been minted
+ */
+
+Status.MaxNftsInPriceRegimeHaveBeenMinted = new Status(255);
+/**
+ * The payer account has been marked as deleted
+ */
+
+Status.PayerAccountDeleted = new Status(256);
+/**
+ * The reference chain of custom fees for a transferred token exceeded the maximum length of 2
+ */
+
+Status.CustomFeeChargingExceededMaxRecursionDepth = new Status(257);
+/**
+ * More than 20 balance adjustments were to satisfy a CryptoTransfer and its implied custom fee payments
+ */
+
+Status.CustomFeeChargingExceededMaxAccountAmounts = new Status(258);
 
 /***/ }),
 
@@ -25554,7 +26059,6 @@ class AccountId {
   }
   /**
    * @internal
-   * @override
    * @returns {proto.IAccountID}
    */
 
@@ -25575,7 +26079,6 @@ class AccountId {
     return proto.AccountID.encode(this._toProtobuf()).finish();
   }
   /**
-   * @override
    * @returns {string}
    */
 
@@ -25674,6 +26177,7 @@ class AccountInfo {
    * @param {LiveHash[]} props.liveHashes
    * @param {TokenRelationshipMap} props.tokenRelationships
    * @param {string} props.accountMemo
+   * @param {Long} props.ownedNfts
    */
   constructor(props) {
     /**
@@ -25777,6 +26281,7 @@ class AccountInfo {
 
     this.tokenRelationships = props.tokenRelationships;
     this.accountMemo = props.accountMemo;
+    this.ownedNfts = props.ownedNfts;
     Object.freeze(this);
   }
   /**
@@ -25817,7 +26322,8 @@ class AccountInfo {
       proxyReceived: _Hbar.default.fromTinybars(info.proxyReceived != null ? info.proxyReceived : 0),
       liveHashes: (info.liveHashes != null ? info.liveHashes : []).map(hash => _LiveHash.default._fromProtobuf(hash, ledgerId)),
       tokenRelationships: _TokenRelationshipMap.default._fromProtobuf(info.tokenRelationships != null ? info.tokenRelationships : [], ledgerId),
-      accountMemo: info.memo != null ? info.memo : ""
+      accountMemo: info.memo != null ? info.memo : "",
+      ownedNfts: info.ownedNfts ? info.ownedNfts : _long.default.ZERO
     });
   }
   /**
@@ -25841,7 +26347,8 @@ class AccountInfo {
       autoRenewPeriod: this.autoRenewPeriod._toProtobuf(),
       liveHashes: this.liveHashes.map(hash => hash._toProtobuf()),
       tokenRelationships: this.tokenRelationships != null ? this.tokenRelationships._toProtobuf() : null,
-      memo: this.accountMemo
+      memo: this.accountMemo,
+      ownedNfts: this.ownedNfts
     };
   }
   /**
@@ -27801,6 +28308,142 @@ exports.default = TokenDecimalMap;
 
 /***/ }),
 
+/***/ 3558:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.default = void 0;
+
+var _TokenId = _interopRequireDefault(__nccwpck_require__(6297));
+
+var _AccountId = _interopRequireDefault(__nccwpck_require__(7776));
+
+var _ObjectMap = _interopRequireDefault(__nccwpck_require__(5835));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITokenTransferList} proto.ITokenTransferList
+ * @typedef {import("@hashgraph/proto").INftTransfer} proto.INftTransfer
+ * @typedef {import("@hashgraph/proto").IAccountAmount} proto.IAccountAmount
+ * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ */
+
+/**
+ * @typedef {object} NftTransfer
+ * @property {AccountId} sender
+ * @property {AccountId} recipient
+ * @property {Long} serial
+ */
+
+/**
+ * @augments {ObjectMap<TokenId, NftTransfer[]>}
+ */
+class TokenNftTransferMap extends _ObjectMap.default {
+  constructor() {
+    super(s => _TokenId.default.fromString(s));
+  }
+  /**
+   * @internal
+   * @param {TokenId} tokenId
+   * @param {NftTransfer} nftTransfer
+   */
+
+
+  __set(tokenId, nftTransfer) {
+    const token = tokenId.toString();
+
+    let _map = this._map.get(token);
+
+    if (_map == null) {
+      _map = [];
+
+      this._map.set(token, _map);
+
+      this.__map.set(tokenId, _map);
+    }
+
+    _map.push(nftTransfer);
+  }
+  /**
+   * @param {proto.ITokenTransferList[]} transfers
+   * @param {(string | null)=} ledgerId
+   * @returns {TokenNftTransferMap}
+   */
+
+
+  static _fromProtobuf(transfers, ledgerId) {
+    const tokenTransfersMap = new TokenNftTransferMap();
+
+    for (const transfer of transfers) {
+      const token = _TokenId.default._fromProtobuf(
+      /** @type {proto.ITokenID} */
+      transfer.token, ledgerId);
+
+      for (const aa of transfer.nftTransfers != null ? transfer.nftTransfers : []) {
+        const sender = _AccountId.default._fromProtobuf(
+        /** @type {proto.IAccountID} */
+        aa.senderAccountID, ledgerId);
+
+        const recipient = _AccountId.default._fromProtobuf(
+        /** @type {proto.IAccountID} */
+        aa.receiverAccountID, ledgerId);
+
+        tokenTransfersMap.__set(token, {
+          sender,
+          recipient,
+          serial:
+          /** @type {Long} */
+          aa.serialNumber
+        });
+      }
+    }
+
+    return tokenTransfersMap;
+  }
+  /**
+   * @returns {proto.ITokenTransferList[]}
+   */
+
+
+  _toProtobuf() {
+    /** @type {proto.ITokenTransferList[]} */
+    const tokenTransferList = [];
+
+    for (const [tokenId, value] of this) {
+      /** @type {proto.INftTransfer[]} */
+      const transfers = [];
+
+      for (const transfer of value) {
+        transfers.push({
+          senderAccountID: transfer.sender._toProtobuf(),
+          receiverAccountID: transfer.recipient._toProtobuf(),
+          serialNumber: transfer.serial
+        });
+      }
+
+      tokenTransferList.push({
+        token: tokenId._toProtobuf(),
+        nftTransfers: transfers
+      });
+    }
+
+    return tokenTransferList;
+  }
+
+}
+
+exports.default = TokenNftTransferMap;
+
+/***/ }),
+
 /***/ 586:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -28177,6 +28820,8 @@ var _TokenTransferMap = _interopRequireDefault(__nccwpck_require__(4363));
 
 var _HbarTransferMap = _interopRequireDefault(__nccwpck_require__(2072));
 
+var _TokenNftTransferMap = _interopRequireDefault(__nccwpck_require__(3558));
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -28199,6 +28844,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").IAccountAmount} proto.IAccountAmount
+ * @typedef {import("@hashgraph/proto").ITokenTransferList} proto.ITokenTransferList
  */
 
 /**
@@ -28228,6 +28874,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 /**
+ * @typedef {object} TransferNftInput
+ * @property {TokenId | string} tokenId
+ * @property {AccountId | string} sender
+ * @property {AccountId | string} recipient
+ * @property {Long | number} serial
+ */
+
+/**
  * Transfers a new Hedera™ crypto-currency token.
  */
 class TransferTransaction extends _Transaction.default {
@@ -28235,6 +28889,7 @@ class TransferTransaction extends _Transaction.default {
    * @param {object} [props]
    * @param {(TransferTokensInput)[]} [props.tokenTransfers]
    * @param {(TransferHbarInput)[]} [props.hbarTransfers]
+   * @param {(TransferNftInput)[]} [props.nftTransfers]
    */
   constructor(props = {}) {
     super();
@@ -28250,6 +28905,12 @@ class TransferTransaction extends _Transaction.default {
      */
 
     this._hbarTransfers = new _HbarTransferMap.default();
+    /**
+     * @private
+     * @type {TokenNftTransferMap}
+     */
+
+    this._nftTransfers = new _TokenNftTransferMap.default();
     this.setMaxTransactionFee(new _Hbar.default(1));
 
     for (const transfer of props.tokenTransfers != null ? props.tokenTransfers : []) {
@@ -28258,6 +28919,10 @@ class TransferTransaction extends _Transaction.default {
 
     for (const transfer of props.hbarTransfers != null ? props.hbarTransfers : []) {
       this.addHbarTransfer(transfer.accountId, transfer.amount);
+    }
+
+    for (const transfer of props.nftTransfers != null ? props.nftTransfers : []) {
+      this.addNftTransfer(transfer.tokenId, transfer.serial, transfer.sender, transfer.recipient);
     }
   }
   /**
@@ -28377,6 +29042,35 @@ class TransferTransaction extends _Transaction.default {
     }
   }
   /**
+   * @returns {TokenNftTransferMap}
+   */
+
+
+  get nftTransfers() {
+    return this._nftTransfers;
+  }
+  /**
+   * @internal
+   * @param {TokenId | string} tokenId
+   * @param {Long | number} serial
+   * @param {AccountId | string} sender
+   * @param {AccountId | string} recipient
+   * @returns {TransferTransaction}
+   */
+
+
+  addNftTransfer(tokenId, serial, sender, recipient) {
+    this._requireNotFrozen();
+
+    this._nftTransfers.__set(typeof tokenId === "string" ? _TokenId.default.fromString(tokenId) : tokenId, {
+      serial: typeof serial === "number" ? _long.default.fromNumber(serial) : serial,
+      sender: typeof sender === "string" ? _AccountId.default.fromString(sender) : sender,
+      recipient: typeof recipient === "string" ? _AccountId.default.fromString(recipient) : recipient
+    });
+
+    return this;
+  }
+  /**
    * @override
    * @internal
    * @param {Channel} channel
@@ -28406,6 +29100,7 @@ class TransferTransaction extends _Transaction.default {
 
 
   _makeTransactionData() {
+    /** @type {proto.ITokenTransferList[]} */
     const tokenTransfers = [];
     const hbarTransfers = [];
 
@@ -28423,6 +29118,31 @@ class TransferTransaction extends _Transaction.default {
         token: tokenId._toProtobuf(),
         transfers
       });
+    }
+
+    for (const [tokenId, value] of this._nftTransfers) {
+      let found = false; // eslint-disable-next-line ie11/no-loop-func
+
+      const nftTransfers = value.map(transfer => {
+        return {
+          senderAccountID: transfer.sender._toProtobuf(),
+          receiverAccountID: transfer.recipient._toProtobuf(),
+          serialNumber: transfer.serial
+        };
+      });
+
+      for (const tokenTransfer of tokenTransfers) {
+        if (tokenTransfer.token != null && tokenTransfer.token.shardNum === tokenId.shard && tokenTransfer.token.realmNum === tokenId.realm && tokenTransfer.token.tokenNum === tokenId.num) {
+          tokenTransfer.nftTransfers = nftTransfers;
+        }
+      }
+
+      if (!found) {
+        tokenTransfers.push({
+          token: tokenId._toProtobuf(),
+          nftTransfers
+        });
+      }
     }
 
     for (const [accountId, value] of this._hbarTransfers) {
@@ -32869,7 +33589,6 @@ class ContractId extends _cryptography.Key {
     return new ContractId(shard, realm, contract);
   }
   /**
-   * @override
    * @internal
    * @returns {proto.IContractID}
    */
@@ -34503,20 +35222,28 @@ var _exportNames = {
   SystemDeleteTransaction: true,
   SystemUndeleteTransaction: true,
   Timestamp: true,
+  AssessedCustomFee: true,
+  CustomFee: true,
+  CustomFixedFee: true,
+  CustomFractionalFee: true,
+  NftId: true,
   TokenAssociateTransaction: true,
   TokenBurnTransaction: true,
   TokenCreateTransaction: true,
   TokenDeleteTransaction: true,
   TokenDissociateTransaction: true,
+  TokenFeeScheduleUpdateTransaction: true,
   TokenFreezeTransaction: true,
   TokenGrantKycTransaction: true,
   TokenId: true,
   TokenInfo: true,
   TokenInfoQuery: true,
   TokenMintTransaction: true,
-  TokenRelationship: true,
-  TokenRelationshipMap: true,
+  TokenNftInfo: true,
+  TokenNftInfoQuery: true,
   TokenRevokeKycTransaction: true,
+  TokenSupplyType: true,
+  TokenType: true,
   TokenUnfreezeTransaction: true,
   TokenUpdateTransaction: true,
   TokenWipeTransaction: true,
@@ -34867,6 +35594,36 @@ Object.defineProperty(exports, "Timestamp", ({
     return _Timestamp.default;
   }
 }));
+Object.defineProperty(exports, "AssessedCustomFee", ({
+  enumerable: true,
+  get: function () {
+    return _AssessedCustomFee.default;
+  }
+}));
+Object.defineProperty(exports, "CustomFee", ({
+  enumerable: true,
+  get: function () {
+    return _CustomFee.default;
+  }
+}));
+Object.defineProperty(exports, "CustomFixedFee", ({
+  enumerable: true,
+  get: function () {
+    return _CustomFixedFee.default;
+  }
+}));
+Object.defineProperty(exports, "CustomFractionalFee", ({
+  enumerable: true,
+  get: function () {
+    return _CustomFractionalFee.default;
+  }
+}));
+Object.defineProperty(exports, "NftId", ({
+  enumerable: true,
+  get: function () {
+    return _NftId.default;
+  }
+}));
 Object.defineProperty(exports, "TokenAssociateTransaction", ({
   enumerable: true,
   get: function () {
@@ -34895,6 +35652,12 @@ Object.defineProperty(exports, "TokenDissociateTransaction", ({
   enumerable: true,
   get: function () {
     return _TokenDissociateTransaction.default;
+  }
+}));
+Object.defineProperty(exports, "TokenFeeScheduleUpdateTransaction", ({
+  enumerable: true,
+  get: function () {
+    return _TokenFeeScheduleUpdateTransaction.default;
   }
 }));
 Object.defineProperty(exports, "TokenFreezeTransaction", ({
@@ -34933,22 +35696,34 @@ Object.defineProperty(exports, "TokenMintTransaction", ({
     return _TokenMintTransaction.default;
   }
 }));
-Object.defineProperty(exports, "TokenRelationship", ({
+Object.defineProperty(exports, "TokenNftInfo", ({
   enumerable: true,
   get: function () {
-    return _TokenRelationship.default;
+    return _TokenNftInfo.default;
   }
 }));
-Object.defineProperty(exports, "TokenRelationshipMap", ({
+Object.defineProperty(exports, "TokenNftInfoQuery", ({
   enumerable: true,
   get: function () {
-    return _TokenRelationshipMap.default;
+    return _TokenNftInfoQuery.default;
   }
 }));
 Object.defineProperty(exports, "TokenRevokeKycTransaction", ({
   enumerable: true,
   get: function () {
     return _TokenRevokeKycTransaction.default;
+  }
+}));
+Object.defineProperty(exports, "TokenSupplyType", ({
+  enumerable: true,
+  get: function () {
+    return _TokenSupplyType.default;
+  }
+}));
+Object.defineProperty(exports, "TokenType", ({
+  enumerable: true,
+  get: function () {
+    return _TokenType.default;
   }
 }));
 Object.defineProperty(exports, "TokenUnfreezeTransaction", ({
@@ -35224,6 +35999,16 @@ var _SystemUndeleteTransaction = _interopRequireDefault(__nccwpck_require__(1403
 
 var _Timestamp = _interopRequireDefault(__nccwpck_require__(351));
 
+var _AssessedCustomFee = _interopRequireDefault(__nccwpck_require__(8846));
+
+var _CustomFee = _interopRequireDefault(__nccwpck_require__(8324));
+
+var _CustomFixedFee = _interopRequireDefault(__nccwpck_require__(214));
+
+var _CustomFractionalFee = _interopRequireDefault(__nccwpck_require__(5699));
+
+var _NftId = _interopRequireDefault(__nccwpck_require__(1349));
+
 var _TokenAssociateTransaction = _interopRequireDefault(__nccwpck_require__(2334));
 
 var _TokenBurnTransaction = _interopRequireDefault(__nccwpck_require__(3464));
@@ -35233,6 +36018,8 @@ var _TokenCreateTransaction = _interopRequireDefault(__nccwpck_require__(8123));
 var _TokenDeleteTransaction = _interopRequireDefault(__nccwpck_require__(6903));
 
 var _TokenDissociateTransaction = _interopRequireDefault(__nccwpck_require__(2651));
+
+var _TokenFeeScheduleUpdateTransaction = _interopRequireDefault(__nccwpck_require__(5813));
 
 var _TokenFreezeTransaction = _interopRequireDefault(__nccwpck_require__(3825));
 
@@ -35246,11 +36033,15 @@ var _TokenInfoQuery = _interopRequireDefault(__nccwpck_require__(5248));
 
 var _TokenMintTransaction = _interopRequireDefault(__nccwpck_require__(3192));
 
-var _TokenRelationship = _interopRequireDefault(__nccwpck_require__(586));
+var _TokenNftInfo = _interopRequireDefault(__nccwpck_require__(4602));
 
-var _TokenRelationshipMap = _interopRequireDefault(__nccwpck_require__(5985));
+var _TokenNftInfoQuery = _interopRequireDefault(__nccwpck_require__(4815));
 
 var _TokenRevokeKycTransaction = _interopRequireDefault(__nccwpck_require__(4501));
+
+var _TokenSupplyType = _interopRequireDefault(__nccwpck_require__(7166));
+
+var _TokenType = _interopRequireDefault(__nccwpck_require__(662));
 
 var _TokenUnfreezeTransaction = _interopRequireDefault(__nccwpck_require__(2181));
 
@@ -36477,7 +37268,6 @@ class FileId {
     return FileId._fromProtobuf(proto.FileID.decode(bytes));
   }
   /**
-   * @override
    * @internal
    * @returns {proto.IFileID}
    */
@@ -36491,7 +37281,6 @@ class FileId {
     };
   }
   /**
-   * @override
    * @returns {string}
    */
 
@@ -37387,7 +38176,6 @@ class GrpcStatus {
     }
   }
   /**
-   * @override
    * @returns {string}
    */
 
@@ -37584,7 +38372,6 @@ class NetworkVersionInfo {
    * @param {object} props
    * @param {SemanticVersion} props.protobufVersion
    * @param {SemanticVersion} props.servicesVesion
-   *
    */
   constructor(props) {
     /**
@@ -39109,7 +39896,6 @@ class ScheduleId {
   }
   /**
    * @internal
-   * @override
    * @returns {proto.ScheduleID}
    */
 
@@ -39122,7 +39908,6 @@ class ScheduleId {
     };
   }
   /**
-   * @override
    * @returns {string}
    */
 
@@ -39916,17 +40701,6 @@ class FreezeTransaction extends _Transaction.default {
   /**
    * @override
    * @protected
-   * @param {Channel} channel
-   * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
-   */
-
-
-  _getMethod(channel) {
-    return transaction => channel.freeze.freeze(transaction);
-  }
-  /**
-   * @override
-   * @protected
    * @returns {NonNullable<proto.TransactionBody["data"]>}
    */
 
@@ -40362,6 +41136,684 @@ SystemUndeleteTransaction._fromProtobuf);
 
 /***/ }),
 
+/***/ 8846:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.default = void 0;
+
+var _TokenId = _interopRequireDefault(__nccwpck_require__(6297));
+
+var _AccountId = _interopRequireDefault(__nccwpck_require__(7776));
+
+var _long = _interopRequireDefault(__nccwpck_require__(492));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IAssessedCustomFee} proto.IAssessedCustomFee
+ */
+class AssessedCustomFee {
+  /**
+   * @param {object} props
+   * @param {AccountId | string} [props.feeCollectorAccountId]
+   * @param {TokenId | string} [props.tokenId]
+   * @param {Long | number} [props.amount]
+   */
+  constructor(props = {}) {
+    /**
+     * @type {?AccountId}
+     */
+    this._feeCollectorAccountId;
+
+    if (props.feeCollectorAccountId != null) {
+      this.setFeeCollectorAccountId(props.feeCollectorAccountId);
+    }
+    /**
+     * @type {?TokenId}
+     */
+
+
+    this._tokenId;
+
+    if (props.tokenId != null) {
+      this.setTokenId(props.tokenId);
+    }
+    /**
+     * @type {?Long}
+     */
+
+
+    this._amount;
+
+    if (props.amount != null) {
+      this.setAmount(props.amount);
+    }
+  }
+  /**
+   * @returns {?AccountId}
+   */
+
+
+  get feeCollectorAccountId() {
+    return this._feeCollectorAccountId;
+  }
+  /**
+   * @param {AccountId | string} feeCollectorAccountId
+   * @returns {this}
+   */
+
+
+  setFeeCollectorAccountId(feeCollectorAccountId) {
+    this._feeCollectorAccountId = typeof feeCollectorAccountId === "string" ? _AccountId.default.fromString(feeCollectorAccountId) : feeCollectorAccountId;
+    return this;
+  }
+  /**
+   * @returns {?TokenId}
+   */
+
+
+  get tokenId() {
+    return this._tokenId;
+  }
+  /**
+   * @param {TokenId | string} tokenId
+   * @returns {this}
+   */
+
+
+  setTokenId(tokenId) {
+    this._tokenId = typeof tokenId === "string" ? _TokenId.default.fromString(tokenId) : tokenId;
+    return this;
+  }
+  /**
+   * @returns {?Long}
+   */
+
+
+  get amount() {
+    return this._amount;
+  }
+  /**
+   * @param {Long | number} amount
+   * @returns {AssessedCustomFee}
+   */
+
+
+  setAmount(amount) {
+    this._amount = typeof amount === "number" ? _long.default.fromNumber(amount) : amount;
+    return this;
+  }
+  /**
+   * @internal
+   * @param {proto.IAssessedCustomFee} fee
+   * @returns {AssessedCustomFee}
+   */
+
+
+  static _fromProtobuf(fee) {
+    return new AssessedCustomFee({
+      feeCollectorAccountId: fee.feeCollectorAccountId != null ? _AccountId.default._fromProtobuf(fee.feeCollectorAccountId) : undefined,
+      tokenId: fee.tokenId != null ? _TokenId.default._fromProtobuf(fee.tokenId) : undefined,
+      amount: fee.amount != null ? fee.amount : undefined
+    });
+  }
+  /**
+   * @internal
+   * @abstract
+   * @returns {proto.IAssessedCustomFee}
+   */
+
+
+  _toProtobuf() {
+    return {
+      feeCollectorAccountId: this.feeCollectorAccountId != null ? this.feeCollectorAccountId._toProtobuf() : null,
+      tokenId: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+      amount: this._amount
+    };
+  }
+
+}
+
+exports.default = AssessedCustomFee;
+
+/***/ }),
+
+/***/ 8324:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.default = void 0;
+
+var _AccountId = _interopRequireDefault(__nccwpck_require__(7776));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ICustomFee} proto.ICustomFee
+ */
+class CustomFee {
+  /**
+   * @param {object} props
+   * @param {AccountId | string} [props.feeCollectorAccountId]
+   */
+  constructor(props = {}) {
+    /**
+     * @type {?AccountId}
+     */
+    this._feeCollectorAccountId;
+
+    if (props.feeCollectorAccountId != null) {
+      this.setFeeCollectorAccountId(props.feeCollectorAccountId);
+    }
+  }
+  /**
+   * @returns {?AccountId}
+   */
+
+
+  get feeCollectorAccountId() {
+    return this._feeCollectorAccountId;
+  }
+  /**
+   * @param {AccountId | string} feeCollectorAccountId
+   * @returns {this}
+   */
+
+
+  setFeeCollectorAccountId(feeCollectorAccountId) {
+    this._feeCollectorAccountId = typeof feeCollectorAccountId === "string" ? _AccountId.default.fromString(feeCollectorAccountId) : feeCollectorAccountId;
+    return this;
+  }
+  /**
+   * @internal
+   * @abstract
+   * @param {proto.ICustomFee} info
+   * @returns {CustomFee}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+
+  static _fromProtobuf(info) {
+    throw new Error("not implemented");
+  }
+  /**
+   * @internal
+   * @abstract
+   * @returns {proto.ICustomFee}
+   */
+
+
+  _toProtobuf() {
+    throw new Error("not implemented");
+  }
+
+}
+
+exports.default = CustomFee;
+
+/***/ }),
+
+/***/ 214:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.default = void 0;
+
+var _TokenId = _interopRequireDefault(__nccwpck_require__(6297));
+
+var _CustomFee = _interopRequireDefault(__nccwpck_require__(8324));
+
+var _AccountId = _interopRequireDefault(__nccwpck_require__(7776));
+
+var _long = _interopRequireDefault(__nccwpck_require__(492));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ICustomFee} proto.ICustomFee
+ * @typedef {import("@hashgraph/proto").IFixedFee} proto.IFixedFee
+ */
+class CustomFixedFee extends _CustomFee.default {
+  /**
+   * @param {object} props
+   * @param {AccountId | string} [props.feeCollectorAccountId]
+   * @param {TokenId | string} [props.denominatingTokenId]
+   * @param {Long | number} [props.amount]
+   */
+  constructor(props = {}) {
+    super(props);
+    /**
+     * @type {?TokenId}
+     */
+
+    this._denominatingTokenId;
+
+    if (props.denominatingTokenId != null) {
+      this.setDenominatingTokenId(props.denominatingTokenId);
+    }
+    /**
+     * @type {?Long}
+     */
+
+
+    this._amount;
+
+    if (props.amount != null) {
+      this.setAmount(props.amount);
+    }
+  }
+  /**
+   * @returns {?TokenId}
+   */
+
+
+  get denominatingTokenId() {
+    return this._denominatingTokenId;
+  }
+  /**
+   * @param {TokenId | string} denominatingTokenId
+   * @returns {CustomFixedFee}
+   */
+
+
+  setDenominatingTokenId(denominatingTokenId) {
+    this._denominatingTokenId = typeof denominatingTokenId === "string" ? _TokenId.default.fromString(denominatingTokenId) : denominatingTokenId;
+    return this;
+  }
+  /**
+   * @returns {?Long}
+   */
+
+
+  get amount() {
+    return this._amount;
+  }
+  /**
+   * @param {Long | number} amount
+   * @returns {CustomFixedFee}
+   */
+
+
+  setAmount(amount) {
+    this._amount = typeof amount === "number" ? _long.default.fromNumber(amount) : amount;
+    return this;
+  }
+  /**
+   * @internal
+   * @override
+   * @param {proto.ICustomFee} info
+   * @returns {CustomFee}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+
+  static _fromProtobuf(info) {
+    const fee =
+    /** @type {proto.IFixedFee} */
+    info.fixedFee;
+    return new CustomFixedFee({
+      feeCollectorAccountId: info.feeCollectorAccountId != null ? _AccountId.default._fromProtobuf(info.feeCollectorAccountId) : undefined,
+      denominatingTokenId: fee.denominatingTokenId != null ? _TokenId.default._fromProtobuf(fee.denominatingTokenId) : undefined,
+      amount: fee.amount != null ? fee.amount : undefined
+    });
+  }
+  /**
+   * @internal
+   * @abstract
+   * @returns {proto.ICustomFee}
+   */
+
+
+  _toProtobuf() {
+    return {
+      feeCollectorAccountId: this.feeCollectorAccountId != null ? this.feeCollectorAccountId._toProtobuf() : null,
+      fixedFee: {
+        denominatingTokenId: this._denominatingTokenId != null ? this._denominatingTokenId._toProtobuf() : null,
+        amount: this._amount
+      }
+    };
+  }
+
+}
+
+exports.default = CustomFixedFee;
+
+/***/ }),
+
+/***/ 5699:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.default = void 0;
+
+var _CustomFee = _interopRequireDefault(__nccwpck_require__(8324));
+
+var _AccountId = _interopRequireDefault(__nccwpck_require__(7776));
+
+var _long = _interopRequireDefault(__nccwpck_require__(492));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ICustomFee} proto.ICustomFee
+ * @typedef {import("@hashgraph/proto").IFractionalFee} proto.IFractionalFee
+ * @typedef {import("@hashgraph/proto").IFraction} proto.IFraction
+ */
+class CustomFractionalFee extends _CustomFee.default {
+  /**
+   * @param {object} props
+   * @param {AccountId | string} [props.feeCollectorAccountId]
+   * @param {Long | number} [props.numerator]
+   * @param {Long | number} [props.denominator]
+   * @param {Long | number} [props.min]
+   * @param {Long | number} [props.max]
+   */
+  constructor(props = {}) {
+    super(props);
+    /**
+     * @type {?Long}
+     */
+
+    this._numerator;
+
+    if (props.numerator != null) {
+      this.setNumerator(props.numerator);
+    }
+    /**
+     * @type {?Long}
+     */
+
+
+    this._denominator;
+
+    if (props.denominator != null) {
+      this.setDenominator(props.denominator);
+    }
+    /**
+     * @type {?Long}
+     */
+
+
+    this._min;
+
+    if (props.min != null) {
+      this.setMin(props.min);
+    }
+    /**
+     * @type {?Long}
+     */
+
+
+    this._max;
+
+    if (props.max != null) {
+      this.setMax(props.max);
+    }
+  }
+  /**
+   * @returns {?Long}
+   */
+
+
+  get numerator() {
+    return this._numerator;
+  }
+  /**
+   * @param {Long | number} numerator
+   * @returns {CustomFractionalFee}
+   */
+
+
+  setNumerator(numerator) {
+    this._numerator = typeof numerator === "number" ? _long.default.fromNumber(numerator) : numerator;
+    return this;
+  }
+  /**
+   * @returns {?Long}
+   */
+
+
+  get denominator() {
+    return this._denominator;
+  }
+  /**
+   * @param {Long | number} denominator
+   * @returns {CustomFractionalFee}
+   */
+
+
+  setDenominator(denominator) {
+    this._denominator = typeof denominator === "number" ? _long.default.fromNumber(denominator) : denominator;
+    return this;
+  }
+  /**
+   * @returns {?Long}
+   */
+
+
+  get min() {
+    return this._min;
+  }
+  /**
+   * @param {Long | number} min
+   * @returns {CustomFractionalFee}
+   */
+
+
+  setMin(min) {
+    this._min = typeof min === "number" ? _long.default.fromNumber(min) : min;
+    return this;
+  }
+  /**
+   * @returns {?Long}
+   */
+
+
+  get max() {
+    return this._max;
+  }
+  /**
+   * @param {Long | number} max
+   * @returns {CustomFractionalFee}
+   */
+
+
+  setMax(max) {
+    this._max = typeof max === "number" ? _long.default.fromNumber(max) : max;
+    return this;
+  }
+  /**
+   * @internal
+   * @override
+   * @param {proto.ICustomFee} info
+   * @returns {CustomFee}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+
+  static _fromProtobuf(info) {
+    const fee =
+    /** @type {proto.IFractionalFee} */
+    info.fractionalFee;
+    const fractional =
+    /** @type {proto.IFraction} */
+    fee.fractionalAmount;
+    return new CustomFractionalFee({
+      feeCollectorAccountId: info.feeCollectorAccountId != null ? _AccountId.default._fromProtobuf(info.feeCollectorAccountId) : undefined,
+      numerator: fractional.numerator != null ? fractional.numerator : undefined,
+      denominator: fractional.denominator != null ? fractional.denominator : undefined,
+      min: fee.minimumAmount != null ? fee.minimumAmount : undefined,
+      max: fee.maximumAmount != null ? fee.maximumAmount : undefined
+    });
+  }
+  /**
+   * @internal
+   * @abstract
+   * @returns {proto.ICustomFee}
+   */
+
+
+  _toProtobuf() {
+    return {
+      feeCollectorAccountId: this.feeCollectorAccountId != null ? this.feeCollectorAccountId._toProtobuf() : null,
+      fractionalFee: {
+        fractionalAmount: {
+          numerator: this._numerator,
+          denominator: this._denominator
+        },
+        minimumAmount: this._min,
+        maximumAmount: this._max
+      }
+    };
+  }
+
+}
+
+exports.default = CustomFractionalFee;
+
+/***/ }),
+
+/***/ 1349:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.default = void 0;
+
+var proto = _interopRequireWildcard(__nccwpck_require__(973));
+
+var _TokenId = _interopRequireDefault(__nccwpck_require__(6297));
+
+var _long = _interopRequireDefault(__nccwpck_require__(492));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+/**
+ * The ID for a crypto-currency token on Hedera.
+ *
+ * @augments {EntityId<proto.INftID>}
+ */
+class NftId {
+  /**
+   * @param {TokenId} token
+   * @param {number | Long} serial
+   */
+  constructor(token, serial) {
+    this.tokenId = token;
+    this.serial = typeof serial === "number" ? _long.default.fromNumber(serial) : serial;
+    Object.freeze(this);
+  }
+  /**
+   * @param {string} text
+   * @returns {NftId}
+   */
+
+
+  static fromString(text) {
+    const strings = text.split("@");
+
+    for (const string of strings) {
+      if (string === "") {
+        throw new Error("invalid format for NftId");
+      }
+    }
+
+    const serial = _long.default.fromString(strings[0]);
+
+    const token = _TokenId.default.fromString(strings[1]);
+
+    return new NftId(token, serial);
+  }
+  /**
+   * @internal
+   * @param {proto.INftID} id
+   * @param {(string | null)=} ledgerId
+   * @returns {NftId}
+   */
+
+
+  static _fromProtobuf(id, ledgerId) {
+    return new NftId(_TokenId.default._fromProtobuf(
+    /** @type {proto.ITokenID} */
+    id.tokenID, ledgerId), id.serialNumber != null ? id.serialNumber : _long.default.ZERO);
+  }
+  /**
+   * @param {Uint8Array} bytes
+   * @returns {NftId}
+   */
+
+
+  static fromBytes(bytes) {
+    return NftId._fromProtobuf(proto.NftID.decode(bytes));
+  }
+  /**
+   * @internal
+   * @returns {proto.INftID}
+   */
+
+
+  _toProtobuf() {
+    return {
+      tokenID: this.tokenId._toProtobuf(),
+      serialNumber: _long.default.fromValue(this.serial !== undefined ? this.serial : 0)
+    };
+  }
+  /**
+   * @returns {string}
+   */
+
+
+  toString() {
+    return `${this.serial.toString()}@${this.tokenId.toString()}`;
+  }
+  /**
+   * @returns {Uint8Array}
+   */
+
+
+  toBytes() {
+    return proto.NftID.encode(this._toProtobuf()).finish();
+  }
+
+}
+
+exports.default = NftId;
+
+/***/ }),
+
 /***/ 2334:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -40608,6 +42060,7 @@ class TokenBurnTransaction extends _Transaction.default {
    * @param {object} [props]
    * @param {TokenId | string} [props.tokenId]
    * @param {Long | number} [props.amount]
+   * @param {(Long | number)[]} [props.serials]
    */
   constructor(props = {}) {
     super();
@@ -40623,6 +42076,12 @@ class TokenBurnTransaction extends _Transaction.default {
      */
 
     this._amount = null;
+    /**
+     * @private
+     * @type {Long[]}
+     */
+
+    this._serials = [];
 
     if (props.tokenId != null) {
       this.setTokenId(props.tokenId);
@@ -40630,6 +42089,10 @@ class TokenBurnTransaction extends _Transaction.default {
 
     if (props.amount != null) {
       this.setAmount(props.amount);
+    }
+
+    if (props.serials != null) {
+      this.setSerials(props.serials);
     }
   }
   /**
@@ -40650,7 +42113,8 @@ class TokenBurnTransaction extends _Transaction.default {
     body.tokenBurn;
     return _Transaction.default._fromProtobufTransactions(new TokenBurnTransaction({
       tokenId: burnToken.token != null ? _TokenId.default._fromProtobuf(burnToken.token) : undefined,
-      amount: burnToken.amount != null ? burnToken.amount : undefined
+      amount: burnToken.amount != null ? burnToken.amount : undefined,
+      serials: burnToken.serialNumbers != null ? burnToken.serialNumbers : undefined
     }), transactions, signedTransactions, transactionIds, nodeIds, bodies);
   }
   /**
@@ -40704,6 +42168,26 @@ class TokenBurnTransaction extends _Transaction.default {
     }
   }
   /**
+   * @returns {Long[]}
+   */
+
+
+  get serials() {
+    return this._serials;
+  }
+  /**
+   * @param {(Long | number)[]} serials
+   * @returns {this}
+   */
+
+
+  setSerials(serials) {
+    this._requireNotFrozen();
+
+    this._serials = serials.map(serial => serial instanceof _long.default ? serial : _long.default.fromValue(serial));
+    return this;
+  }
+  /**
    * @override
    * @internal
    * @param {Channel} channel
@@ -40735,6 +42219,7 @@ class TokenBurnTransaction extends _Transaction.default {
   _makeTransactionData() {
     return {
       amount: this._amount,
+      serialNumbers: this._serials,
       token: this._tokenId != null ? this._tokenId._toProtobuf() : null
     };
   }
@@ -40773,6 +42258,14 @@ var _Timestamp = _interopRequireDefault(__nccwpck_require__(351));
 
 var _Duration = _interopRequireDefault(__nccwpck_require__(7479));
 
+var _CustomFixedFee = _interopRequireDefault(__nccwpck_require__(214));
+
+var _CustomFractionalFee = _interopRequireDefault(__nccwpck_require__(5699));
+
+var _TokenType = _interopRequireDefault(__nccwpck_require__(662));
+
+var _TokenSupplyType = _interopRequireDefault(__nccwpck_require__(7166));
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -40796,6 +42289,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("./CustomFee.js").default} CustomFee
  */
 
 /**
@@ -40814,11 +42308,16 @@ class TokenCreateTransaction extends _Transaction.default {
    * @param {Key} [props.freezeKey]
    * @param {Key} [props.wipeKey]
    * @param {Key} [props.supplyKey]
+   * @param {Key} [props.feeScheduleKey]
    * @param {boolean} [props.freezeDefault]
    * @param {AccountId | string} [props.autoRenewAccountId]
    * @param {Timestamp | Date} [props.expirationTime]
    * @param {Duration | Long | number} [props.autoRenewPeriod]
    * @param {string} [props.tokenMemo]
+   * @param {CustomFee[]} [props.customFees]
+   * @param {TokenType} [props.tokenType]
+   * @param {TokenSupplyType} [props.supplyType]
+   * @param {Long | number} [props.maxSupply]
    */
   constructor(props = {}) {
     super();
@@ -40884,6 +42383,12 @@ class TokenCreateTransaction extends _Transaction.default {
     this._supplyKey = null;
     /**
      * @private
+     * @type {?Key}
+     */
+
+    this._feeScheduleKey = null;
+    /**
+     * @private
      * @type {?boolean}
      */
 
@@ -40912,6 +42417,30 @@ class TokenCreateTransaction extends _Transaction.default {
      */
 
     this._tokenMemo = null;
+    /**
+     * @private
+     * @type {CustomFee[]}
+     */
+
+    this._customFees = [];
+    /**
+     * @private
+     * @type {?TokenType}
+     */
+
+    this._tokenType = null;
+    /**
+     * @private
+     * @type {?TokenSupplyType}
+     */
+
+    this._supplyType = null;
+    /**
+     * @private
+     * @type {?Long}
+     */
+
+    this._maxSupply = null;
     this.setMaxTransactionFee(new _Hbar.default(30));
 
     if (props.tokenName != null) {
@@ -40954,6 +42483,10 @@ class TokenCreateTransaction extends _Transaction.default {
       this.setSupplyKey(props.supplyKey);
     }
 
+    if (props.feeScheduleKey != null) {
+      this.setFeeScheduleKey(props.feeScheduleKey);
+    }
+
     if (props.freezeDefault != null) {
       this.setFreezeDefault(props.freezeDefault);
     }
@@ -40972,6 +42505,22 @@ class TokenCreateTransaction extends _Transaction.default {
 
     if (props.tokenMemo != null) {
       this.setTokenMemo(props.tokenMemo);
+    }
+
+    if (props.customFees != null) {
+      this.setCustomFees(props.customFees);
+    }
+
+    if (props.tokenType != null) {
+      this.setTokenType(props.tokenType);
+    }
+
+    if (props.supplyType != null) {
+      this.setSupplyType(props.supplyType);
+    }
+
+    if (props.maxSupply != null) {
+      this.setMaxSupply(props.maxSupply);
     }
   }
   /**
@@ -41001,11 +42550,22 @@ class TokenCreateTransaction extends _Transaction.default {
       freezeKey: create.freezeKey != null ? (0, _protobuf.keyFromProtobuf)(create.freezeKey) : undefined,
       wipeKey: create.wipeKey != null ? (0, _protobuf.keyFromProtobuf)(create.wipeKey) : undefined,
       supplyKey: create.supplyKey != null ? (0, _protobuf.keyFromProtobuf)(create.supplyKey) : undefined,
+      feeScheduleKey: create.feeScheduleKey != null ? (0, _protobuf.keyFromProtobuf)(create.feeScheduleKey) : undefined,
       freezeDefault: create.freezeDefault != null ? create.freezeDefault : undefined,
       autoRenewAccountId: create.autoRenewAccount != null ? _AccountId.default._fromProtobuf(create.autoRenewAccount) : undefined,
       expirationTime: create.expiry != null ? _Timestamp.default._fromProtobuf(create.expiry) : undefined,
       autoRenewPeriod: create.autoRenewPeriod != null ? _Duration.default._fromProtobuf(create.autoRenewPeriod) : undefined,
-      tokenMemo: create.memo != null ? create.memo : undefined
+      tokenMemo: create.memo != null ? create.memo : undefined,
+      customFees: create.customFees != null ? create.customFees.map(fee => {
+        if (fee.fixedFee != null) {
+          return _CustomFixedFee.default._fromProtobuf(fee);
+        } else {
+          return _CustomFractionalFee.default._fromProtobuf(fee);
+        }
+      }) : undefined,
+      tokenType: create.tokenType != null ? _TokenType.default._fromCode(create.tokenType) : undefined,
+      supplyType: create.supplyType != null ? _TokenSupplyType.default._fromCode(create.supplyType) : undefined,
+      maxSupply: create.maxSupply != null ? create.maxSupply : undefined
     }), transactions, signedTransactions, transactionIds, nodeIds, bodies);
   }
   /**
@@ -41209,6 +42769,26 @@ class TokenCreateTransaction extends _Transaction.default {
     return this;
   }
   /**
+   * @returns {?Key}
+   */
+
+
+  get feeScheduleKey() {
+    return this._feeScheduleKey;
+  }
+  /**
+   * @param {Key} key
+   * @returns {this}
+   */
+
+
+  setFeeScheduleKey(key) {
+    this._requireNotFrozen();
+
+    this._feeScheduleKey = key;
+    return this;
+  }
+  /**
    * @returns {?boolean}
    */
 
@@ -41312,6 +42892,78 @@ class TokenCreateTransaction extends _Transaction.default {
     return this;
   }
   /**
+   * @returns {CustomFee[]}
+   */
+
+
+  get customFees() {
+    return this._customFees;
+  }
+  /**
+   * @param {CustomFee[]} customFees
+   * @returns {this}
+   */
+
+
+  setCustomFees(customFees) {
+    this._customFees = customFees;
+    return this;
+  }
+  /**
+   * @returns {?TokenType}
+   */
+
+
+  get tokenType() {
+    return this._tokenType;
+  }
+  /**
+   * @param {TokenType} tokenType
+   * @returns {this}
+   */
+
+
+  setTokenType(tokenType) {
+    this._tokenType = tokenType;
+    return this;
+  }
+  /**
+   * @returns {?TokenSupplyType}
+   */
+
+
+  get supplyType() {
+    return this._supplyType;
+  }
+  /**
+   * @param {TokenSupplyType} supplyType
+   * @returns {this}
+   */
+
+
+  setSupplyType(supplyType) {
+    this._supplyType = supplyType;
+    return this;
+  }
+  /**
+   * @returns {?Long}
+   */
+
+
+  get maxSupply() {
+    return this._maxSupply;
+  }
+  /**
+   * @param {Long | number} maxSupply
+   * @returns {this}
+   */
+
+
+  setMaxSupply(maxSupply) {
+    this._maxSupply = typeof maxSupply === "number" ? _long.default.fromNumber(maxSupply) : maxSupply;
+    return this;
+  }
+  /**
    * @param {?import("../client/Client.js").default<Channel, *>} client
    * @returns {this}
    */
@@ -41379,11 +43031,16 @@ class TokenCreateTransaction extends _Transaction.default {
       freezeKey: this._freezeKey != null ? (0, _protobuf.keyToProtobuf)(this._freezeKey) : null,
       wipeKey: this._wipeKey != null ? (0, _protobuf.keyToProtobuf)(this._wipeKey) : null,
       supplyKey: this._supplyKey != null ? (0, _protobuf.keyToProtobuf)(this._supplyKey) : null,
+      feeScheduleKey: this._feeScheduleKey != null ? (0, _protobuf.keyToProtobuf)(this._feeScheduleKey) : null,
       freezeDefault: this._freezeDefault,
       autoRenewAccount: this._autoRenewAccountId != null ? this._autoRenewAccountId._toProtobuf() : null,
       expiry: this._expirationTime != null ? this._expirationTime._toProtobuf() : null,
       autoRenewPeriod: this._autoRenewPeriod != null ? this._autoRenewPeriod._toProtobuf() : null,
-      memo: this._tokenMemo
+      memo: this._tokenMemo,
+      customFees: this.customFees.map(fee => fee._toProtobuf()),
+      tokenType: this._tokenType != null ? this._tokenType._code : null,
+      supplyType: this._supplyType != null ? this._supplyType._code : null,
+      maxSupply: this.maxSupply
     };
   }
 
@@ -41744,6 +43401,195 @@ exports.default = TokenDissociateTransaction;
 
 _Transaction.TRANSACTION_REGISTRY.set("tokenDissociate", // eslint-disable-next-line @typescript-eslint/unbound-method
 TokenDissociateTransaction._fromProtobuf);
+
+/***/ }),
+
+/***/ 5813:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.default = void 0;
+
+var _TokenId = _interopRequireDefault(__nccwpck_require__(6297));
+
+var _Transaction = _interopRequireWildcard(__nccwpck_require__(3972));
+
+var _CustomFixedFee = _interopRequireDefault(__nccwpck_require__(214));
+
+var _CustomFractionalFee = _interopRequireDefault(__nccwpck_require__(5699));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").ITokenFeeScheduleUpdateTransactionBody} proto.ITokenFeeScheduleUpdateTransactionBody
+ * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
+ */
+
+/**
+ * @typedef {import("bignumber.js").default} BigNumber
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("./CustomFee.js").default} CustomFee
+ * @typedef {import("../account/AccountId.js").default} AccountId
+ */
+
+/**
+ * FeeScheduleUpdate a new Hedera™ crypto-currency token.
+ */
+class TokenFeeScheduleUpdateTransaction extends _Transaction.default {
+  /**
+   * @param {object} [props]
+   * @param {TokenId | string} [props.tokenId]
+   * @param {CustomFee[]} [props.customFees]
+   */
+  constructor(props = {}) {
+    super();
+    /**
+     * @private
+     * @type {?TokenId}
+     */
+
+    this._tokenId = null;
+    /**
+     * @private
+     * @type {CustomFee[]}
+     */
+
+    this._customFees = [];
+
+    if (props.tokenId != null) {
+      this.setTokenId(props.tokenId);
+    }
+
+    if (props.customFees != null) {
+      this.setCustomFees(props.customFees);
+    }
+  }
+  /**
+   * @internal
+   * @param {proto.ITransaction[]} transactions
+   * @param {proto.ISignedTransaction[]} signedTransactions
+   * @param {TransactionId[]} transactionIds
+   * @param {AccountId[]} nodeIds
+   * @param {proto.ITransactionBody[]} bodies
+   * @returns {TokenFeeScheduleUpdateTransaction}
+   */
+
+
+  static _fromProtobuf(transactions, signedTransactions, transactionIds, nodeIds, bodies) {
+    const body = bodies[0];
+    const feeScheduleUpdate =
+    /** @type {proto.ITokenFeeScheduleUpdateTransactionBody} */
+    body.tokenFeeScheduleUpdate;
+    return _Transaction.default._fromProtobufTransactions(new TokenFeeScheduleUpdateTransaction({
+      tokenId: feeScheduleUpdate.tokenId != null ? _TokenId.default._fromProtobuf(feeScheduleUpdate.tokenId) : undefined,
+      customFees: feeScheduleUpdate.customFees != null ? feeScheduleUpdate.customFees.map(fee => {
+        if (fee.fixedFee != null) {
+          return _CustomFixedFee.default._fromProtobuf(fee);
+        } else {
+          return _CustomFractionalFee.default._fromProtobuf(fee);
+        }
+      }) : undefined
+    }), transactions, signedTransactions, transactionIds, nodeIds, bodies);
+  }
+  /**
+   * @returns {?TokenId}
+   */
+
+
+  get tokenId() {
+    return this._tokenId;
+  }
+  /**
+   * @param {TokenId | string} tokenId
+   * @returns {this}
+   */
+
+
+  setTokenId(tokenId) {
+    this._requireNotFrozen();
+
+    this._tokenId = typeof tokenId === "string" ? _TokenId.default.fromString(tokenId) : _TokenId.default._fromProtobuf(tokenId._toProtobuf());
+    return this;
+  }
+  /**
+   * @returns {CustomFee[]}
+   */
+
+
+  get customFees() {
+    return this._customFees;
+  }
+  /**
+   * @param {CustomFee[]} fees
+   * @returns {this}
+   */
+
+
+  setCustomFees(fees) {
+    this._requireNotFrozen();
+
+    this._customFees = fees;
+    return this;
+  }
+  /**
+   * @override
+   * @internal
+   * @param {Channel} channel
+   * @param {proto.ITransaction} request
+   * @returns {Promise<proto.ITransactionResponse>}
+   */
+
+
+  _execute(channel, request) {
+    return channel.token.updateTokenFeeSchedule(request);
+  }
+  /**
+   * @override
+   * @protected
+   * @returns {NonNullable<proto.TransactionBody["data"]>}
+   */
+
+
+  _getTransactionDataCase() {
+    return "tokenFeeScheduleUpdate";
+  }
+  /**
+   * @override
+   * @protected
+   * @returns {proto.ITokenFeeScheduleUpdateTransactionBody}
+   */
+
+
+  _makeTransactionData() {
+    return {
+      tokenId: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+      customFees: this._customFees.map(fee => fee._toProtobuf())
+    };
+  }
+
+}
+
+exports.default = TokenFeeScheduleUpdateTransaction;
+
+_Transaction.TRANSACTION_REGISTRY.set("tokenFeeScheduleUpdate", // eslint-disable-next-line @typescript-eslint/unbound-method
+TokenFeeScheduleUpdateTransaction._fromProtobuf);
 
 /***/ }),
 
@@ -42254,7 +44100,6 @@ class TokenId {
   }
   /**
    * @internal
-   * @override
    * @returns {proto.ITokenID}
    */
 
@@ -42267,7 +44112,6 @@ class TokenId {
     };
   }
   /**
-   * @override
    * @returns {string}
    */
 
@@ -42329,6 +44173,14 @@ var _long = _interopRequireDefault(__nccwpck_require__(492));
 
 var proto = _interopRequireWildcard(__nccwpck_require__(973));
 
+var _TokenType = _interopRequireDefault(__nccwpck_require__(662));
+
+var _TokenSupplyType = _interopRequireDefault(__nccwpck_require__(7166));
+
+var _CustomFixedFee = _interopRequireDefault(__nccwpck_require__(214));
+
+var _CustomFractionalFee = _interopRequireDefault(__nccwpck_require__(5699));
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -42337,6 +44189,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
+ * @typedef {import("./CustomFee.js").default} CustomFee
  */
 
 /**
@@ -42357,6 +44210,7 @@ class TokenInfo {
    * @param {Key | null} props.freezeKey;
    * @param {Key | null} props.wipeKey;
    * @param {Key | null} props.supplyKey;
+   * @param {Key | null} props.feeScheduleKey;
    * @param {boolean | null} props.defaultFreezeStatus;
    * @param {boolean | null} props.defaultKycStatus;
    * @param {boolean} props.isDeleted;
@@ -42364,6 +44218,10 @@ class TokenInfo {
    * @param {Duration | null} props.autoRenewPeriod;
    * @param {Timestamp | null} props.expirationTime;
    * @param {string} props.tokenMemo;
+   * @param {CustomFee[]} props.customFees;
+   * @param {TokenType | null} props.tokenType;
+   * @param {TokenSupplyType | null} props.supplyType;
+   * @param {Long | null} props.maxSupply;
    */
   constructor(props) {
     /**
@@ -42444,6 +44302,7 @@ class TokenInfo {
      */
 
     this.supplyKey = props.supplyKey;
+    this.feeScheduleKey = props.feeScheduleKey;
     /**
      * The default Freeze status (not applicable = null, frozen = false, or unfrozen = true) of Hedera accounts relative to this token.
      * FreezeNotApplicable is returned if Token Freeze Key is empty. Frozen is returned if Token Freeze Key is set and
@@ -42452,8 +44311,7 @@ class TokenInfo {
      *      Frozen = true;
      *      Unfrozen = false;
      *
-     * @readonly
-     */
+      @readonly */
 
     this.defaultFreezeStatus = props.defaultFreezeStatus;
     /**
@@ -42503,6 +44361,10 @@ class TokenInfo {
      */
 
     this.tokenMemo = props.tokenMemo;
+    this.customFees = props.customFees;
+    this.tokenType = props.tokenType;
+    this.supplyType = props.supplyType;
+    this.maxSupply = props.maxSupply;
   }
   /**
    * @internal
@@ -42544,6 +44406,7 @@ class TokenInfo {
       freezeKey: info.freezeKey != null ? (0, _protobuf.keyFromProtobuf)(info.freezeKey, ledgerId) : null,
       wipeKey: info.wipeKey != null ? (0, _protobuf.keyFromProtobuf)(info.wipeKey, ledgerId) : null,
       supplyKey: info.supplyKey != null ? (0, _protobuf.keyFromProtobuf)(info.supplyKey, ledgerId) : null,
+      feeScheduleKey: info.feeScheduleKey != null ? (0, _protobuf.keyFromProtobuf)(info.feeScheduleKey, ledgerId) : null,
       defaultFreezeStatus: defaultFreezeStatus === 0 ? null : defaultFreezeStatus == 1,
       defaultKycStatus: defaultKycStatus === 0 ? null : defaultKycStatus == 1,
       isDeleted:
@@ -42556,7 +44419,17 @@ class TokenInfo {
       expirationTime: info.expiry != null ? _Timestamp.default._fromProtobuf(
       /** @type {proto.ITimestamp} */
       info.expiry) : null,
-      tokenMemo: info.memo != null ? info.memo : ""
+      tokenMemo: info.memo != null ? info.memo : "",
+      customFees: info.customFees != null ? info.customFees.map(fee => {
+        if (fee.fixedFee != null) {
+          return _CustomFixedFee.default._fromProtobuf(fee);
+        } else {
+          return _CustomFractionalFee.default._fromProtobuf(fee);
+        }
+      }) : [],
+      tokenType: info.tokenType != null ? _TokenType.default._fromCode(info.tokenType) : null,
+      supplyType: info.supplyType != null ? _TokenSupplyType.default._fromCode(info.supplyType) : null,
+      maxSupply: info.maxSupply != null ? info.maxSupply : null
     });
   }
   /**
@@ -42577,13 +44450,18 @@ class TokenInfo {
       freezeKey: this.freezeKey != null ? (0, _protobuf.keyToProtobuf)(this.freezeKey) : null,
       wipeKey: this.wipeKey != null ? (0, _protobuf.keyToProtobuf)(this.wipeKey) : null,
       supplyKey: this.supplyKey != null ? (0, _protobuf.keyToProtobuf)(this.supplyKey) : null,
+      feeScheduleKey: this.feeScheduleKey != null ? (0, _protobuf.keyToProtobuf)(this.feeScheduleKey) : null,
       defaultFreezeStatus: this.defaultFreezeStatus == null ? 0 : this.defaultFreezeStatus ? 1 : 2,
       defaultKycStatus: this.defaultKycStatus == null ? 0 : this.defaultKycStatus ? 1 : 2,
       deleted: this.isDeleted,
       autoRenewAccount: this.autoRenewAccountId != null ? this.autoRenewAccountId._toProtobuf() : undefined,
       autoRenewPeriod: this.autoRenewPeriod != null ? this.autoRenewPeriod._toProtobuf() : null,
       expiry: this.expirationTime != null ? this.expirationTime._toProtobuf() : null,
-      memo: this.tokenMemo
+      memo: this.tokenMemo,
+      customFees: this.customFees.map(fee => fee._toProtobuf()),
+      tokenType: this.tokenType != null ? this.tokenType._code : null,
+      supplyType: this.supplyType != null ? this.supplyType._code : null,
+      maxSupply: this.maxSupply
     };
   }
   /**
@@ -42826,6 +44704,8 @@ var _Transaction = _interopRequireWildcard(__nccwpck_require__(3972));
 
 var _long = _interopRequireDefault(__nccwpck_require__(492));
 
+var hex = _interopRequireWildcard(__nccwpck_require__(819));
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -42858,6 +44738,7 @@ class TokenMintTransaction extends _Transaction.default {
    * @param {object} [props]
    * @param {TokenId | string} [props.tokenId]
    * @param {Long | number} [props.amount]
+   * @param {(Uint8Array | string)[]} [props.metadata]
    */
   constructor(props = {}) {
     super();
@@ -42873,6 +44754,12 @@ class TokenMintTransaction extends _Transaction.default {
      */
 
     this._amount = null;
+    /**
+     * @private
+     * @type {Uint8Array[]}
+     */
+
+    this._metadata = [];
 
     if (props.tokenId != null) {
       this.setTokenId(props.tokenId);
@@ -42880,6 +44767,10 @@ class TokenMintTransaction extends _Transaction.default {
 
     if (props.amount != null) {
       this.setAmount(props.amount);
+    }
+
+    if (props.metadata != null) {
+      this.setMetadata(props.metadata);
     }
   }
   /**
@@ -42897,10 +44788,11 @@ class TokenMintTransaction extends _Transaction.default {
     const body = bodies[0];
     const mintToken =
     /** @type {proto.ITokenMintTransactionBody} */
-    body.tokenCreation;
+    body.tokenMint;
     return _Transaction.default._fromProtobufTransactions(new TokenMintTransaction({
       tokenId: mintToken.token != null ? _TokenId.default._fromProtobuf(mintToken.token) : undefined,
-      amount: mintToken.amount != null ? mintToken.amount : undefined
+      amount: mintToken.amount != null ? mintToken.amount : undefined,
+      metadata: mintToken.metadata != null ? mintToken.metadata : undefined
     }), transactions, signedTransactions, transactionIds, nodeIds, bodies);
   }
   /**
@@ -42954,6 +44846,39 @@ class TokenMintTransaction extends _Transaction.default {
     }
   }
   /**
+   * @returns {Uint8Array[]}
+   */
+
+
+  get metadata() {
+    return this._metadata;
+  }
+  /**
+   * @param {Uint8Array | string} metadata
+   * @returns {this}
+   */
+
+
+  addMetadata(metadata) {
+    this._requireNotFrozen();
+
+    this._metadata.push(typeof metadata === "string" ? hex.decode(metadata) : metadata);
+
+    return this;
+  }
+  /**
+   * @param {(Uint8Array | string)[]} metadata
+   * @returns {this}
+   */
+
+
+  setMetadata(metadata) {
+    this._requireNotFrozen();
+
+    this._metadata = metadata.map(data => typeof data === "string" ? hex.decode(data) : data);
+    return this;
+  }
+  /**
    * @override
    * @internal
    * @param {Channel} channel
@@ -42985,7 +44910,8 @@ class TokenMintTransaction extends _Transaction.default {
   _makeTransactionData() {
     return {
       amount: this._amount,
-      token: this._tokenId != null ? this._tokenId._toProtobuf() : null
+      token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+      metadata: this._metadata
     };
   }
 
@@ -42995,6 +44921,523 @@ exports.default = TokenMintTransaction;
 
 _Transaction.TRANSACTION_REGISTRY.set("tokenMint", // eslint-disable-next-line @typescript-eslint/unbound-method
 TokenMintTransaction._fromProtobuf);
+
+/***/ }),
+
+/***/ 4602:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.default = void 0;
+
+var _NftId = _interopRequireDefault(__nccwpck_require__(1349));
+
+var _AccountId = _interopRequireDefault(__nccwpck_require__(7776));
+
+var _Timestamp = _interopRequireDefault(__nccwpck_require__(351));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").TokenFreezeStatus} proto.TokenFreezeStatus
+ * @typedef {import("@hashgraph/proto").TokenKycStatus} proto.TokenKycStatus
+ * @typedef {import("@hashgraph/proto").ITokenNftInfo} proto.ITokenNftInfo
+ * @typedef {import("@hashgraph/proto").INftID} proto.INftID
+ * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
+ * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").IKey} proto.IKey
+ * @typedef {import("@hashgraph/proto").IDuration} proto.IDuration
+ */
+
+/**
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ */
+class TokenNftInfo {
+  /**
+   * @private
+   * @param {object} props
+   * @param {NftId} props.nftId;
+   * @param {AccountId} props.accountId;
+   * @param {Timestamp} props.creationTime;
+   * @param {Uint8Array | null} props.metadata;
+   */
+  constructor(props) {
+    /**
+     * ID of the nft instance
+     *
+     * @readonly
+     */
+    this.nftId = props.nftId;
+    /**
+     * @readonly
+     */
+
+    this.accountId = props.accountId;
+    /**
+     * @readonly
+     */
+
+    this.creationTime = props.creationTime;
+    /**
+     * @readonly
+     */
+
+    this.metadata = props.metadata;
+    Object.freeze(this);
+  }
+  /**
+   * @internal
+   * @param {proto.ITokenNftInfo} info
+   * @param {(string | null)=} ledgerId
+   * @returns {TokenNftInfo}
+   */
+
+
+  static _fromProtobuf(info, ledgerId) {
+    return new TokenNftInfo({
+      nftId: _NftId.default._fromProtobuf(
+      /** @type {proto.INftID} */
+      info.nftID, ledgerId),
+      accountId: _AccountId.default._fromProtobuf(
+      /** @type {proto.IAccountID} */
+      info.accountID, ledgerId),
+      creationTime: _Timestamp.default._fromProtobuf(
+      /** @type {proto.ITimestamp} */
+      info.creationTime),
+      metadata: info.metadata !== undefined ? info.metadata : null
+    });
+  }
+  /**
+   * @returns {proto.ITokenNftInfo}
+   */
+
+
+  _toProtobuf() {
+    return {
+      nftID: this.nftId._toProtobuf(),
+      accountID: this.accountId._toProtobuf(),
+      creationTime: this.creationTime._toProtobuf(),
+      metadata: this.metadata
+    };
+  }
+
+}
+
+exports.default = TokenNftInfo;
+
+/***/ }),
+
+/***/ 4815:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.default = void 0;
+
+var _Query = _interopRequireWildcard(__nccwpck_require__(8678));
+
+var _NftId = _interopRequireDefault(__nccwpck_require__(1349));
+
+var _AccountId = _interopRequireDefault(__nccwpck_require__(7776));
+
+var _TokenId = _interopRequireDefault(__nccwpck_require__(6297));
+
+var _TokenNftInfo = _interopRequireDefault(__nccwpck_require__(4602));
+
+var _Hbar = _interopRequireDefault(__nccwpck_require__(3826));
+
+var _long = _interopRequireDefault(__nccwpck_require__(492));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").ITokenNftInfo} proto.ITokenNftInfo
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").ITokenGetNftInfoQuery} proto.ITokenGetNftInfoQuery
+ * @typedef {import("@hashgraph/proto").ITokenGetNftInfosQuery} proto.ITokenGetNftInfosQuery
+ * @typedef {import("@hashgraph/proto").ITokenGetAccountNftInfosQuery} proto.ITokenGetAccountNftInfosQuery
+ * @typedef {import("@hashgraph/proto").ITokenGetNftInfoResponse} proto.ITokenGetNftInfoResponse
+ * @typedef {import("@hashgraph/proto").ITokenGetNftInfosResponse} proto.ITokenGetNftInfosResponse
+ * @typedef {import("@hashgraph/proto").ITokenGetAccountNftInfosResponse} proto.ITokenGetAccountNftInfosResponse
+ */
+
+/**
+ * @typedef {import("../channel/Channel.js").default} Channel
+ */
+
+/**
+ * @augments {Query<TokenNftInfo[]>}
+ */
+class TokenNftInfoQuery extends _Query.default {
+  /**
+   * @param {object} properties
+   * @param {NftId | string} [properties.nftId]
+   * @param {AccountId | string} [properties.accountId]
+   * @param {TokenId | string} [properties.tokenId]
+   * @param {Long | number} [properties.start]
+   * @param {Long | number} [properties.end]
+   */
+  constructor(properties = {}) {
+    super();
+    /**
+     * @private
+     * @type {?NftId}
+     */
+
+    this._nftId = null;
+
+    if (properties.nftId != null) {
+      this.setNftId(properties.nftId);
+    }
+    /**
+     * @private
+     * @type {?AccountId}
+     */
+
+
+    this._accountId = null;
+
+    if (properties.accountId != null) {
+      this.setAccountId(properties.accountId);
+    }
+    /**
+     * @private
+     * @type {?TokenId}
+     */
+
+
+    this._tokenId = null;
+
+    if (properties.tokenId != null) {
+      this.setTokenId(properties.tokenId);
+    }
+    /**
+     * @private
+     * @type {?Long}
+     */
+
+
+    this._start = null;
+
+    if (properties.start != null) {
+      this.setStart(properties.start);
+    }
+    /**
+     * @private
+     * @type {?Long}
+     */
+
+
+    this._end = null;
+
+    if (properties.end != null) {
+      this.setEnd(properties.end);
+    }
+  }
+  /**
+   * @internal
+   * @param {proto.IQuery} query
+   * @param {(string | null)=} ledgerId
+   * @returns {TokenNftInfoQuery}
+   */
+
+
+  static _fromProtobuf(query, ledgerId) {
+    if (query.tokenGetNftInfo != null) {
+      const info =
+      /** @type {proto.ITokenGetNftInfoQuery} */
+      query.tokenGetNftInfo;
+      return new TokenNftInfoQuery({
+        nftId: info.nftID != null ? _NftId.default._fromProtobuf(info.nftID, ledgerId) : undefined
+      });
+    } else if (query.tokenGetAccountNftInfos != null) {
+      const info =
+      /** @type {proto.ITokenGetAccountNftInfosQuery} */
+      query.tokenGetAccountNftInfos;
+      return new TokenNftInfoQuery({
+        accountId: info.accountID != null ? _AccountId.default._fromProtobuf(info.accountID, ledgerId) : undefined,
+        start: info.start != null ? info.start : undefined,
+        end: info.end != null ? info.end : undefined
+      });
+    } else {
+      const info =
+      /** @type {proto.ITokenGetNftInfosQuery} */
+      query.tokenGetNftInfos;
+      return new TokenNftInfoQuery({
+        tokenId: info.tokenID != null ? _TokenId.default._fromProtobuf(info.tokenID, ledgerId) : undefined,
+        start: info.start != null ? info.start : undefined,
+        end: info.end != null ? info.end : undefined
+      });
+    }
+  }
+  /**
+   * @returns {?NftId}
+   */
+
+
+  get nftId() {
+    return this._nftId;
+  }
+  /**
+   * Set the token ID for which the info is being requested.
+   *
+   * @param {NftId | string} nftId
+   * @returns {TokenNftInfoQuery}
+   */
+
+
+  setNftId(nftId) {
+    this._nftId = typeof nftId === "string" ? _NftId.default.fromString(nftId) : _NftId.default._fromProtobuf(nftId._toProtobuf());
+    return this;
+  }
+  /**
+   * @returns {?AccountId}
+   */
+
+
+  get accountId() {
+    return this._accountId;
+  }
+  /**
+   * Set the token ID for which the info is being requested.
+   *
+   * @param {AccountId | string} accountId
+   * @returns {TokenNftInfoQuery}
+   */
+
+
+  setAccountId(accountId) {
+    this._accountId = typeof accountId === "string" ? _AccountId.default.fromString(accountId) : _AccountId.default._fromProtobuf(accountId._toProtobuf());
+    return this;
+  }
+  /**
+   * @returns {?TokenId}
+   */
+
+
+  get tokenId() {
+    return this._tokenId;
+  }
+  /**
+   * Set the token ID for which the info is being requested.
+   *
+   * @param {TokenId | string} tokenId
+   * @returns {TokenNftInfoQuery}
+   */
+
+
+  setTokenId(tokenId) {
+    this._tokenId = typeof tokenId === "string" ? _TokenId.default.fromString(tokenId) : _TokenId.default._fromProtobuf(tokenId._toProtobuf());
+    return this;
+  }
+  /**
+   * @returns {?Long}
+   */
+
+
+  get start() {
+    return this._start;
+  }
+  /**
+   * Set the token ID for which the info is being requested.
+   *
+   * @param {Long | number} start
+   * @returns {TokenNftInfoQuery}
+   */
+
+
+  setStart(start) {
+    this._start = typeof start === "number" ? _long.default.fromNumber(start) : start;
+    return this;
+  }
+  /**
+   * @returns {?Long}
+   */
+
+
+  get end() {
+    return this._end;
+  }
+  /**
+   * Set the token ID for which the info is being requested.
+   *
+   * @param {Long | number} end
+   * @returns {TokenNftInfoQuery}
+   */
+
+
+  setEnd(end) {
+    this._end = typeof end === "number" ? _long.default.fromNumber(end) : end;
+    return this;
+  }
+  /**
+   * @override
+   * @param {import("../client/Client.js").default<Channel, *>} client
+   * @returns {Promise<Hbar>}
+   */
+
+
+  async getCost(client) {
+    let cost = await super.getCost(client);
+
+    if (cost.toTinybars().greaterThan(25)) {
+      return cost;
+    } else {
+      return _Hbar.default.fromTinybars(25);
+    }
+  }
+  /**
+   * @override
+   * @internal
+   * @param {Channel} channel
+   * @param {proto.IQuery} request
+   * @returns {Promise<proto.IResponse>}
+   */
+
+
+  _execute(channel, request) {
+    if (this._nftId != null) {
+      return channel.token.getTokenNftInfo(request);
+    } else if (this._accountId != null) {
+      return channel.token.getAccountNftInfos(request);
+    } else {
+      return channel.token.getTokenNftInfos(request);
+    }
+  }
+  /**
+   * @override
+   * @internal
+   * @param {proto.IResponse} response
+   * @returns {proto.IResponseHeader}
+   */
+
+
+  _mapResponseHeader(response) {
+    let infos;
+
+    if (this._nftId != null) {
+      infos =
+      /** @type {proto.ITokenGetNftInfoResponse} */
+      response.tokenGetNftInfo;
+    } else if (this._accountId != null) {
+      infos =
+      /** @type {proto.ITokenGetAccountNftInfosResponse} */
+      response.tokenGetAccountNftInfos;
+    } else {
+      infos =
+      /** @type {proto.ITokenGetNftInfosResponse} */
+      response.tokenGetNftInfos;
+    }
+
+    return (
+      /** @type {proto.IResponseHeader} */
+      infos.header
+    );
+  }
+  /**
+   * @override
+   * @internal
+   * @param {proto.IResponse} response
+   * @param {AccountId} nodeAccountId
+   * @param {proto.IQuery} request
+   * @param {string | null} ledgerId
+   * @returns {Promise<TokenNftInfo[]>}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+
+  _mapResponse(response, nodeAccountId, request, ledgerId) {
+    let nfts = [];
+    /** @type {proto.ITokenGetNftInfoResponse} */
+
+    response.tokenGetNftInfo;
+
+    if (this._nftId != null) {
+      nfts = [
+      /** @type {proto.ITokenNftInfo} */
+
+      /** @type {proto.ITokenGetNftInfoResponse} */
+      response.tokenGetNftInfo.nft];
+    } else if (this._accountId != null) {
+      nfts =
+      /** @type {proto.ITokenNftInfo[]} */
+
+      /** @type {proto.ITokenGetAccountNftInfosResponse} */
+      response.tokenGetAccountNftInfos.nfts;
+    } else {
+      nfts =
+      /** @type {proto.ITokenNftInfo[]} */
+
+      /** @type {proto.ITokenGetNftInfosResponse} */
+      response.tokenGetNftInfos.nfts;
+    }
+
+    return Promise.resolve(nfts.map(nft => _TokenNftInfo.default._fromProtobuf(
+    /** @type {proto.ITokenNftInfo} */
+    nft, ledgerId)));
+  }
+  /**
+   * @override
+   * @internal
+   * @param {proto.IQueryHeader} header
+   * @returns {proto.IQuery}
+   */
+
+
+  _onMakeRequest(header) {
+    if (this._nftId != null) {
+      return {
+        tokenGetNftInfo: {
+          header,
+          nftID: this._nftId != null ? this._nftId._toProtobuf() : null
+        }
+      };
+    } else if (this._accountId != null) {
+      return {
+        tokenGetAccountNftInfos: {
+          header,
+          accountID: this._accountId != null ? this._accountId._toProtobuf() : null,
+          start: this._start,
+          end: this._end
+        }
+      };
+    } else {
+      return {
+        tokenGetNftInfos: {
+          header,
+          tokenID: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+          start: this._start,
+          end: this._end
+        }
+      };
+    }
+  }
+
+} // eslint-disable-next-line @typescript-eslint/unbound-method
+
+
+exports.default = TokenNftInfoQuery;
+
+_Query.QUERY_REGISTRY.set("tokenGetNftInfo", TokenNftInfoQuery._fromProtobuf);
 
 /***/ }),
 
@@ -43187,6 +45630,188 @@ exports.default = TokenRevokeKycTransaction;
 
 _Transaction.TRANSACTION_REGISTRY.set("tokenRevokeKyc", // eslint-disable-next-line @typescript-eslint/unbound-method
 TokenRevokeKycTransaction._fromProtobuf);
+
+/***/ }),
+
+/***/ 7166:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.default = void 0;
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").TokenSupplyType} proto.TokenSupplyType
+ */
+class TokenSupplyType {
+  /**
+   * @hideconstructor
+   * @internal
+   * @param {number} code
+   */
+  constructor(code) {
+    /** @readonly */
+    this._code = code;
+    Object.freeze(this);
+  }
+  /**
+   * @returns {string}
+   */
+
+
+  toString() {
+    switch (this) {
+      case TokenSupplyType.Infinite:
+        return "INFINITE";
+
+      case TokenSupplyType.Finite:
+        return "FINITE";
+
+      default:
+        return `UNKNOWN (${this._code})`;
+    }
+  }
+  /**
+   * @internal
+   * @param {number} code
+   * @returns {TokenSupplyType}
+   */
+
+
+  static _fromCode(code) {
+    switch (code) {
+      case 0:
+        return TokenSupplyType.Infinite;
+
+      case 1:
+        return TokenSupplyType.Finite;
+    }
+
+    throw new Error(`(BUG) TokenSupplyType.fromCode() does not handle code: ${code}`);
+  }
+  /**
+   * @returns {proto.TokenSupplyType}
+   */
+
+
+  valueOf() {
+    return this._code;
+  }
+
+}
+/**
+ * Interchangeable value with one another, where any quantity of them has the
+ * same value as another equal quantity if they are in the same class. Share
+ * a single set of properties, not distinct from one another. Simply represented
+ * as a balance or quantity to a given Hedera account.
+ */
+
+
+exports.default = TokenSupplyType;
+TokenSupplyType.Infinite = new TokenSupplyType(0);
+/**
+ * Unique, not interchangeable with other tokens of the same type as they
+ * typically have different values. Individually traced and can carry unique
+ * properties (e.g. serial number).
+ */
+
+TokenSupplyType.Finite = new TokenSupplyType(1);
+
+/***/ }),
+
+/***/ 662:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.default = void 0;
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").TokenType} proto.TokenType
+ */
+class TokenType {
+  /**
+   * @hideconstructor
+   * @internal
+   * @param {number} code
+   */
+  constructor(code) {
+    /** @readonly */
+    this._code = code;
+    Object.freeze(this);
+  }
+  /**
+   * @returns {string}
+   */
+
+
+  toString() {
+    switch (this) {
+      case TokenType.FungibleCommon:
+        return "FUNGIBLE_COMMON";
+
+      case TokenType.NonFungibleUnique:
+        return "NON_FUNGIBLE_UNIQUE";
+
+      default:
+        return `UNKNOWN (${this._code})`;
+    }
+  }
+  /**
+   * @internal
+   * @param {number} code
+   * @returns {TokenType}
+   */
+
+
+  static _fromCode(code) {
+    switch (code) {
+      case 0:
+        return TokenType.FungibleCommon;
+
+      case 1:
+        return TokenType.NonFungibleUnique;
+    }
+
+    throw new Error(`(BUG) TokenType.fromCode() does not handle code: ${code}`);
+  }
+  /**
+   * @returns {proto.TokenType}
+   */
+
+
+  valueOf() {
+    return this._code;
+  }
+
+}
+/**
+ * Interchangeable value with one another, where any quantity of them has the
+ * same value as another equal quantity if they are in the same class. Share
+ * a single set of properties, not distinct from one another. Simply represented
+ * as a balance or quantity to a given Hedera account.
+ */
+
+
+exports.default = TokenType;
+TokenType.FungibleCommon = new TokenType(0);
+/**
+ * Unique, not interchangeable with other tokens of the same type as they
+ * typically have different values. Individually traced and can carry unique
+ * properties (e.g. serial number).
+ */
+
+TokenType.NonFungibleUnique = new TokenType(1);
 
 /***/ }),
 
@@ -43449,6 +46074,7 @@ class TokenUpdateTransaction extends _Transaction.default {
    * @param {Timestamp | Date} [props.expirationTime]
    * @param {Duration | Long | number} [props.autoRenewPeriod]
    * @param {string} [props.tokenMemo]
+   * @param {Key} [props.feeScheduleKey]
    */
   constructor(props = {}) {
     super();
@@ -43530,6 +46156,12 @@ class TokenUpdateTransaction extends _Transaction.default {
      */
 
     this._tokenMemo = null;
+    /**
+     * @private
+     * @type {?Key}
+     */
+
+    this._feeScheduleKey = null;
 
     if (props.tokenId != null) {
       this.setTokenId(props.tokenId);
@@ -43582,6 +46214,10 @@ class TokenUpdateTransaction extends _Transaction.default {
     if (props.tokenMemo != null) {
       this.setTokenMemo(props.tokenMemo);
     }
+
+    if (props.feeScheduleKey != null) {
+      this.setFeeScheduleKey(props.feeScheduleKey);
+    }
   }
   /**
    * @internal
@@ -43612,7 +46248,8 @@ class TokenUpdateTransaction extends _Transaction.default {
       autoRenewAccountId: update.autoRenewAccount != null ? _AccountId.default._fromProtobuf(update.autoRenewAccount) : undefined,
       expirationTime: update.expiry != null ? _Timestamp.default._fromProtobuf(update.expiry) : undefined,
       autoRenewPeriod: update.autoRenewPeriod != null ? _Duration.default._fromProtobuf(update.autoRenewPeriod) : undefined,
-      tokenMemo: update.memo != null ? update.memo.value != null ? update.memo.value : undefined : undefined
+      tokenMemo: update.memo != null ? update.memo.value != null ? update.memo.value : undefined : undefined,
+      feeScheduleKey: update.feeScheduleKey != null ? (0, _protobuf.keyFromProtobuf)(update.feeScheduleKey) : undefined
     }), transactions, signedTransactions, transactionIds, nodeIds, bodies);
   }
   /**
@@ -43878,6 +46515,26 @@ class TokenUpdateTransaction extends _Transaction.default {
     return this;
   }
   /**
+   * @returns {?Key}
+   */
+
+
+  get feeScheduleKey() {
+    return this._feeScheduleKey;
+  }
+  /**
+   * @param {Key} feeScheduleKey
+   * @returns {this}
+   */
+
+
+  setFeeScheduleKey(feeScheduleKey) {
+    this._requireNotFrozen();
+
+    this._feeScheduleKey = feeScheduleKey;
+    return this;
+  }
+  /**
    * @returns {this}
    */
 
@@ -43951,7 +46608,8 @@ class TokenUpdateTransaction extends _Transaction.default {
       autoRenewPeriod: this._autoRenewPeriod != null ? this._autoRenewPeriod._toProtobuf() : null,
       memo: this._tokenMemo != null ? {
         value: this._tokenMemo
-      } : null
+      } : null,
+      feeScheduleKey: this._feeScheduleKey != null ? (0, _protobuf.keyToProtobuf)(this._feeScheduleKey) : null
     };
   }
 
@@ -44015,6 +46673,7 @@ class TokenWipeTransaction extends _Transaction.default {
    * @param {TokenId | string} [props.tokenId]
    * @param {AccountId | string} [props.accountId]
    * @param {Long | number} [props.amount]
+   * @param {(Long | number)[]} [props.serials]
    */
   constructor(props = {}) {
     super();
@@ -44032,6 +46691,12 @@ class TokenWipeTransaction extends _Transaction.default {
     this._accountId = null;
     /**
      * @private
+     * @type {Long[]}
+     */
+
+    this._serials = [];
+    /**
+     * @private
      * @type {?Long}
      */
 
@@ -44047,6 +46712,10 @@ class TokenWipeTransaction extends _Transaction.default {
 
     if (props.amount != null) {
       this.setAmount(props.amount);
+    }
+
+    if (props.serials != null) {
+      this.setSerials(props.serials);
     }
   }
   /**
@@ -44146,6 +46815,26 @@ class TokenWipeTransaction extends _Transaction.default {
     }
   }
   /**
+   * @returns {Long[]}
+   */
+
+
+  get serials() {
+    return this._serials;
+  }
+  /**
+   * @param {(Long | number)[]} serials
+   * @returns {this}
+   */
+
+
+  setSerials(serials) {
+    this._requireNotFrozen();
+
+    this._serials = serials.map(serial => typeof serial === "number" ? _long.default.fromNumber(serial) : serial);
+    return this;
+  }
+  /**
    * @override
    * @internal
    * @param {Channel} channel
@@ -44178,7 +46867,8 @@ class TokenWipeTransaction extends _Transaction.default {
     return {
       amount: this._amount,
       token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
-      account: this._accountId != null ? this._accountId._toProtobuf() : null
+      account: this._accountId != null ? this._accountId._toProtobuf() : null,
+      serialNumbers: this.serials
     };
   }
 
@@ -44798,7 +47488,6 @@ class TopicId {
     return TopicId._fromProtobuf(_proto.TopicID.decode(bytes));
   }
   /**
-   * @override
    * @returns {proto.ITopicID}
    */
 
@@ -44811,7 +47500,6 @@ class TopicId {
     };
   }
   /**
-   * @override
    * @returns {string}
    */
 
@@ -48162,6 +50850,7 @@ class TransactionReceipt {
    * @param {?Uint8Array} props.topicRunningHash
    * @param {?Long} props.totalSupply
    * @param {?TransactionId} props.scheduledTransactionId
+   * @param {Long[]} props.serials
    */
   constructor(props) {
     /**
@@ -48241,6 +50930,7 @@ class TransactionReceipt {
 
     this.totalSupply = props.totalSupply;
     this.scheduledTransactionId = props.scheduledTransactionId;
+    this.serials = props.serials;
     Object.freeze(this);
   }
   /**
@@ -48264,7 +50954,8 @@ class TransactionReceipt {
         nextRate: null,
         currentRate: this.exchangeRate != null ? this.exchangeRate._toProtobuf() : null
       },
-      scheduledTransactionID: this.scheduledTransactionId != null ? this.scheduledTransactionId._toProtobuf() : null
+      scheduledTransactionID: this.scheduledTransactionId != null ? this.scheduledTransactionId._toProtobuf() : null,
+      serialNumbers: this.serials
     };
   }
   /**
@@ -48293,7 +50984,8 @@ class TransactionReceipt {
       topicSequenceNumber: receipt.topicSequenceNumber == null ? null : _long.default.fromValue(receipt.topicSequenceNumber),
       topicRunningHash: receipt.topicRunningHash != null ? receipt.topicRunningHash : null,
       totalSupply: receipt.newTotalSupply != null ? receipt.newTotalSupply : null,
-      scheduledTransactionId: receipt.scheduledTransactionID != null ? _TransactionId.default._fromProtobuf(receipt.scheduledTransactionID, ledgerId) : null
+      scheduledTransactionId: receipt.scheduledTransactionID != null ? _TransactionId.default._fromProtobuf(receipt.scheduledTransactionID, ledgerId) : null,
+      serials: receipt.serialNumbers != null ? receipt.serialNumbers : []
     });
   }
   /**
@@ -48650,15 +51342,23 @@ var _ContractFunctionResult = _interopRequireDefault(__nccwpck_require__(5971));
 
 var _TokenTransferMap = _interopRequireDefault(__nccwpck_require__(4363));
 
+var _TokenNftTransferMap = _interopRequireDefault(__nccwpck_require__(3558));
+
 var proto = _interopRequireWildcard(__nccwpck_require__(973));
 
 var _ScheduleId = _interopRequireDefault(__nccwpck_require__(9032));
+
+var _AssessedCustomFee = _interopRequireDefault(__nccwpck_require__(8846));
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @typedef {import("../token/TokenId.js").default} TokenId
+ */
 
 /**
  * Response when the client sends the node TransactionGetRecordResponse.
@@ -48677,6 +51377,8 @@ class TransactionRecord {
    * @param {Transfer[]} props.transfers
    * @param {TokenTransferMap} props.tokenTransfers
    * @param {?ScheduleId} props.scheduleRef
+   * @param {AssessedCustomFee[]} props.assessedCustomFees
+   * @param {TokenNftTransferMap} props.nftTransfers
    */
   constructor(props) {
     /**
@@ -48747,6 +51449,8 @@ class TransactionRecord {
 
     this.tokenTransfers = props.tokenTransfers;
     this.scheduleRef = props.scheduleRef;
+    this.assessedCustomFees = props.assessedCustomFees;
+    this.nftTransfers = props.nftTransfers;
     Object.freeze(this);
   }
   /**
@@ -48756,6 +51460,27 @@ class TransactionRecord {
 
 
   _toProtobuf() {
+    const tokenTransfers = this.tokenTransfers._toProtobuf();
+
+    const nftTransfers = this.nftTransfers._toProtobuf();
+
+    const tokenTransferLists = [];
+
+    for (const tokenTransfer of tokenTransfers) {
+      for (const nftTransfer of nftTransfers) {
+        if (tokenTransfer.token != null && nftTransfer.token != null && tokenTransfer.token.shardNum === nftTransfer.token.shardNum && tokenTransfer.token.realmNum === nftTransfer.token.realmNum && tokenTransfer.token.tokenNum === nftTransfer.token.tokenNum) {
+          tokenTransferLists.push({
+            token: tokenTransfer.token,
+            transfers: tokenTransfer.transfers,
+            nftTransfers: tokenTransfer.nftTransfers
+          });
+        } else {
+          tokenTransferLists.push(tokenTransfer);
+          tokenTransferLists.push(nftTransfer);
+        }
+      }
+    }
+
     return {
       receipt: this.receipt._toProtobuf(),
       transactionHash: this.transactionHash != null ? this.transactionHash : null,
@@ -48768,8 +51493,9 @@ class TransactionRecord {
       transferList: this.transfers != null ? {
         accountAmounts: this.transfers.map(transfer => transfer._toProtobuf())
       } : null,
-      tokenTransferLists: this.tokenTransfers._toProtobuf(),
-      scheduleRef: this.scheduleRef != null ? this.scheduleRef._toProtobuf() : null
+      tokenTransferLists,
+      scheduleRef: this.scheduleRef != null ? this.scheduleRef._toProtobuf() : null,
+      assessedCustomFees: this.assessedCustomFees.map(fee => fee._toProtobuf())
     };
   }
   /**
@@ -48798,7 +51524,9 @@ class TransactionRecord {
       transfers: (record.transferList != null ? record.transferList.accountAmounts != null ? record.transferList.accountAmounts : [] : []).map(aa => _Transfer.default._fromProtobuf(aa, ledgerId)),
       contractFunctionResult,
       tokenTransfers: _TokenTransferMap.default._fromProtobuf(record.tokenTransferLists != null ? record.tokenTransferLists : [], ledgerId),
-      scheduleRef: record.scheduleRef != null ? _ScheduleId.default._fromProtobuf(record.scheduleRef, ledgerId) : null
+      scheduleRef: record.scheduleRef != null ? _ScheduleId.default._fromProtobuf(record.scheduleRef, ledgerId) : null,
+      assessedCustomFees: record.assessedCustomFees != null ? record.assessedCustomFees.map(fee => _AssessedCustomFee.default._fromProtobuf(fee)) : [],
+      nftTransfers: _TokenNftTransferMap.default._fromProtobuf(record.tokenTransferLists != null ? record.tokenTransferLists : [], ledgerId)
     });
   }
   /**
@@ -49372,7 +52100,12 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const core = __nccwpck_require__(694);
-const { Client, AccountBalanceQuery, HbarUnit } = __nccwpck_require__(9868);
+const {
+  AccountBalanceQuery,
+  Client,
+  Hbar,
+  HbarUnit,
+} = __nccwpck_require__(9868);
 
 async function main() {
   try {
@@ -49391,9 +52124,7 @@ async function main() {
       core.setFailed(`minimum-balance ${minimumBalance} should be a number`);
       return;
     }
-    const minimumHbars = Number(minimumBalance);
-    // Alternative to integer if smaller hbar units are needed?
-    //const minimumHbars = Hbar(minimumBalance, HbarUnit.Hbar);
+    const minimumHbars = new Hbar(minimumBalance, HbarUnit.Hbar);
 
     console.log(
       `Checking account ${accountId} balance on ${hederaNetwork} using operator ${operatorId}`
@@ -49418,15 +52149,16 @@ async function main() {
       .setAccountId(accountId)
       .execute(client);
 
-    const hbars = balance.hbars.to(HbarUnit.Hbar).integerValue();
+    core.setOutput("account-balance", balance.hbars);
 
-    core.setOutput("account-balance", hbars);
-
-    var result = hbars < minimumHbars ? "below" : "above or equal to";
-    var msg = `Balance of ${hbars}ℏ is ${result} minimum ${minimumHbars}ℏ`;
+    const isLessThan = balance.hbars
+      .toBigNumber()
+      .isLessThan(minimumHbars.toBigNumber());
+    const result = isLessThan ? "below" : "above or equal to";
+    const msg = `Balance of ${balance.hbars} is ${result} minimum ${minimumHbars}`;
     console.log(msg);
 
-    if (failAction && hbars < minimumHbars) {
+    if (failAction && isLessThan) {
       core.setFailed(msg);
     }
   } catch (error) {

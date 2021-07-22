@@ -1,6 +1,6 @@
 {
   "name": "hedera-check-balance",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Github Action to check the balance of a Hedera account",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,7 @@
   "dependencies": {
     "@actions/core": "^1.4.0",
     "@actions/github": "^5.0.0",
-    "@hashgraph/sdk": "^2.0.24"
+    "@hashgraph/sdk": "^2.0.26"
   },
   "devDependencies": {
     "prettier": "2.3.2"
