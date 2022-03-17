@@ -1,26 +1,21 @@
-const core = require("@actions/core");
-const {
-  AccountBalanceQuery,
-  Client,
-  Hbar,
-  HbarUnit,
-} = require("@hashgraph/sdk");
+import { getInput, setFailed, setOutput } from "@actions/core";
+import { AccountBalanceQuery, Client, Hbar, HbarUnit } from "@hashgraph/sdk";
 
 async function main() {
   try {
-    const hederaNetwork = core.getInput("hedera-network").toLowerCase();
-    const operatorId = core.getInput("operator-id");
-    const operatorKey = core.getInput("operator-key");
-    const failAction = core.getInput("fail-action").toLowerCase() !== "false";
+    const hederaNetwork = getInput("hedera-network").toLowerCase();
+    const operatorId = getInput("operator-id");
+    const operatorKey = getInput("operator-key");
+    const failAction = getInput("fail-action").toLowerCase() !== "false";
 
-    let accountId = core.getInput("account-id");
+    let accountId = getInput("account-id");
     if (accountId.length === 0) {
       accountId = operatorId;
     }
 
-    const minimumBalance = core.getInput("minimum-balance");
+    const minimumBalance = getInput("minimum-balance");
     if (isNaN(minimumBalance) || isNaN(parseFloat(minimumBalance))) {
-      core.setFailed(`minimum-balance ${minimumBalance} should be a number`);
+      setFailed(`minimum-balance ${minimumBalance} should be a number`);
       return;
     }
     const minimumHbars = new Hbar(minimumBalance, HbarUnit.Hbar);
@@ -48,7 +43,7 @@ async function main() {
       .setAccountId(accountId)
       .execute(client);
 
-    core.setOutput("account-balance", balance.hbars);
+    setOutput("account-balance", balance.hbars);
 
     const isLessThan = balance.hbars
       .toBigNumber()
@@ -58,10 +53,10 @@ async function main() {
     console.log(msg);
 
     if (failAction && isLessThan) {
-      core.setFailed(msg);
+      setFailed(msg);
     }
   } catch (error) {
-    core.setFailed(error.message);
+    setFailed(error.message);
   }
 }
 
