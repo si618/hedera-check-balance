@@ -24,7 +24,7 @@ inputs:
   fail-action:
     description: "Boolean to fail action if account balance is below minimum"
     required: false
-    default: true
+    default: "true"
 outputs:
   account-balance:
     description: "The account balance in hbars"
