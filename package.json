@@ -11,10 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/si618/hedera-check-balance.git"
   },
-  "keywords": [
-    "hedera",
-    "hashgraph"
-  ],
+  "keywords": ["hedera", "hashgraph"],
   "author": "Simon McKenna",
   "license": "ISC",
   "bugs": {
