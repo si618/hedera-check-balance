@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/si618/hedera-check-balance#readme",
   "dependencies": {
-    "@actions/core": "^1.8.2",
+    "@actions/core": "^1.9.0",
     "@actions/github": "^5.0.3",
     "@hashgraph/sdk": "^2.15.0"
   },
