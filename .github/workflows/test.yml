@@ -50,7 +50,6 @@ jobs:
 
       - name: Test previewnet
         uses: si618/hedera-check-balance@v1.3
-        if: ${{ false }}
         with:
           hedera-network: "previewnet"
           operator-id: ${{ secrets.PREVIEWNET_OPERATOR_ID }}
