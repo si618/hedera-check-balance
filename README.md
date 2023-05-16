@@ -1,4 +1,5 @@
 # Hedera check account balance action
+
 [![Test](https://github.com/si618/hedera-check-balance/actions/workflows/test.yml/badge.svg)](https://github.com/si618/hedera-check-balance/actions/workflows/test.yml)
 
 Github Action to [check balance](https://docs.hedera.com/guides/docs/hedera-api/cryptocurrency-accounts/cryptogetaccountbalance) of a Hedera account, optionally failing if there are insufficient hbars.
