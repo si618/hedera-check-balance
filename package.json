@@ -27,6 +27,6 @@
     "@hashgraph/sdk": "^2.48.1"
   },
   "devDependencies": {
-    "prettier": "3.3.2"
+    "prettier": "3.3.3"
   }
 }
