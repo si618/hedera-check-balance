@@ -1,6 +1,10 @@
-# Create pull requests on updates to npm packages
+# Create pull requests on updates to npm packages or github actions
 version: 2
 updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
   - package-ecosystem: npm
     directory: /
     schedule:
