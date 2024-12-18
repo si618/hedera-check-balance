@@ -24,7 +24,7 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
-    "@hashgraph/sdk": "^2.53.0"
+    "@hashgraph/sdk": "^2.56.0"
   },
   "devDependencies": {
     "prettier": "3.3.3"
