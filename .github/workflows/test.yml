@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Test minimum passes
         uses: si618/hedera-check-balance@v1.4
